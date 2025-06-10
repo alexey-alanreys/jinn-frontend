@@ -1,0 +1,28 @@
+@import './_reset.css';
+
+* {
+	font-family: system-ui, 'Segoe UI', 'Helvetica Neue';
+}
+
+body {
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	background-color: #e7e2e2;
+	color: #212529;
+}
+
+button {
+	padding: 0;
+	background-color: transparent;
+	border: 0;
+}
+
+button:hover {
+	background-color: #f5f5f5;
+}
+
+button:focus-visible {
+	outline: none;
+	background-color: #f5f5f5;
+}
