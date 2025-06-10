@@ -1,0 +1,21 @@
+{
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.28.0",
+		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
+		"eslint": "^9.28.0",
+		"eslint-import-resolver-alias": "^1.1.2",
+		"prettier": "^3.5.3",
+		"vite": "^6.3.5",
+		"vite-plugin-string": "^1.2.3"
+	},
+	"dependencies": {
+		"lightweight-charts": "^5.0.7"
+	}
+}
