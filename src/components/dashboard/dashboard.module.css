@@ -1,0 +1,8 @@
+.dashboard {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 100%;
+	min-width: 0;
+
+	background-color: #fff;
+}

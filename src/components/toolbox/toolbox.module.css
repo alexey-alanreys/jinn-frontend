@@ -1,0 +1,9 @@
+.toolbox {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
+	min-width: 46px;
+	margin-right: 4px;
+	background-color: #fff;
+}

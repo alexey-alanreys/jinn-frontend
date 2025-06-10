@@ -1,0 +1,21 @@
+import { Component } from '@/core/component/component.js';
+import { renderService } from '@/core/services/render.service.js';
+
+import styles from './layout.module.css';
+import templateHTML from './layout.template.html';
+
+import { Dashboard } from './dashboard/dashboard.component.js';
+import { Inspector } from './inspector/inspector.component.js';
+import { Toolbox } from './toolbox/toolbox.component.js';
+
+export class Layout extends Component {
+	render() {
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[Toolbox, Dashboard, Inspector],
+			styles,
+		);
+
+		return this.element;
+	}
+}
