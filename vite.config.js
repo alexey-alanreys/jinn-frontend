@@ -1,22 +1,30 @@
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import string from 'vite-plugin-string';
 
-export default defineConfig({
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, './src'),
+export default ({ mode }) => {
+	const env = loadEnv(mode, process.cwd());
+
+	return defineConfig({
+		define: {
+			'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
+			'import.meta.env.VITE_API_MODE': JSON.stringify(env.VITE_API_MODE),
 		},
-	},
-	root: path.resolve(__dirname, 'src'),
-	publicDir: path.resolve(__dirname, 'public'),
-	build: {
-		outDir: path.resolve(__dirname, 'dist'),
-		emptyOutDir: true,
-	},
-	plugins: [
-		string({
-			include: ['**/*.html'],
-		}),
-	],
-});
+		resolve: {
+			alias: {
+				'@': path.resolve(__dirname, './src'),
+			},
+		},
+		root: path.resolve(__dirname, 'src'),
+		publicDir: path.resolve(__dirname, 'public'),
+		build: {
+			outDir: path.resolve(__dirname, 'dist'),
+			emptyOutDir: true,
+		},
+		plugins: [
+			string({
+				include: ['**/*.html'],
+			}),
+		],
+	});
+};
