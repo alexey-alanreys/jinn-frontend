@@ -93,11 +93,7 @@ export class DataService {
 			method: 'GET',
 			onSuccess,
 			onError: (error) => {
-				this.#handleError(
-					`Error fetching details for contextId: ${contextId}`,
-					error,
-					onError,
-				);
+				this.#handleError('Error fetching details', error, onError);
 			},
 		});
 	}

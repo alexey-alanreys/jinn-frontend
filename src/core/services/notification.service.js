@@ -20,6 +20,7 @@ export class NotificationService {
 		if (this.#timeout) {
 			clearTimeout(this.#timeout);
 		}
+
 		this.#timeout = setTimeout(callback, duration);
 	}
 

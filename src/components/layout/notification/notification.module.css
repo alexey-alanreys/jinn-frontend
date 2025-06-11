@@ -1,0 +1,53 @@
+.notification {
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+	display: none;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	z-index: 1000;
+	top: 2rem;
+	right: 2rem;
+	opacity: 0;
+	padding: 1.2rem 1.6rem;
+	animation: slideUpFade 2.5s;
+	border-radius: 1rem;
+	font-size: 1.8rem;
+	font-weight: 500;
+	color: #fff;
+	transform: translateY(-50px);
+}
+
+.notification.success,
+.notification.error {
+	display: block;
+}
+
+.notification.success {
+	background-color: #2e8677;
+}
+
+.notification.error {
+	background-color: #ff4a4a;
+}
+
+@keyframes slideUpFade {
+	0% {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+
+	15% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	80% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+}
