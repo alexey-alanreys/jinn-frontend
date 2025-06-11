@@ -1,6 +1,6 @@
 import '@/styles/global.css';
 
 import { Layout } from './components/layout/layout.component.js';
-import { $R } from './core/libs/rquery.lib.js';
+import { $Q } from './core/libs/query.lib.js';
 
-$R('#app').append(new Layout().render());
+$Q('#app').append(new Layout().render());

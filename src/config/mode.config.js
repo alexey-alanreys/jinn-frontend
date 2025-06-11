@@ -1,4 +1,4 @@
-export const API_MODE =
-	typeof window.API_MODE === 'string' && !window.API_MODE.startsWith('{')
-		? window.API_MODE
-		: import.meta.env.VITE_API_MODE;
+export const SERVER_MODE =
+	typeof window.SERVER_MODE === 'string' && !window.SERVER_MODE.startsWith('{')
+		? window.SERVER_MODE
+		: import.meta.env.VITE_SERVER_MODE;

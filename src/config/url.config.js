@@ -1,4 +1,4 @@
-export const API_URL =
-	typeof window.API_URL === 'string' && !window.API_URL.startsWith('{')
-		? window.API_URL
-		: import.meta.env.VITE_API_URL;
+export const SERVER_URL =
+	typeof window.SERVER_URL === 'string' && !window.SERVER_URL.startsWith('{')
+		? window.SERVER_URL
+		: import.meta.env.VITE_SERVER_URL;
