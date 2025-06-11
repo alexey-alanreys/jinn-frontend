@@ -145,7 +145,12 @@ export class DataService {
 	 */
 	#handleError(message, error, callback) {
 		console.error(message, error);
-		this.#notificationService.show('error', message);
+
+		try {
+			this.#notificationService.show('error', message);
+		} catch (err) {
+			console.warn('Notification display failed:', err);
+		}
 
 		if (callback) {
 			callback(error);
