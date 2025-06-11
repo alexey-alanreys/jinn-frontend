@@ -12,10 +12,9 @@ class Query {
 	/**
 	 * Initializes a new instance of the Query class.
 	 *
-	 * @param {string | HTMLElement} selector - A CSS selector string
-	 * or an HTMLElement.
-	 * If a string is provided, the first matching element in the DOM
-	 * will be selected.
+	 * @param {string | HTMLElement} selector
+	 * - A CSS selector string or an HTMLElement. If a string is provided,
+	 * the first matching element in the DOM will be selected.
 	 * If an HTMLElement is provided, it will be used directly.
 	 * @throws {Error} Throws an error if the selector is invalid
 	 * or if no element is found for a string selector.
@@ -42,10 +41,10 @@ class Query {
 	 * Finds the first element that matches the specified selector within
 	 * the current element.
 	 *
-	 * @param {string} selector - A CSS selector string to search for within
-	 * the current element.
-	 * @throws {Error} Throws an error if no element matching the selector
-	 * is found.
+	 * @param {string} selector
+	 * - A CSS selector string to search for within the current element.
+	 * @throws {Error} Throws an error
+	 * if no element matching the selector is found.
 	 * @returns {Query} A new Query instance wrapping the found element.
 	 */
 	find(selector) {
@@ -63,9 +62,10 @@ class Query {
 	/**
 	 * Appends a new child element to the current element.
 	 *
-	 * @param {HTMLElement} childElement - The child element to append.
-	 * @throws {Error} Throws an error if the provided childElement
-	 * is not an instance of HTMLElement.
+	 * @param {HTMLElement} childElement
+	 * - The child element to append.
+	 * @throws {Error} Throws an error
+	 * if the provided childElement is not an instance of HTMLElement.
 	 * @returns {Query} The current Query instance for method chaining.
 	 */
 	append(childElement) {
@@ -82,9 +82,11 @@ class Query {
 	/**
 	 * Inserts a new element immediately before the current element in the DOM.
 	 *
-	 * @param {HTMLElement} newElement - The new element to insert.
-	 * @throws {Error} Throws an error if the provided newElement
-	 * is not an instance of HTMLElement or if the current element
+	 * @param {HTMLElement} newElement
+	 * - The new element to insert.
+	 * @throws {Error} Throws an error
+	 * if the provided newElement is not an instance of HTMLElement or
+	 * if the current element
 	 * does not have a parent element.
 	 * @returns {Query} The current Query instance for method chaining.
 	 */
@@ -108,7 +110,8 @@ class Query {
 	/**
 	 * Gets or sets the inner HTML content of the current element.
 	 *
-	 * @param {string} [htmlContent] - The HTML content to set.
+	 * @param {string} [htmlContent]
+	 * - The HTML content to set.
 	 * If omitted, the method will return the current inner HTML of the element.
 	 * @returns {Query | string} The current Query instance for method chaining
 	 * when setting HTML content, or the current inner HTML when getting.
@@ -125,7 +128,8 @@ class Query {
 	/**
 	 * Get or set the text content of the selected element.
 	 *
-	 * @param {string} [textContent] - Optional text content to set.
+	 * @param {string} [textContent]
+	 * - Optional text content to set.
 	 * If not provided, the current text content will be returned.
 	 * @returns {Query | string} The current Query instance for method
 	 * chaining when setting text content, or the current text content.
@@ -144,8 +148,8 @@ class Query {
 	/**
 	 * Adds a click event listener to the current element.
 	 *
-	 * @param {function(Event): void} callback - The function to execute
-	 * when the element is clicked.
+	 * @param {function(Event): void} callback
+	 * - The function to execute when the element is clicked.
 	 * The callback receives the event object as its argument.
 	 * @returns {Query} The current Query instance for method chaining.
 	 */
@@ -158,11 +162,12 @@ class Query {
 
 	/**
 	 * Sets attributes and event listeners for an input element.
-	 * @param {Object} options - An object containing input options.
-	 * @param {function(Event): void} [options.onInput] - Function to be called
-	 * when the input event occurs.
-	 * @param {Object} [options.rest] - Optional attributes to set
-	 * on the input element.
+	 * @param {Object} options
+	 * - An object containing input options.
+	 * @param {function(Event): void} [options.onInput]
+	 * - Function to be called when the input event occurs.
+	 * @param {Object} [options.rest]
+	 * - Optional attributes to set on the input element.
 	 * @throws {Error} If the current element is not an input element.
 	 * @returns {Query} The current Query instance for method chaining.
 	 */
@@ -187,8 +192,10 @@ class Query {
 	/**
 	 * Sets a CSS property to a specified value for the current element.
 	 *
-	 * @param {string} property - The name of the CSS property to set.
-	 * @param {string} value - The value to assign to the CSS property.
+	 * @param {string} property
+	 * - The name of the CSS property to set.
+	 * @param {string} value
+	 * - The value to assign to the CSS property.
 	 * @throws {Error} Throws an error if the property or value is not a string.
 	 * @returns {Query} The current Query instance for method chaining.
 	 */
@@ -204,8 +211,9 @@ class Query {
 	/**
 	 * Adds one or more CSS classes to the current element.
 	 *
-	 * @param {string | string[]} classNames - A single class name as a string
-	 * or an array of class names to add. If an array is provided, each class
+	 * @param {string | string[]} classNames
+	 * - A single class name as a string or an array of class names to add.
+	 * If an array is provided, each class
 	 * name in the array will be added to the element.
 	 * @throws {Error} Throws an error if the provided classNames is neither
 	 * a string nor an array of strings.
@@ -230,7 +238,8 @@ class Query {
 	/**
 	 * Removes one or more CSS classes from the element.
 	 *
-	 * @param {string | string[]} classNames - The class name(s) to remove.
+	 * @param {string | string[]} classNames
+	 * - The class name(s) to remove.
 	 * Can be a single class name as a string or an array of class names.
 	 * @returns {this} The current Query instance for method chaining.
 	 */
@@ -249,8 +258,10 @@ class Query {
 	/**
 	 * Set or get the value of an attribute on the selected element.
 	 *
-	 * @param {string} attributeName - The name of the attribute to set or get.
-	 * @param {string} [value] - The value to set for the attribute.
+	 * @param {string} attributeName
+	 * - The name of the attribute to set or get.
+	 * @param {string} [value]
+	 * - The value to set for the attribute.
 	 * If not provided, the current value of the attribute will be returned.
 	 * @returns {Query|string} The current Query instance for method chaining
 	 * (if setting) or the attribute value (if getting).
@@ -272,8 +283,8 @@ class Query {
 /**
  * Creates a new Query instance for the specified selector or element.
  *
- * @param {string | HTMLElement} selector - A CSS selector string
- * or an HTMLElement.
+ * @param {string | HTMLElement} selector
+ * - A CSS selector string or an HTMLElement.
  * @returns {Query} A new Query instance wrapping the selected element.
  */
 export const $Q = (selector) => new Query(selector);

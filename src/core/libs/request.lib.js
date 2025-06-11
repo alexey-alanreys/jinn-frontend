@@ -10,9 +10,10 @@ import { SERVER_URL } from '@/config/url.config';
 /**
  * Extracts an error message from an error object.
  *
- * @param {Object} error - Error object containing a message.
- * @param {string|Object} error.message - Error message,
- * can be a string or an object.
+ * @param {Object} error
+ * - Error object containing a message.
+ * @param {string|Object} error.message
+ * - Error message, can be a string or an object.
  * @returns {string} Extracted error message.
  */
 export function extractErrorMessage(error) {
@@ -22,18 +23,20 @@ export function extractErrorMessage(error) {
 /**
  * Performs an HTTP request to the API.
  *
- * @param {Object} options - Request configuration.
- * @param {string} options.path - API endpoint path.
- * @param {'GET'|'POST'|'PATCH'|'DELETE'|'PUT'} [options.method='GET'] -
- * HTTP method to use for the request.
- * @param {Object|null} [options.body=null] -
- * JSON payload to send with the request.
- * @param {Object} [options.headers={}] -
- * Additional headers to include in the request.
- * @param {Function|null} [options.onSuccess=null] -
- * Callback called on success with response data.
- * @param {Function|null} [options.onError=null] -
- * Callback called on error with error message.
+ * @param {Object} options
+ * - Request configuration.
+ * @param {string} options.path
+ * - API endpoint path.
+ * @param {'GET'|'POST'|'PATCH'|'DELETE'|'PUT'} [options.method='GET']
+ * - HTTP method to use for the request.
+ * @param {Object|null} [options.body=null]
+ * - JSON payload to send with the request.
+ * @param {Object} [options.headers={}]
+ * - Additional headers to include in the request.
+ * @param {Function|null} [options.onSuccess=null]
+ * - Callback called on success with response data.
+ * @param {Function|null} [options.onError=null]
+ * - Callback called on error with error message.
  * @returns {Promise<{isLoading: boolean, data: any|null, error: string|null}>}
  * A promise resolving to the state of the request.
  */
