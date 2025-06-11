@@ -38,8 +38,8 @@ class Query {
 	/* FIND */
 
 	/**
-	 * Finds the first element that matches the specified selector within
-	 * the current element.
+	 * Finds the first element that matches the specified selector
+	 * within the current element.
 	 *
 	 * @param {string} selector
 	 * - A CSS selector string to search for within the current element.
@@ -55,6 +55,19 @@ class Query {
 		} else {
 			throw new Error(`No element found for the selector: "${selector}"`);
 		}
+	}
+
+	/**
+	 * Find all elements that match the specified selector
+	 * within the selected element.
+	 * @param {string} selector
+	 * - A CSS selector string to search for within the selected element.
+	 * @returns {RQuery[]} An array of new Query instances
+	 * for the found elements.
+	 */
+	findAll(selector) {
+		const elements = this.element.querySelectorAll(selector);
+		return Array.from(elements).map((el) => new Query(el));
 	}
 
 	/* INSERT */
@@ -277,6 +290,21 @@ class Query {
 			this.element.setAttribute(attributeName, value);
 			return this;
 		}
+	}
+
+	/**
+	 * Removes an attribute from the current element.
+	 * @param {string} attrName
+	 * - The name of the attribute to remove.
+	 * @return {RQuery} Returns the RQuery instance.
+	 */
+	removeAttr(attrName) {
+		if (typeof attrName !== 'string') {
+			throw new Error('attrName must be a string');
+		}
+
+		this.element.removeAttribute(attrName);
+		return this;
 	}
 }
 
