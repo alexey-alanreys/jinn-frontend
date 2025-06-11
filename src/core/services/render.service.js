@@ -1,4 +1,4 @@
-import { Component } from '@/core/component/component.js';
+import { BaseComponent } from '@/core/component/base.component.js';
 
 /**
  * A utility class for converting HTML strings to DOM elements.
@@ -39,7 +39,7 @@ export class RenderService {
 	#replaceComponentTags(parentElement, components) {
 		const instanceMap = new Map();
 		const componentInstances = components.map((el) =>
-			el instanceof Component ? el : new el(),
+			el instanceof BaseComponent ? el : new el(),
 		);
 		const componentElements = parentElement.querySelectorAll('*');
 
