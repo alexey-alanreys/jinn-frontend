@@ -1,18 +1,20 @@
 *,
-*:before,
-*:after {
+*::before,
+*::after {
 	user-select: none;
 	-webkit-user-drag: none;
 	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
 
-html,
+html {
+	text-size-adjust: none;
+	font-size: 62.5%;
+}
+
 body,
-div,
-span,
-object,
-iframe,
-figure,
 h1,
 h2,
 h3,
@@ -23,24 +25,41 @@ p,
 blockquote,
 pre,
 a,
+abbr,
+acronym,
+address,
+big,
+cite,
 code,
+del,
+dfn,
 em,
 img,
+ins,
+kbd,
+q,
+s,
+samp,
 small,
 strike,
 strong,
 sub,
 sup,
 tt,
+var,
 b,
 u,
 i,
+dl,
+dt,
+dd,
 ol,
 ul,
 li,
 fieldset,
 form,
 label,
+legend,
 table,
 caption,
 tbody,
@@ -49,25 +68,35 @@ thead,
 tr,
 th,
 td,
-main,
+article,
+aside,
 canvas,
+details,
 embed,
+figure,
+figcaption,
 footer,
 header,
+hgroup,
+menu,
 nav,
+output,
+ruby,
 section,
+summary,
+time,
+mark,
+audio,
 video {
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
-	text-size-adjust: none;
-	margin: 0;
-	padding: 0;
-	border: 0;
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
 }
 
+article,
+aside,
 footer,
 header,
 nav,
@@ -91,10 +120,14 @@ table {
 }
 
 input,
-button {
+button,
+textarea,
+select {
 	outline: none;
+	background: none;
 	border: none;
 	border-radius: 0;
+	font: inherit;
 }
 
 button {
