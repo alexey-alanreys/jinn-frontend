@@ -1,0 +1,6 @@
+.report {
+	display: flex;
+	flex-direction: column;
+	min-height: auto;
+	max-height: 70%;
+}
