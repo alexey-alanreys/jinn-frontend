@@ -1,0 +1,21 @@
+.report-size-button {
+	width: 34px;
+	height: 34px;
+	border-radius: 6px;
+}
+
+.report-size-button[data-status='opened'] .icon-opened {
+	display: block;
+}
+
+.report-size-button[data-status='opened'] .icon-closed {
+	display: none;
+}
+
+.report-size-button[data-status='closed'] .icon-opened {
+	display: none;
+}
+
+.report-size-button[data-status='closed'] .icon-closed {
+	display: block;
+}

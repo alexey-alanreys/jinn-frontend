@@ -2,11 +2,8 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: #fff;
-
 	flex: 1;
 	overflow: auto;
 	min-height: 0;
-
-	background-color: #fca9a9;
+	background-color: #fff;
 }
