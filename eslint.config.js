@@ -14,6 +14,7 @@ export default [
 			globals: {
 				clearTimeout: 'readonly',
 				console: 'readonly',
+				DOMParser: 'readonly',
 				document: 'readonly',
 				HTMLElement: 'readonly',
 				fetch: 'readonly',

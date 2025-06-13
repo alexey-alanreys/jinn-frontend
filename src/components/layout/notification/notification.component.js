@@ -2,7 +2,7 @@ import { BaseComponent } from '@/core/component/base.component.js';
 import { renderService } from '@/core/services/render.service.js';
 
 import styles from './notification.module.css';
-import template from './notification.template.html';
+import template from './notification.template.html?raw';
 
 export class Notification extends BaseComponent {
 	render() {

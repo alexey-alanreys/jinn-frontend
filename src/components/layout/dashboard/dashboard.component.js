@@ -2,7 +2,7 @@ import { BaseComponent } from '@/core/component/base.component.js';
 import { renderService } from '@/core/services/render.service';
 
 import styles from './dashboard.module.css';
-import templateHTML from './dashboard.template.html';
+import templateHTML from './dashboard.template.html?raw';
 
 import { Chart } from './chart/chart.component';
 import { Report } from './report/report.component';

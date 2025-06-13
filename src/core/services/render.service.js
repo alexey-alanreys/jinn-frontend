@@ -7,21 +7,21 @@ export class RenderService {
 	/**
 	 * Converts an HTML string into an HTMLElement, applies scoped styles, and replaces custom component tags.
 	 *
-	 * @param {string} templateHTML - The HTML string to convert into an HTMLElement.
+	 * @param {string} html - The HTML string to convert into an HTMLElement.
 	 * @param {Array} [components=[]] - An array of component classes or instances to replace custom tags.
 	 * @param {Object} [styles] - An object mapping original class names to scoped class names for styling.
 	 * @returns {HTMLElement} The resulting HTMLElement with applied styles and replaced components.
 	 */
-	htmlToElement(templateHTML, components = [], styles = null) {
-		const template = document.createElement('template');
-		template.innerHTML = templateHTML.trim();
-		const element = template.content.firstChild;
-
-		this.#replaceComponentTags(element, components);
+	htmlToElement(html, components = [], styles = null) {
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(html, 'text/html');
+		const element = doc.body.firstElementChild;
 
 		if (styles) {
 			this.#applyModuleStyles(element, styles);
 		}
+
+		this.#replaceComponentTags(element, components);
 
 		return element;
 	}

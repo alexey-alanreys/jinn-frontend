@@ -3,7 +3,17 @@
 	flex-direction: column;
 	justify-content: start;
 	align-items: center;
+	gap: 4px;
 	min-width: 46px;
 	margin-right: 4px;
+	padding-top: 6px;
 	background-color: #fff;
+}
+
+.toolbox hr {
+	width: 38px;
+	height: 1px;
+	margin: 4px;
+	background: linear-gradient(to right, transparent, #d1d4dc, transparent);
+	border: none;
 }

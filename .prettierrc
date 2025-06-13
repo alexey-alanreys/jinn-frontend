@@ -15,7 +15,7 @@
 		"^@/services/(.*)$",
 		"^@/store/(.*)$",
 		"^@/api/(.*)$",
-		"^.+\\.(template\\.html|module\\.css)$",
+		"^.+\\.(template\\.html\\?raw|module\\.css)$",
 		"^../(.*)",
 		"^./(.*)"
 	],

@@ -2,7 +2,7 @@ import { BaseComponent } from '@/core/component/base.component.js';
 import { renderService } from '@/core/services/render.service.js';
 
 import styles from './layout.module.css';
-import templateHTML from './layout.template.html';
+import templateHTML from './layout.template.html?raw';
 
 import { Dashboard } from './dashboard/dashboard.component.js';
 import { Inspector } from './inspector/inspector.component.js';
