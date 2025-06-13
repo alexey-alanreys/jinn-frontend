@@ -9,14 +9,12 @@ import { Report } from './report/report.component';
 
 export class Dashboard extends BaseComponent {
 	render() {
-		this.chart = new Chart();
-		this.report = new Report();
-
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.chart, this.report],
+			[Chart, Report],
 			styles,
 		);
+
 		return this.element;
 	}
 }

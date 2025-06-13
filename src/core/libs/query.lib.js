@@ -12,10 +12,11 @@ class Query {
 	/**
 	 * Initializes a new instance of the Query class.
 	 *
-	 * @param {string | HTMLElement} selector
-	 * - A CSS selector string or an HTMLElement. If a string is provided,
-	 * the first matching element in the DOM will be selected.
-	 * If an HTMLElement is provided, it will be used directly.
+	 * @param {string | HTMLElement | Document} selector
+	 * - A CSS selector string, HTMLElement, or Document.
+	 * If a string is provided, the first matching element in the DOM
+	 * will be selected.
+	 * If an HTMLElement or Document is provided, it will be used directly.
 	 * @throws {Error} Throws an error if the selector is invalid
 	 * or if no element is found for a string selector.
 	 */
@@ -26,11 +27,14 @@ class Query {
 			if (!this.element) {
 				throw new Error(`No element found for the selector: "${selector}"`);
 			}
-		} else if (selector instanceof HTMLElement) {
+		} else if (
+			selector instanceof HTMLElement ||
+			selector instanceof Document
+		) {
 			this.element = selector;
 		} else {
 			throw new Error(
-				'The selector must be a string or an instance of HTMLElement.',
+				'The selector must be a string, HTMLElement, or Document.',
 			);
 		}
 	}
@@ -171,6 +175,54 @@ class Query {
 		return this;
 	}
 
+	/**
+	 * Add event listener to selected element.
+	 * @param {string} eventType
+	 * - Event type ('click', 'input' etc.)
+	 * @param {function(Event): void} callback
+	 * - Handler function receiving event object
+	 * @returns {RQuery} Current instance for chaining
+	 */
+	on(eventType, callback) {
+		if (typeof eventType !== 'string' || typeof callback !== 'function') {
+			throw new Error(
+				'eventType must be a string and callback must be a function',
+			);
+		}
+
+		this.element.addEventListener(eventType, callback);
+		return this;
+	}
+
+	/**
+	 * Remove event listener from selected element.
+	 * @param {string} eventType
+	 * - Event type to remove
+	 * @param {function(Event): void} [callback]
+	 * - Optional callback to remove
+	 * @returns {Query} Current instance for chaining
+	 */
+	off(eventType, callback) {
+		if (typeof eventType !== 'string') {
+			throw new Error('eventType must be a string');
+		}
+
+		if (callback) {
+			this.element.removeEventListener(eventType, callback);
+		} else {
+			if (this.element instanceof Document) {
+				const newHandler = () => {};
+				this.element.addEventListener(eventType, newHandler);
+				this.element.removeEventListener(eventType, newHandler);
+			} else {
+				const newElement = this.element.cloneNode(true);
+				this.element.parentNode.replaceChild(newElement, this.element);
+				this.element = newElement;
+			}
+		}
+		return this;
+	}
+
 	/* FORM */
 
 	/**
@@ -203,21 +255,28 @@ class Query {
 	/* STYLES */
 
 	/**
-	 * Sets a CSS property to a specified value for the current element.
-	 *
-	 * @param {string} property
-	 * - The name of the CSS property to set.
-	 * @param {string} value
-	 * - The value to assign to the CSS property.
-	 * @throws {Error} Throws an error if the property or value is not a string.
-	 * @returns {Query} The current Query instance for method chaining.
+	 * Get or set CSS properties
+	 * @param {string|Object} prop
+	 * - Property name or object of properties
+	 * @param {string} [value]
+	 * - Value to set
+	 * @returns {Query|string} Current instance or property value
 	 */
-	css(property, value) {
-		if (typeof property !== 'string' || typeof value !== 'string') {
-			throw new Error('Both "property" and "value" must be strings.');
+	css(prop, value) {
+		if (typeof prop === 'string' && typeof value === 'undefined') {
+			return window.getComputedStyle(this.element).getPropertyValue(prop);
 		}
 
-		this.element.style[property] = value;
+		if (typeof prop === 'object') {
+			for (const [key, val] of Object.entries(prop)) {
+				this.element.style[key] = val;
+			}
+		} else if (typeof prop === 'string' && value) {
+			this.element.style[prop] = value;
+		} else {
+			throw new Error('Invalid arguments');
+		}
+
 		return this;
 	}
 

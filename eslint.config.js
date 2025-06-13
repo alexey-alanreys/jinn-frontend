@@ -15,6 +15,7 @@ export default [
 				clearTimeout: 'readonly',
 				console: 'readonly',
 				DOMParser: 'readonly',
+				Document: 'readonly',
 				document: 'readonly',
 				HTMLElement: 'readonly',
 				fetch: 'readonly',
