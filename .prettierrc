@@ -2,6 +2,7 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"tabWidth": 2,
+	"printWidth": 79,
 	"importOrder": [
 		"<THIRD_PARTY_MODULES>",
 		"^@/core/(.*)$",

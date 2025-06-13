@@ -4,18 +4,18 @@
 	border-radius: 6px;
 }
 
-.report-size-button[data-status='opened'] .icon-opened {
+.report-size-button[data-status='expanded'] .icon-expanded {
 	display: block;
 }
 
-.report-size-button[data-status='opened'] .icon-closed {
+.report-size-button[data-status='expanded'] .icon-collapsed {
 	display: none;
 }
 
-.report-size-button[data-status='closed'] .icon-opened {
+.report-size-button[data-status='collapsed'] .icon-expanded {
 	display: none;
 }
 
-.report-size-button[data-status='closed'] .icon-closed {
+.report-size-button[data-status='collapsed'] .icon-collapsed {
 	display: block;
 }
