@@ -1,12 +1,18 @@
 .report {
 	display: flex;
 	flex-direction: column;
-	flex-basis: 40%;
-	min-height: auto;
-	max-height: 70%;
+	position: absolute;
+	z-index: 10;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 40%;
+	max-height: 100%;
 }
 
 .report-handle {
+	z-index: 20;
 	min-height: 4px;
 	cursor: ns-resize;
+	background-color: #e7e2e2;
 }

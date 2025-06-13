@@ -22,6 +22,7 @@ export default [
 				localStorage: 'readonly',
 				module: 'readonly',
 				process: 'readonly',
+				requestAnimationFrame: 'readonly',
 				require: 'readonly',
 				setTimeout: 'readonly',
 				__dirname: 'readonly',

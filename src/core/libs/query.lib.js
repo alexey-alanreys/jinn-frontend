@@ -281,6 +281,20 @@ class Query {
 	}
 
 	/**
+	 * Set document cursor style
+	 * @param {string} cursorStyle - CSS cursor value
+	 * @returns {Query}
+	 */
+	cursor(cursorStyle) {
+		if (this.element === document) {
+			document.body.style.cursor = cursorStyle;
+		} else {
+			this.element.style.cursor = cursorStyle;
+		}
+		return this;
+	}
+
+	/**
 	 * Adds one or more CSS classes to the current element.
 	 *
 	 * @param {string | string[]} classNames
