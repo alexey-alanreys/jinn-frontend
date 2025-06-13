@@ -1,0 +1,9 @@
+.report-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-height: 38px;
+	background-color: #fff;
+	border-bottom: 1px solid #e0e3eb;
+	border-radius: 6px 6px 0 0;
+}

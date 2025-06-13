@@ -1,6 +1,12 @@
 .report {
 	display: flex;
 	flex-direction: column;
+	flex-basis: 40%;
 	min-height: auto;
 	max-height: 70%;
+}
+
+.report-handle {
+	min-height: 4px;
+	cursor: ns-resize;
 }

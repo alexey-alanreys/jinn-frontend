@@ -1,6 +1,6 @@
 .chart {
 	display: block;
-	flex: 1 1 100%;
+	flex: 1 1 60%;
 	position: relative;
 	overflow: hidden;
 	min-height: 30%;
