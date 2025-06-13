@@ -9,9 +9,12 @@ import { Report } from './report/report.component';
 
 export class Dashboard extends BaseComponent {
 	render() {
+		this.chart = new Chart();
+		this.report = new Report();
+
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[Chart, Report],
+			[this.chart, this.report],
 			styles,
 		);
 		return this.element;
