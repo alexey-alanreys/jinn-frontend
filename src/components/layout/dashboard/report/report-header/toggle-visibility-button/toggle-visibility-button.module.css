@@ -1,0 +1,19 @@
+.toggle-visibility-button {
+	width: 34px;
+	height: 34px;
+	border-radius: 6px;
+}
+
+.icon-visible {
+	display: none;
+}
+.icon-hidden {
+	display: block;
+}
+
+.toggle-visibility-button[data-visible='true'] .icon-visible {
+	display: block;
+}
+.toggle-visibility-button[data-visible='true'] .icon-hidden {
+	display: none;
+}

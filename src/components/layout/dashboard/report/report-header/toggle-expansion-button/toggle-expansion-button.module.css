@@ -1,0 +1,19 @@
+.toggle-expansion-button {
+	width: 34px;
+	height: 34px;
+	border-radius: 6px;
+}
+
+.icon-expanded {
+	display: none;
+}
+.icon-collapsed {
+	display: block;
+}
+
+.toggle-expansion-button[data-expanded='true'] .icon-expanded {
+	display: block;
+}
+.toggle-expansion-button[data-expanded='true'] .icon-collapsed {
+	display: none;
+}
