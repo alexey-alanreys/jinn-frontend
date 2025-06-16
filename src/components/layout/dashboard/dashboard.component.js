@@ -6,174 +6,137 @@ import styles from './dashboard.module.css';
 import templateHTML from './dashboard.template.html?raw';
 
 import { Chart } from './chart/chart.component';
+import { ReportHeader } from './report/report-header/report-header.component';
+import { ToggleExpansionButton } from './report/report-header/toggle-expansion-button/toggle-expansion-button.component';
+import { ToggleVisibilityButton } from './report/report-header/toggle-visibility-button/toggle-visibility-button.component.js';
 import { Report } from './report/report.component';
 
 export class Dashboard extends BaseComponent {
-	#chart;
-	#report;
-	#reportHandle;
-	#reportHeader;
-	#expansionBtn;
-	#visibilityBtn;
+	#$element;
+	#reportHeight;
+	#reportMaxHeight;
+	#reportMinHeight;
 
 	render() {
+		this.#createInstances();
+
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[Chart, Report],
+			[this.chart, this.report],
 			styles,
 		);
 
+		this.#$element = $Q(this.element);
+
 		requestAnimationFrame(() => {
-			this.#cacheElements();
-
-			this.#handleExpansionToggle();
-			this.#handleVisibilityToggle();
-
-			this.#handleManualResize();
+			this.#cacheSizes();
 		});
 
 		return this.element;
 	}
 
-	#handleExpansionToggle() {
-		let lastKnownHeight = parseInt(this.#report.css('height'));
-
-		this.#expansionBtn.on('click', () => {
-			const isExpanded = this.#expansionBtn.attr('data-expanded') === 'true';
-
-			if (!isExpanded) {
-				if (this.#visibilityBtn.attr('data-visible') !== 'false') {
-					lastKnownHeight = parseInt(this.#report.css('height'));
-				}
-
-				this.#report.css('height', `${window.innerHeight}px`);
-				this.#chart.css('bottom', `${window.innerHeight}px`);
-
-				this.#visibilityBtn
-					.attr('data-visible', 'true')
-					.attr('title', 'Свернуть панель');
+	handleVisibilityToggle() {
+		if (this.toggleVisibilityButton.isActive()) {
+			if (this.toggleExpansionButton.isActive()) {
+				this.toggleExpansionButton.toggleActiveState();
 			} else {
-				this.#report.css('height', `${lastKnownHeight}px`);
-				this.#chart.css('bottom', `${lastKnownHeight}px`);
+				this.#reportHeight = this.report.getHeight();
 			}
 
-			this.#expansionBtn
-				.attr('data-expanded', String(!isExpanded))
-				.attr('title', `${isExpanded ? 'Развернуть' : 'Восстановить'} панель`);
-		});
+			this.#resizePanels(this.#reportMinHeight);
+		} else {
+			this.#resizePanels(this.#reportHeight);
+		}
 	}
 
-	#handleVisibilityToggle() {
-		const reportMinHeight = this.#getReportMinHeight();
-		let lastKnownHeight = parseInt(this.#report.css('height'));
-
-		this.#visibilityBtn.on('click', () => {
-			const isVisible = this.#visibilityBtn.attr('data-visible') === 'true';
-
-			if (isVisible) {
-				if (this.#expansionBtn.attr('data-expanded') !== 'true') {
-					lastKnownHeight = parseInt(this.#report.css('height'));
-				}
-
-				this.#report.css('height', `${reportMinHeight}px`);
-				this.#chart.css('bottom', `${reportMinHeight}px`);
-
-				this.#expansionBtn
-					.attr('data-expanded', 'false')
-					.attr('title', 'Развернуть панель');
+	handleExpansionToggle() {
+		if (this.toggleExpansionButton.isActive()) {
+			if (this.toggleVisibilityButton.isActive()) {
+				this.toggleVisibilityButton.toggleActiveState();
 			} else {
-				this.#report.css('height', `${lastKnownHeight}px`);
-				this.#chart.css('bottom', `${lastKnownHeight}px`);
+				this.#reportHeight = this.report.getHeight();
 			}
 
-			this.#visibilityBtn
-				.attr('data-visible', String(!isVisible))
-				.attr('title', `${isVisible ? 'Открыть' : 'Свернуть'} панель`);
-		});
+			this.#resizePanels(this.#reportMaxHeight);
+		} else {
+			this.#resizePanels(this.#reportHeight);
+		}
 	}
 
-	#handleManualResize() {
-		const reportMinHeight = this.#getReportMinHeight();
-		const reportMaxHeight = window.innerHeight;
+	handleManualResize(startY) {
+		const startHeight = this.report.getOffsetHeight();
 
-		let isExpanded = this.#expansionBtn.attr('data-expanded') === 'true';
-		let isVisible = this.#visibilityBtn.attr('data-visible') === 'true';
-
-		let startHeight = 0;
-		let startY = 0;
+		let isVisActive = this.toggleVisibilityButton.isActive();
+		let isExpActive = this.toggleExpansionButton.isActive();
 
 		const onMouseMove = (event) => {
 			const newHeight = Math.max(
-				reportMinHeight,
+				this.#reportMinHeight,
 				startHeight + startY - event.clientY,
 			);
 
-			this.#report.css('height', `${newHeight}px`);
-			this.#chart.css('bottom', `${newHeight}px`);
+			this.#resizePanels(newHeight);
 
-			if (newHeight >= reportMaxHeight && !isExpanded) {
-				isExpanded = !isExpanded;
-
-				this.#expansionBtn
-					.attr('data-expanded', 'true')
-					.attr('title', 'Восстановить панель');
-			} else if (isExpanded && newHeight < reportMaxHeight) {
-				isExpanded = !isExpanded;
-
-				this.#expansionBtn
-					.attr('data-expanded', 'false')
-					.attr('title', 'Развернуть панель');
+			if (newHeight === this.#reportMinHeight && !isVisActive) {
+				this.toggleVisibilityButton.toggleActiveState();
+				isVisActive = !isVisActive;
+			} else if (isVisActive && newHeight > this.#reportMinHeight) {
+				this.toggleVisibilityButton.toggleActiveState();
+				isVisActive = !isVisActive;
 			}
 
-			if (newHeight === reportMinHeight && isVisible) {
-				isVisible = !isVisible;
-
-				this.#visibilityBtn
-					.attr('data-visible', 'false')
-					.attr('title', 'Развернуть панель');
-			} else if (!isVisible && newHeight > reportMinHeight) {
-				isVisible = !isVisible;
-
-				this.#visibilityBtn
-					.attr('data-visible', 'true')
-					.attr('title', 'Свернуть панель');
+			if (newHeight >= this.#reportMaxHeight && !isExpActive) {
+				this.toggleExpansionButton.toggleActiveState();
+				isExpActive = !isExpActive;
+			} else if (isExpActive && newHeight < this.#reportMaxHeight) {
+				this.toggleExpansionButton.toggleActiveState();
+				isExpActive = !isExpActive;
 			}
 		};
 
-		this.#reportHandle.on('mousedown', (event) => {
-			isVisible = this.#visibilityBtn.attr('data-status') === 'visible';
-			isExpanded = this.#expansionBtn.attr('data-status') === 'collapsed';
-
-			startHeight = this.#report.element.offsetHeight;
-			startY = event.clientY;
-
-			const handleMouseUp = () => {
-				$Q(document)
-					.off('mousemove', onMouseMove)
-					.off('mouseup', handleMouseUp)
-					.cursor('default');
-			};
-
+		const handleMouseUp = () => {
 			$Q(document)
-				.on('mousemove', onMouseMove)
-				.on('mouseup', handleMouseUp)
-				.cursor('ns-resize');
+				.off('mousemove', onMouseMove)
+				.off('mouseup', handleMouseUp)
+				.find('body')
+				.removeClass('resizing');
+		};
+
+		$Q(document)
+			.on('mousemove', onMouseMove)
+			.on('mouseup', handleMouseUp)
+			.find('body')
+			.addClass('resizing');
+	}
+
+	#createInstances() {
+		this.chart = new Chart();
+
+		this.toggleVisibilityButton = new ToggleVisibilityButton({
+			onClick: this.handleVisibilityToggle.bind(this),
+		});
+		this.toggleExpansionButton = new ToggleExpansionButton({
+			onClick: this.handleExpansionToggle.bind(this),
+		});
+		this.reportHeader = new ReportHeader({
+			toggleVisibilityButton: this.toggleVisibilityButton,
+			toggleExpansionButton: this.toggleExpansionButton,
+		});
+
+		this.report = new Report({
+			reportHeader: this.reportHeader,
+			onMousedown: this.handleManualResize.bind(this),
 		});
 	}
 
-	#cacheElements() {
-		this.#chart = $Q(this.element).find('#chart');
-		this.#report = $Q(this.element).find('#report');
-		this.#reportHandle = $Q(this.element).find('#report-handle');
-		this.#reportHeader = $Q(this.element).find('#report-header');
-		this.#expansionBtn = $Q(this.element).find('#toggle-expansion-button');
-		this.#visibilityBtn = $Q(this.element).find('#toggle-visibility-button');
+	#cacheSizes() {
+		this.#reportHeight = this.report.getHeight();
+		this.#reportMaxHeight = parseInt(this.#$element.css('height'));
+		this.#reportMinHeight = this.report.getMinHeight();
 	}
 
-	#getReportMinHeight() {
-		return (
-			parseInt(this.#reportHandle.css('min-height')) +
-			parseInt(this.#reportHeader.css('min-height'))
-		);
+	#resizePanels(height) {
+		this.chart.setHeight(height);
+		this.report.setHeight(height);
 	}
 }

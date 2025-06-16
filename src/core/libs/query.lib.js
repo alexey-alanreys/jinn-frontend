@@ -223,6 +223,33 @@ class Query {
 		return this;
 	}
 
+	/**
+	 * Dispatches a custom event on the current element.
+	 *
+	 * @param {string} eventName
+	 * - The name of the custom event.
+	 * @param {Object} [detail]
+	 * - Optional data to pass with the event (available in event.detail).
+	 * @param {Object} [options]
+	 * - Optional event options like bubbles, cancelable, etc.
+	 * @returns {boolean} The return value is false if event is cancelable and
+	 * at least one of the event handlers called preventDefault(), otherwise true.
+	 */
+	trigger(eventName, detail = {}, options = {}) {
+		if (typeof eventName !== 'string') {
+			throw new Error('Event name must be a string');
+		}
+
+		const event = new CustomEvent(eventName, {
+			detail,
+			bubbles: options.bubbles ?? true,
+			cancelable: options.cancelable ?? true,
+			composed: options.composed ?? false,
+		});
+
+		return this.element.dispatchEvent(event);
+	}
+
 	/* FORM */
 
 	/**
@@ -363,6 +390,48 @@ class Query {
 			this.element.setAttribute(attributeName, value);
 			return this;
 		}
+	}
+
+	/**
+	 * Gets or sets a data attribute on the element.
+	 *
+	 * @param {string} key
+	 * - The data attribute name (without 'data-' prefix).
+	 * @param {string} [value]
+	 * - The value to set. If omitted, returns the current value.
+	 * @returns {Query|string} The current Query instance (if setting)
+	 * or the data value (if getting).
+	 */
+	data(key, value) {
+		if (typeof key !== 'string') {
+			throw new Error('Key must be a string.');
+		}
+
+		const dataAttr = `data-${key}`;
+
+		if (typeof value === 'undefined') {
+			return this.element.getAttribute(dataAttr);
+		} else {
+			this.element.setAttribute(dataAttr, value);
+			return this;
+		}
+	}
+
+	/**
+	 * Checks if an attribute is set to a boolean value.
+	 *
+	 * @param {string} attrName
+	 * - The attribute name to check.
+	 * @returns {boolean} `true` if the attribute exists and is not `false`,
+	 * otherwise `false`.
+	 */
+	is(attrName) {
+		if (typeof attrName !== 'string') {
+			throw new Error('Attribute name must be a string.');
+		}
+
+		const attrValue = this.element.getAttribute(attrName);
+		return attrValue !== null && attrValue !== 'false';
 	}
 
 	/**

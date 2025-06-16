@@ -4,16 +4,16 @@
 	border-radius: 6px;
 }
 
-.icon-expanded {
+.icon-collapsed {
 	display: none;
 }
-.icon-collapsed {
+.icon-expanded {
 	display: block;
 }
 
-.toggle-expansion-button[data-expanded='true'] .icon-expanded {
+.toggle-expansion-button[data-active='false'] .icon-collapsed {
 	display: block;
 }
-.toggle-expansion-button[data-expanded='true'] .icon-collapsed {
+.toggle-expansion-button[data-active='false'] .icon-expanded {
 	display: none;
 }

@@ -54,13 +54,13 @@ export class RenderService {
 		);
 		const componentElements = parentElement.querySelectorAll('*');
 
-		componentInstances.forEach((instance) => {
-			const name = instance.constructor.name.toLowerCase();
-			instanceMap.set(name, instance);
+		componentInstances.forEach((el) => {
+			const name = el.constructor.name.toLowerCase();
+			instanceMap.set(name, el);
 		});
 
-		componentElements.forEach((element) => {
-			const componentName = element.tagName
+		componentElements.forEach((el) => {
+			const componentName = el.tagName
 				.toLowerCase()
 				.replace(/^component-/, '')
 				.replace(/-/g, '');
@@ -68,7 +68,7 @@ export class RenderService {
 
 			if (instance) {
 				const content = instance.render();
-				element.replaceWith(content);
+				el.replaceWith(content);
 			}
 		});
 	}

@@ -11,9 +11,9 @@
 	display: block;
 }
 
-.toggle-visibility-button[data-visible='true'] .icon-visible {
+.toggle-visibility-button[data-active='false'] .icon-visible {
 	display: block;
 }
-.toggle-visibility-button[data-visible='true'] .icon-hidden {
+.toggle-visibility-button[data-active='false'] .icon-hidden {
 	display: none;
 }
