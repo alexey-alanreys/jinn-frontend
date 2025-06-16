@@ -1,4 +1,4 @@
-import { BaseComponent } from '@/core/component/base.component.js';
+import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
@@ -10,12 +10,19 @@ import { ReportContent } from './report-content/report-content.component';
 export class Report extends BaseComponent {
 	#$element;
 
+	constructor(props) {
+		super(props);
+
+		this.reportHeader = props.reportHeader;
+		this.onMousedown = props.onMousedown;
+	}
+
 	render() {
-		this.reportHeader = this.props.reportHeader;
+		this.reportContent = new ReportContent();
 
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.reportHeader, ReportContent],
+			[this.reportHeader, this.reportContent],
 			styles,
 		);
 
@@ -23,6 +30,10 @@ export class Report extends BaseComponent {
 		this.#$element
 			.find('#report-handle')
 			.on('mousedown', this.#handleMousedown.bind(this));
+
+		this.reportHeader.connectButtons((tabName) => {
+			this.reportContent.showOnly(tabName);
+		});
 
 		return this.element;
 	}
@@ -49,6 +60,6 @@ export class Report extends BaseComponent {
 	}
 
 	#handleMousedown(event) {
-		this.props.onMousedown?.(event.clientY);
+		this.onMousedown?.(event.clientY);
 	}
 }

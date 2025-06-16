@@ -1,4 +1,4 @@
-import { BaseComponent } from '@/core/component/base.component.js';
+import { BaseComponent } from '@/core/component/base.component';
 
 /**
  * A utility class for converting HTML strings to DOM elements.

@@ -1,13 +1,13 @@
-import { BaseComponent } from '@/core/component/base.component.js';
-import { renderService } from '@/core/services/render.service.js';
+import { BaseComponent } from '@/core/component/base.component';
+import { renderService } from '@/core/services/render.service';
 
 import styles from './layout.module.css';
 import templateHTML from './layout.template.html?raw';
 
-import { Dashboard } from './dashboard/dashboard.component.js';
-import { Inspector } from './inspector/inspector.component.js';
-import { Notification } from './notification/notification.component.js';
-import { Toolbox } from './toolbox/toolbox.component.js';
+import { Dashboard } from './dashboard/dashboard.component';
+import { Inspector } from './inspector/inspector.component';
+import { Notification } from './notification/notification.component';
+import { Toolbox } from './toolbox/toolbox.component';
 
 export class Layout extends BaseComponent {
 	render() {

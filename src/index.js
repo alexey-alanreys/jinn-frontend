@@ -1,6 +1,6 @@
 import '@/styles/global.css';
 
-import { Layout } from './components/layout/layout.component.js';
-import { $Q } from './core/libs/query.lib.js';
+import { Layout } from './components/layout/layout.component';
+import { $Q } from './core/libs/query.lib';
 
 $Q('#app').append(new Layout().render());

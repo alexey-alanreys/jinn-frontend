@@ -1,5 +1,5 @@
-import { request } from '@/core/libs/request.lib.js';
-import { NotificationService } from '@/core/services/notification.service.js';
+import { request } from '@/core/libs/request.lib';
+import { NotificationService } from '@/core/services/notification.service';
 
 /**
  * Service for interacting with backend data API endpoints.

@@ -1,4 +1,4 @@
-import { BaseComponent } from '@/core/component/base.component.js';
+import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 

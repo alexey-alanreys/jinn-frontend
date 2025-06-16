@@ -1,4 +1,4 @@
-import { BaseComponent } from '@/core/component/base.component.js';
+import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
@@ -8,7 +8,7 @@ import templateHTML from './dashboard.template.html?raw';
 import { Chart } from './chart/chart.component';
 import { ReportHeader } from './report/report-header/report-header.component';
 import { ToggleExpansionButton } from './report/report-header/toggle-expansion-button/toggle-expansion-button.component';
-import { ToggleVisibilityButton } from './report/report-header/toggle-visibility-button/toggle-visibility-button.component.js';
+import { ToggleVisibilityButton } from './report/report-header/toggle-visibility-button/toggle-visibility-button.component';
 import { Report } from './report/report.component';
 
 export class Dashboard extends BaseComponent {
@@ -17,9 +17,29 @@ export class Dashboard extends BaseComponent {
 	#reportMaxHeight;
 	#reportMinHeight;
 
-	render() {
-		this.#createInstances();
+	constructor(props) {
+		super(props);
 
+		this.chart = new Chart();
+
+		this.toggleVisibilityButton = new ToggleVisibilityButton({
+			onClick: this.handleVisibilityToggle.bind(this),
+		});
+		this.toggleExpansionButton = new ToggleExpansionButton({
+			onClick: this.handleExpansionToggle.bind(this),
+		});
+		this.reportHeader = new ReportHeader({
+			toggleVisibilityButton: this.toggleVisibilityButton,
+			toggleExpansionButton: this.toggleExpansionButton,
+		});
+
+		this.report = new Report({
+			reportHeader: this.reportHeader,
+			onMousedown: this.handleManualResize.bind(this),
+		});
+	}
+
+	render() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
 			[this.chart, this.report],
@@ -107,26 +127,6 @@ export class Dashboard extends BaseComponent {
 			.on('mouseup', handleMouseUp)
 			.find('body')
 			.addClass('resizing');
-	}
-
-	#createInstances() {
-		this.chart = new Chart();
-
-		this.toggleVisibilityButton = new ToggleVisibilityButton({
-			onClick: this.handleVisibilityToggle.bind(this),
-		});
-		this.toggleExpansionButton = new ToggleExpansionButton({
-			onClick: this.handleExpansionToggle.bind(this),
-		});
-		this.reportHeader = new ReportHeader({
-			toggleVisibilityButton: this.toggleVisibilityButton,
-			toggleExpansionButton: this.toggleExpansionButton,
-		});
-
-		this.report = new Report({
-			reportHeader: this.reportHeader,
-			onMousedown: this.handleManualResize.bind(this),
-		});
 	}
 
 	#cacheSizes() {

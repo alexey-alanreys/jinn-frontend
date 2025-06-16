@@ -5,3 +5,7 @@
 	font-size: 1.4rem;
 	color: inherit;
 }
+
+.performance-tab-button[data-active='true'] {
+	background-color: #ebebeb;
+}

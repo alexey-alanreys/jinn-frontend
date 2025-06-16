@@ -1,4 +1,4 @@
-import { $Q } from '@/core/libs/query.lib.js';
+import { $Q } from '@/core/libs/query.lib';
 
 import styles from '@/components/layout/notification/notification.module.css';
 

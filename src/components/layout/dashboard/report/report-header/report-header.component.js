@@ -1,4 +1,4 @@
-import { BaseComponent } from '@/core/component/base.component.js';
+import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
@@ -13,22 +13,41 @@ export class ReportHeader extends BaseComponent {
 	#$element;
 
 	render() {
-		const { toggleVisibilityButton, toggleExpansionButton } = this.props;
+		this.buttons = {
+			overview: new OverviewTabButton(),
+			performance: new PerformanceTabButton(),
+			trades: new TradesTabButton(),
+		};
 
 		this.element = renderService.htmlToElement(
 			templateHTML,
 			[
-				OverviewTabButton,
-				PerformanceTabButton,
-				TradesTabButton,
-				toggleVisibilityButton,
-				toggleExpansionButton,
+				this.buttons.overview,
+				this.buttons.performance,
+				this.buttons.trades,
+				this.props.toggleVisibilityButton,
+				this.props.toggleExpansionButton,
 			],
 			styles,
 		);
 
 		this.#$element = $Q(this.element);
 		return this.element;
+	}
+
+	connectButtons(onTabChange) {
+		Object.entries(this.buttons).forEach(([name, button]) => {
+			button.setOnClick(() => {
+				this.#setActiveOnly(name);
+				onTabChange?.(name);
+			});
+		});
+	}
+
+	#setActiveOnly(buttonName) {
+		for (const [name, button] of Object.entries(this.buttons)) {
+			name === buttonName ? button.activate() : button.deactivate();
+		}
 	}
 
 	getMinHeight() {
