@@ -2,10 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './performance-tab-button.module.css';
-import templateHTML from './performance-tab-button.template.html?raw';
+import styles from './metrics-tab-button.module.css';
+import templateHTML from './metrics-tab-button.template.html?raw';
 
-export class PerformanceTabButton extends BaseComponent {
+export class MetricsTabButton extends BaseComponent {
 	#$element;
 
 	render() {

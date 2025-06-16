@@ -1,4 +1,4 @@
-.performance-tab-button {
+.metrics-tab-button {
 	height: 34px;
 	padding: 0 8px;
 	border-radius: 6px;
@@ -6,6 +6,6 @@
 	color: inherit;
 }
 
-.performance-tab-button[data-active='true'] {
+.metrics-tab-button[data-active='true'] {
 	background-color: #ebebeb;
 }

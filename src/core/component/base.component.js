@@ -1,8 +1,4 @@
 export class BaseComponent {
-	constructor(props = {}) {
-		this.props = props;
-	}
-
 	/**
 	 * Render the component content.
 	 * @returns {HTMLElement}

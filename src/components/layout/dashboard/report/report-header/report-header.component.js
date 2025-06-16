@@ -5,17 +5,24 @@ import { renderService } from '@/core/services/render.service';
 import styles from './report-header.module.css';
 import templateHTML from './report-header.template.html?raw';
 
+import { MetricsTabButton } from './metrics-tab-button/metrics-tab-button.component';
 import { OverviewTabButton } from './overview-tab-button/overview-tab-button.component';
-import { PerformanceTabButton } from './performance-tab-button/performance-tab-button.component';
 import { TradesTabButton } from './trades-tab-button/trades-tab-button.component';
 
 export class ReportHeader extends BaseComponent {
 	#$element;
 
+	constructor({ toggleVisibilityButton, toggleExpansionButton }) {
+		super();
+
+		this.toggleVisibilityButton = toggleVisibilityButton;
+		this.toggleExpansionButton = toggleExpansionButton;
+	}
+
 	render() {
 		this.buttons = {
 			overview: new OverviewTabButton(),
-			performance: new PerformanceTabButton(),
+			metrics: new MetricsTabButton(),
 			trades: new TradesTabButton(),
 		};
 
@@ -23,10 +30,10 @@ export class ReportHeader extends BaseComponent {
 			templateHTML,
 			[
 				this.buttons.overview,
-				this.buttons.performance,
+				this.buttons.metrics,
 				this.buttons.trades,
-				this.props.toggleVisibilityButton,
-				this.props.toggleExpansionButton,
+				this.toggleVisibilityButton,
+				this.toggleExpansionButton,
 			],
 			styles,
 		);

@@ -10,6 +10,12 @@ import { TOGGLE_BUTTON_TITLES as TITLES } from '@/constants/toggle-titles.consta
 export class ToggleExpansionButton extends BaseComponent {
 	#$element;
 
+	constructor({ onClick }) {
+		super();
+
+		this.onClick = onClick;
+	}
+
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 
@@ -33,6 +39,6 @@ export class ToggleExpansionButton extends BaseComponent {
 
 	#handleClick() {
 		this.toggleActiveState();
-		this.props.onClick?.();
+		this.onClick?.();
 	}
 }

@@ -5,7 +5,7 @@ import { NotificationService } from '@/core/services/notification.service';
  * Service for interacting with backend data API endpoints.
  */
 export class DataService {
-	#BASE_URL = '/api/data';
+	#BASE_URL = '/api';
 	#notificationService;
 
 	constructor() {
@@ -73,7 +73,7 @@ export class DataService {
 	}
 
 	/**
-	 * Fetches detailed information for a given strategy context ID.
+	 * Fetches chart details for a given strategy context ID.
 	 *
 	 * @param {string} contextId
 	 * - Strategy context identifier.
@@ -84,16 +84,42 @@ export class DataService {
 	 * @returns {Promise<void>}
 	 * @throws {Error} Throws if contextId is falsy.
 	 */
-	getDetails(contextId, onSuccess, onError) {
+	getChartDetails(contextId, onSuccess, onError) {
 		if (!contextId) {
 			throw new Error('contextId is required');
 		}
 		return request({
-			path: `${this.#BASE_URL}/details/${contextId}`,
+			path: `${this.#BASE_URL}/details/chart/${contextId}`,
 			method: 'GET',
 			onSuccess,
 			onError: (error) => {
-				this.#handleError('Error fetching details', error, onError);
+				this.#handleError('Error fetching chart details', error, onError);
+			},
+		});
+	}
+
+	/**
+	 * Fetches report details for a given strategy context ID.
+	 *
+	 * @param {string} contextId
+	 * - Strategy context identifier.
+	 * @param {function} onSuccess
+	 * - Callback executed on successful response with data.
+	 * @param {function} [onError]
+	 * - Optional callback executed on error.
+	 * @returns {Promise<void>}
+	 * @throws {Error} Throws if contextId is falsy.
+	 */
+	getReportDetails(contextId, onSuccess, onError) {
+		if (!contextId) {
+			throw new Error('contextId is required');
+		}
+		return request({
+			path: `${this.#BASE_URL}/details/report/${contextId}`,
+			method: 'GET',
+			onSuccess,
+			onError: (error) => {
+				this.#handleError('Error fetching report details', error, onError);
 			},
 		});
 	}

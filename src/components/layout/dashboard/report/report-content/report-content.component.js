@@ -4,21 +4,21 @@ import { renderService } from '@/core/services/render.service';
 import styles from './report-content.module.css';
 import templateHTML from './report-content.template.html?raw';
 
+import { MetricsTab } from './metrics-tab/metrics-tab.component';
 import { OverviewTab } from './overview-tab/overview-tab.component';
-import { PerformanceTab } from './performance-tab/performance-tab.component';
 import { TradesTab } from './trades-tab/trades-tab.component';
 
 export class ReportContent extends BaseComponent {
 	render() {
 		this.tabs = {
 			overview: new OverviewTab(),
-			performance: new PerformanceTab(),
+			metrics: new MetricsTab(),
 			trades: new TradesTab(),
 		};
 
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.tabs.overview, this.tabs.performance, this.tabs.trades],
+			[this.tabs.overview, this.tabs.metrics, this.tabs.trades],
 			styles,
 		);
 		return this.element;

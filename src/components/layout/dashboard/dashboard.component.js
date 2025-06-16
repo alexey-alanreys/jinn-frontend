@@ -17,8 +17,8 @@ export class Dashboard extends BaseComponent {
 	#reportMaxHeight;
 	#reportMinHeight;
 
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 
 		this.chart = new Chart();
 
@@ -28,6 +28,7 @@ export class Dashboard extends BaseComponent {
 		this.toggleExpansionButton = new ToggleExpansionButton({
 			onClick: this.handleExpansionToggle.bind(this),
 		});
+
 		this.reportHeader = new ReportHeader({
 			toggleVisibilityButton: this.toggleVisibilityButton,
 			toggleExpansionButton: this.toggleExpansionButton,

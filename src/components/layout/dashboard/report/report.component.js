@@ -10,11 +10,11 @@ import { ReportContent } from './report-content/report-content.component';
 export class Report extends BaseComponent {
 	#$element;
 
-	constructor(props) {
-		super(props);
+	constructor({ reportHeader, onMousedown }) {
+		super();
 
-		this.reportHeader = props.reportHeader;
-		this.onMousedown = props.onMousedown;
+		this.reportHeader = reportHeader;
+		this.onMousedown = onMousedown;
 	}
 
 	render() {

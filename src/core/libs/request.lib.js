@@ -52,7 +52,7 @@ export async function request({
 	let error = null;
 	let data = null;
 
-	const url = `${SERVER_URL}/api${path}`;
+	const url = `${SERVER_URL}${path}`;
 	const requestOptions = {
 		method,
 		headers: {
