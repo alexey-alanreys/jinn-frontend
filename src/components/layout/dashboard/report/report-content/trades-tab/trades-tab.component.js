@@ -5,14 +5,34 @@ import { renderService } from '@/core/services/render.service';
 import styles from './trades-tab.module.css';
 import templateHTML from './trades-tab.template.html?raw';
 
+import { TradesItem } from './trades-item/trades-item.component';
+
 export class TradesTab extends BaseComponent {
 	#$element;
+	#itemsMap = new Map();
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
-
 		this.#$element = $Q(this.element);
 		return this.element;
+	}
+
+	update(trades) {
+		const list = this.#$element.find('[data-ref="trades-items"]');
+
+		trades.forEach((trade, key) => {
+			let item = this.#itemsMap.get(key);
+
+			if (!item) {
+				item = new TradesItem();
+				this.#itemsMap.set(key, item);
+				list.append(item.render());
+			}
+
+			item.update(trade);
+		});
+
+		const keys = Array.from(this.#itemsMap.keys());
 	}
 
 	hide() {

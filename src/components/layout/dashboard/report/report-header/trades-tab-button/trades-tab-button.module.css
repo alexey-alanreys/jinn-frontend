@@ -6,6 +6,6 @@
 	color: inherit;
 
 	&[data-active='true'] {
-		background-color: #ebebeb;
+		color: #2962ff;
 	}
 }

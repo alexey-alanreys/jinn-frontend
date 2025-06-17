@@ -23,8 +23,7 @@ export class MetricsItem extends BaseComponent {
 		};
 
 		this.#$element.findAll('[data-field]').forEach((el) => {
-			const field = el.attr('data-field');
-			const [group, indexStr] = field.split('.');
+			const [group, indexStr] = el.data('field').split('.');
 			const index = Number(indexStr);
 
 			const value = map[group][index] ?? '';

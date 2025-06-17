@@ -1,0 +1,56 @@
+.trades-item {
+	display: grid;
+	grid-template-columns: 10% 18% 18% 10% 10% 10% 10% 14%;
+	min-height: 100px;
+	padding: 8px 0;
+	border-bottom: 1px solid #dcd1d1;
+
+	&:first-child {
+		border-top: 1px solid #f2f2f2;
+	}
+
+	&:hover {
+		transition: background-color 0.2s ease;
+		background-color: #f5f5f5;
+	}
+
+	.cell {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		> div {
+			display: flex;
+			align-items: center;
+			flex: 1;
+		}
+
+		&.align-end {
+			text-align: end;
+
+			> div {
+				justify-content: flex-end;
+			}
+		}
+
+		.border-bottom {
+			border-bottom: 1px solid #e9e6e6;
+		}
+
+		&.compact {
+			gap: 5px;
+		}
+
+		.text-sm {
+			font-size: 1.2rem;
+		}
+	}
+
+	.cell:first-child {
+		padding-left: 16px;
+	}
+
+	.cell:last-child {
+		padding-right: 16px;
+	}
+}

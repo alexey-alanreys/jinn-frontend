@@ -16,10 +16,10 @@ body {
 	height: 100vh;
 	background-color: #ebebeb;
 	color: #212529;
-}
 
-body.resizing * {
-	cursor: ns-resize;
+	&.resizing * {
+		cursor: ns-resize;
+	}
 }
 
 button {
