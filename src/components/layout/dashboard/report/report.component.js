@@ -28,7 +28,7 @@ export class Report extends BaseComponent {
 
 		this.#$element = $Q(this.element);
 		this.#$element
-			.find('#report-handle')
+			.find('[data-ref="handle"]')
 			.on('mousedown', this.#handleMousedown.bind(this));
 
 		this.reportHeader.connectButtons((tabName) => {
@@ -43,7 +43,7 @@ export class Report extends BaseComponent {
 	}
 
 	getMinHeight() {
-		const reportHandle = this.#$element.find('#report-handle');
+		const reportHandle = this.#$element.find('[data-ref="handle"]');
 
 		return (
 			parseInt(reportHandle.css('min-height')) +

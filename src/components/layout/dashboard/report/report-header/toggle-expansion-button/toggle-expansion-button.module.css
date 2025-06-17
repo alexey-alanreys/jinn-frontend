@@ -2,18 +2,21 @@
 	width: 34px;
 	height: 34px;
 	border-radius: 6px;
-}
 
-.icon-collapsed {
-	display: none;
-}
-.icon-expanded {
-	display: block;
-}
+	.icon-collapsed {
+		display: none;
+	}
 
-.toggle-expansion-button[data-active='false'] .icon-collapsed {
-	display: block;
-}
-.toggle-expansion-button[data-active='false'] .icon-expanded {
-	display: none;
+	.icon-expanded {
+		display: block;
+	}
+
+	&[data-active='false'] {
+		.icon-collapsed {
+			display: block;
+		}
+		.icon-expanded {
+			display: none;
+		}
+	}
 }

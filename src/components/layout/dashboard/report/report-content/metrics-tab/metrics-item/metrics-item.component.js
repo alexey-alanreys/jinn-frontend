@@ -8,18 +8,27 @@ import templateHTML from './metrics-item.template.html?raw';
 export class MetricsItem extends BaseComponent {
 	#$element;
 
-	constructor({ key, value, secondaryValue = null }) {
-		super();
-
-		this.key = key;
-		this.value = value;
-		this.secondaryValue = secondaryValue;
-	}
-
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
-
 		this.#$element = $Q(this.element);
 		return this.element;
+	}
+
+	update(metric) {
+		const map = {
+			title: [metric.title],
+			all: metric.all,
+			long: metric.long,
+			short: metric.short,
+		};
+
+		this.#$element.findAll('[data-field]').forEach((el) => {
+			const field = el.attr('data-field');
+			const [group, indexStr] = field.split('.');
+			const index = Number(indexStr);
+
+			const value = map[group][index] ?? '';
+			el.html(value);
+		});
 	}
 }

@@ -2,18 +2,20 @@
 	width: 34px;
 	height: 34px;
 	border-radius: 6px;
-}
 
-.icon-visible {
-	display: none;
-}
-.icon-hidden {
-	display: block;
-}
+	.icon-visible {
+		display: none;
+	}
+	.icon-hidden {
+		display: block;
+	}
 
-.toggle-visibility-button[data-active='false'] .icon-visible {
-	display: block;
-}
-.toggle-visibility-button[data-active='false'] .icon-hidden {
-	display: none;
+	&[data-active='false'] {
+		.icon-visible {
+			display: block;
+		}
+		.icon-hidden {
+			display: none;
+		}
+	}
 }

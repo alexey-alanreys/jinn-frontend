@@ -1,6 +1,8 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { renderService } from '@/core/services/render.service';
 
+import { DataService } from '@/api/data.service';
+
 import styles from './report-content.module.css';
 import templateHTML from './report-content.template.html?raw';
 
@@ -21,6 +23,9 @@ export class ReportContent extends BaseComponent {
 			[this.tabs.overview, this.tabs.metrics, this.tabs.trades],
 			styles,
 		);
+
+		this.testRequest();
+
 		return this.element;
 	}
 
@@ -28,5 +33,23 @@ export class ReportContent extends BaseComponent {
 		for (const [name, tab] of Object.entries(this.tabs)) {
 			name === tabName ? tab.show() : tab.hide();
 		}
+	}
+
+	testRequest() {
+		this.dataService = new DataService();
+		this.dataService.getSummary(this.onSuccessSummary.bind(this));
+	}
+
+	onSuccessSummary(data) {
+		const contextId = Object.keys(data)[0];
+
+		this.dataService.getReportDetails(
+			contextId,
+			this.onSuccessDetails.bind(this),
+		);
+	}
+
+	onSuccessDetails(data) {
+		this.tabs.metrics.update(data.metrics);
 	}
 }

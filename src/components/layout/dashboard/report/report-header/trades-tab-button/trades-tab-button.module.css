@@ -4,8 +4,8 @@
 	border-radius: 6px;
 	font-size: 1.4rem;
 	color: inherit;
-}
 
-.trades-tab-button[data-active='true'] {
-	background-color: #ebebeb;
+	&[data-active='true'] {
+		background-color: #ebebeb;
+	}
 }

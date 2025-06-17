@@ -1,0 +1,39 @@
+.metrics-item {
+	display: flex;
+	height: 50px;
+	border-bottom: 1px solid #f2f2f2;
+
+	&:first-child {
+		border-top: 1px solid #f2f2f2;
+	}
+
+	&:hover {
+		background-color: #f5f5f5;
+	}
+
+	.cell {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+		padding: 0 20px;
+
+		&.title {
+			flex-basis: 40%;
+			text-align: start;
+		}
+
+		&.values {
+			flex-basis: 20%;
+			text-align: end;
+		}
+	}
+
+	.primary {
+		font-size: 1.4rem;
+	}
+
+	.secondary {
+		font-size: 1.2rem;
+	}
+}

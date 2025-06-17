@@ -6,4 +6,13 @@
 	overflow: auto;
 	min-height: 0;
 	background-color: #fff;
+
+	& ::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	& ::-webkit-scrollbar-thumb {
+		background-color: #d3cdcd;
+		border-radius: 3px;
+	}
 }

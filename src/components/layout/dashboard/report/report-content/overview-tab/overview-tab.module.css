@@ -1,5 +1,5 @@
 .overview-tab {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	justify-content: start;
 	align-items: center;
