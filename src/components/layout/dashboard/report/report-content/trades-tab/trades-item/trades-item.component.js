@@ -11,6 +11,7 @@ export class TradesItem extends BaseComponent {
 	#$element;
 	#dataFields = new Map();
 	#redTextClass = styles['text-red'];
+	#greenTextClass = styles['text-green'];
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
@@ -30,10 +31,8 @@ export class TradesItem extends BaseComponent {
 			const value = trade[index];
 			element.html(value);
 
-			if (isProfitField && value.startsWith('-')) {
-				element.addClass(this.#redTextClass);
-			} else if (isProfitField) {
-				element.removeClass(this.#redTextClass);
+			if (isProfitField) {
+				this.#applyColorClass(element, value);
 			}
 		});
 	}
@@ -44,5 +43,15 @@ export class TradesItem extends BaseComponent {
 
 	#isProfitField(index) {
 		return TradesItem.#PROFIT_FIELDS.includes(index);
+	}
+
+	#applyColorClass(element, value) {
+		if (value.startsWith('-')) {
+			element.addClass(this.#redTextClass);
+			element.removeClass(this.#greenTextClass);
+		} else {
+			element.addClass(this.#greenTextClass);
+			element.removeClass(this.#redTextClass);
+		}
 	}
 }

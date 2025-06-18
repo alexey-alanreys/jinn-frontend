@@ -50,6 +50,7 @@ export class ReportContent extends BaseComponent {
 	}
 
 	onSuccessDetails(data) {
+		this.tabs.overview.update(data.overview);
 		this.tabs.metrics.update(data.metrics);
 		this.tabs.trades.update(data.trades);
 

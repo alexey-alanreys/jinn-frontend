@@ -50,7 +50,11 @@
 		}
 
 		> .text-red {
-			color: #f23645;
+			color: #d6333f;
+		}
+
+		> .text-green {
+			color: #06755f;
 		}
 	}
 }

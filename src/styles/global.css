@@ -1,20 +1,11 @@
 @import './_reset.css';
 
-* {
-	font-family:
-		system-ui,
-		-apple-system,
-		'Segoe UI',
-		Roboto,
-		'Helvetica Neue',
-		sans-serif;
-}
-
 body {
 	overflow-x: hidden;
 	width: 100vw;
 	height: 100vh;
 	background-color: #ebebeb;
+	font-family: system-ui, sans-serif;
 	color: #212529;
 
 	&.resizing * {
