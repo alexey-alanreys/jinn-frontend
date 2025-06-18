@@ -18,7 +18,7 @@ export class MetricsTab extends BaseComponent {
 	}
 
 	update(metrics) {
-		const list = this.#$element.find('[data-ref="metrics-items"]');
+		const container = this.#$element.find('[data-ref="metrics-items"]');
 
 		metrics.forEach((metric, index) => {
 			let item = this.#itemsMap.get(index);
@@ -26,7 +26,7 @@ export class MetricsTab extends BaseComponent {
 			if (!item) {
 				item = new MetricsItem();
 				this.#itemsMap.set(index, item);
-				list.append(item.render());
+				container.append(item.render());
 			}
 
 			item.update(metric);

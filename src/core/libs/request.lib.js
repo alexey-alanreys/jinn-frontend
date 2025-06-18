@@ -70,21 +70,18 @@ export async function request({
 
 		if (response.ok) {
 			data = await response.json();
-
-			if (onSuccess) onSuccess(data);
 		} else {
 			const errorResponse = await response.json();
 			error = extractErrorMessage(errorResponse);
-
-			if (onError) onError(error);
 		}
 	} catch (err) {
 		error = extractErrorMessage(err);
-
-		if (onError) onError(error);
 	} finally {
 		isLoading = false;
 	}
+
+	if (error && onError) onError(error);
+	else if (onSuccess) onSuccess(data);
 
 	return { isLoading, data, error };
 }
