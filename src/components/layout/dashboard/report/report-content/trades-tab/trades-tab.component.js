@@ -10,6 +10,7 @@ import { TradesItem } from './trades-item/trades-item.component';
 
 export class TradesTab extends BaseComponent {
 	#$element;
+	#cachedTrades = [];
 	#itemsMap = new Map();
 
 	render() {
@@ -22,20 +23,25 @@ export class TradesTab extends BaseComponent {
 			[this.toggleSortingButton],
 			styles,
 		);
+
 		this.#$element = $Q(this.element);
 		return this.element;
 	}
 
 	update(trades) {
-		const list = this.#$element.find('[data-ref="trades-items"]');
+		this.#cachedTrades = [...trades];
+		this.#ensureCorrectSortOrder();
+		this.#removeOrphanedItems();
 
-		trades.forEach((trade, key) => {
-			let item = this.#itemsMap.get(key);
+		const container = this.#$element.find('[data-ref="trades-items"]');
+
+		this.#cachedTrades.forEach((trade, index) => {
+			let item = this.#itemsMap.get(index);
 
 			if (!item) {
 				item = new TradesItem();
-				this.#itemsMap.set(key, item);
-				list.append(item.render());
+				this.#itemsMap.set(index, item);
+				container.append(item.render());
 			}
 
 			item.update(trade);
@@ -43,7 +49,7 @@ export class TradesTab extends BaseComponent {
 	}
 
 	handleSortingToggle() {
-		console.log('Toggle!');
+		this.update(this.#cachedTrades);
 	}
 
 	hide() {
@@ -52,5 +58,28 @@ export class TradesTab extends BaseComponent {
 
 	show() {
 		this.#$element.css('display', 'flex');
+	}
+
+	#ensureCorrectSortOrder() {
+		if (this.#cachedTrades.length < 2) return;
+
+		const shouldReverse = this.toggleSortingButton.isActive()
+			? this.#cachedTrades[0][0] < this.#cachedTrades[1][0]
+			: this.#cachedTrades[0][0] > this.#cachedTrades[1][0];
+
+		if (shouldReverse) {
+			this.#cachedTrades.reverse();
+		}
+	}
+
+	#removeOrphanedItems() {
+		const validKeys = new Set(this.#cachedTrades.map((_, i) => i));
+
+		this.#itemsMap.forEach((item, key) => {
+			if (!validKeys.has(key)) {
+				item.remove();
+				this.#itemsMap.delete(key);
+			}
+		});
 	}
 }

@@ -11,8 +11,8 @@ export class MetricsItem extends BaseComponent {
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
-		this.#$element = $Q(this.element);
 
+		this.#$element = $Q(this.element);
 		this.#$element.findAll('[data-field]').forEach((el) => {
 			const fieldKey = el.data('field');
 			const [group, index] = fieldKey.split('.');

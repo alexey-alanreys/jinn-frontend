@@ -14,8 +14,8 @@ export class TradesItem extends BaseComponent {
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
-		this.#$element = $Q(this.element);
 
+		this.#$element = $Q(this.element);
 		this.#$element.findAll('[data-field]').forEach((el) => {
 			const index = Number(el.data('field'));
 			const isProfitField = this.#isProfitField(index);
@@ -38,12 +38,8 @@ export class TradesItem extends BaseComponent {
 		});
 	}
 
-	hide() {
-		this.#$element.css('display', 'none');
-	}
-
-	show() {
-		this.#$element.css('display', 'flex');
+	remove() {
+		this.element.remove();
 	}
 
 	#isProfitField(index) {
