@@ -10,7 +10,7 @@ export class TradesItem extends BaseComponent {
 
 	#$element;
 	#dataFields = new Map();
-	#redClass = styles['red'];
+	#redTextClass = styles['text-red'];
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
@@ -18,22 +18,22 @@ export class TradesItem extends BaseComponent {
 
 		this.#$element.findAll('[data-field]').forEach((el) => {
 			const index = Number(el.data('field'));
-			const isProfit = this.#isProfitField(index);
-			this.#dataFields.set(index, { element: el, isProfit });
+			const isProfitField = this.#isProfitField(index);
+			this.#dataFields.set(index, { element: el, isProfitField });
 		});
 
 		return this.element;
 	}
 
 	update(trade) {
-		this.#dataFields.forEach(({ element, isProfit }, index) => {
-			const value = trade[index] ?? '';
+		this.#dataFields.forEach(({ element, isProfitField }, index) => {
+			const value = trade[index];
 			element.html(value);
 
-			if (isProfit && value.startsWith('-')) {
-				element.addClass(this.#redClass);
-			} else if (isProfit) {
-				element.removeClass(this.#redClass);
+			if (isProfitField && value.startsWith('-')) {
+				element.addClass(this.#redTextClass);
+			} else if (isProfitField) {
+				element.removeClass(this.#redTextClass);
 			}
 		});
 	}

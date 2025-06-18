@@ -7,27 +7,29 @@ import templateHTML from './metrics-item.template.html?raw';
 
 export class MetricsItem extends BaseComponent {
 	#$element;
+	#dataFields = new Map();
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);
+
+		this.#$element.findAll('[data-field]').forEach((el) => {
+			const fieldKey = el.data('field');
+			const [group, index] = fieldKey.split('.');
+
+			this.#dataFields.set(fieldKey, {
+				element: el,
+				group,
+				index: Number(index),
+			});
+		});
+
 		return this.element;
 	}
 
 	update(metric) {
-		const map = {
-			title: [metric.title],
-			all: metric.all,
-			long: metric.long,
-			short: metric.short,
-		};
-
-		this.#$element.findAll('[data-field]').forEach((el) => {
-			const [group, indexStr] = el.data('field').split('.');
-			const index = Number(indexStr);
-
-			const value = map[group][index] ?? '';
-			el.html(value);
+		this.#dataFields.forEach(({ element, group, index }) => {
+			element.html(metric[group][index]);
 		});
 	}
 }
