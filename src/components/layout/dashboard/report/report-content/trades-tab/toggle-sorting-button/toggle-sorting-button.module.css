@@ -1,0 +1,28 @@
+.toggle-sorting-button {
+	display: flex;
+	gap: 3px;
+	flex: 1;
+	color: inherit;
+
+	&:hover {
+		background-color: transparent;
+	}
+
+	> .icon-ascending {
+		display: none;
+	}
+
+	> .icon-descending {
+		display: inline;
+	}
+
+	&[data-active='false'] {
+		> .icon-ascending {
+			display: inline;
+		}
+
+		> .icon-descending {
+			display: none;
+		}
+	}
+}

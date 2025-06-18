@@ -51,13 +51,13 @@ export class ReportHeader extends BaseComponent {
 		});
 	}
 
+	getMinHeight() {
+		return parseInt(this.#$element.css('min-height'));
+	}
+
 	#setActiveOnly(buttonName) {
 		for (const [name, button] of Object.entries(this.buttons)) {
 			name === buttonName ? button.activate() : button.deactivate();
 		}
-	}
-
-	getMinHeight() {
-		return parseInt(this.#$element.css('min-height'));
 	}
 }

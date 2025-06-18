@@ -6,19 +6,35 @@ import styles from './trades-item.module.css';
 import templateHTML from './trades-item.template.html?raw';
 
 export class TradesItem extends BaseComponent {
+	static #PROFIT_FIELDS = [10, 11, 12, 13];
+
 	#$element;
+	#dataFields = new Map();
+	#redClass = styles['red'];
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);
+
+		this.#$element.findAll('[data-field]').forEach((el) => {
+			const index = Number(el.data('field'));
+			const isProfit = this.#isProfitField(index);
+			this.#dataFields.set(index, { element: el, isProfit });
+		});
+
 		return this.element;
 	}
 
 	update(trade) {
-		this.#$element.findAll('[data-field]').forEach((el) => {
-			const index = Number(el.data('field'));
+		this.#dataFields.forEach(({ element, isProfit }, index) => {
 			const value = trade[index] ?? '';
-			el.html(value);
+			element.html(value);
+
+			if (isProfit && value.startsWith('-')) {
+				element.addClass(this.#redClass);
+			} else if (isProfit) {
+				element.removeClass(this.#redClass);
+			}
 		});
 	}
 
@@ -28,5 +44,9 @@ export class TradesItem extends BaseComponent {
 
 	show() {
 		this.#$element.css('display', 'flex');
+	}
+
+	#isProfitField(index) {
+		return TradesItem.#PROFIT_FIELDS.includes(index);
 	}
 }

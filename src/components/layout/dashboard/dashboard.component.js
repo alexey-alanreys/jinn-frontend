@@ -17,41 +17,10 @@ export class Dashboard extends BaseComponent {
 	#reportMaxHeight;
 	#reportMinHeight;
 
-	constructor() {
-		super();
-
-		this.chart = new Chart();
-
-		this.toggleVisibilityButton = new ToggleVisibilityButton({
-			onClick: this.handleVisibilityToggle.bind(this),
-		});
-		this.toggleExpansionButton = new ToggleExpansionButton({
-			onClick: this.handleExpansionToggle.bind(this),
-		});
-
-		this.reportHeader = new ReportHeader({
-			toggleVisibilityButton: this.toggleVisibilityButton,
-			toggleExpansionButton: this.toggleExpansionButton,
-		});
-
-		this.report = new Report({
-			reportHeader: this.reportHeader,
-			onMousedown: this.handleManualResize.bind(this),
-		});
-	}
-
 	render() {
-		this.element = renderService.htmlToElement(
-			templateHTML,
-			[this.chart, this.report],
-			styles,
-		);
-
-		this.#$element = $Q(this.element);
-
-		requestAnimationFrame(() => {
-			this.#cacheSizes();
-		});
+		this.#initComponents();
+		this.#initDOM();
+		this.#setupInitialState();
 
 		return this.element;
 	}
@@ -130,10 +99,43 @@ export class Dashboard extends BaseComponent {
 			.addClass('resizing');
 	}
 
-	#cacheSizes() {
-		this.#reportHeight = this.report.getHeight();
-		this.#reportMaxHeight = parseInt(this.#$element.css('height'));
-		this.#reportMinHeight = this.report.getMinHeight();
+	#initComponents() {
+		this.chart = new Chart();
+
+		this.toggleVisibilityButton = new ToggleVisibilityButton({
+			onClick: this.handleVisibilityToggle.bind(this),
+		});
+
+		this.toggleExpansionButton = new ToggleExpansionButton({
+			onClick: this.handleExpansionToggle.bind(this),
+		});
+
+		this.reportHeader = new ReportHeader({
+			toggleVisibilityButton: this.toggleVisibilityButton,
+			toggleExpansionButton: this.toggleExpansionButton,
+		});
+
+		this.report = new Report({
+			reportHeader: this.reportHeader,
+			onMousedown: this.handleManualResize.bind(this),
+		});
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[this.chart, this.report],
+			styles,
+		);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		requestAnimationFrame(() => {
+			this.#reportHeight = this.report.getHeight();
+			this.#reportMaxHeight = parseInt(this.#$element.css('height'));
+			this.#reportMinHeight = this.report.getMinHeight();
+		});
 	}
 
 	#resizePanels(height) {

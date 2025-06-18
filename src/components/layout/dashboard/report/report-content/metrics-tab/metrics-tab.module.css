@@ -24,13 +24,14 @@
 
 				> .cell {
 					display: flex;
-					padding: 0 16px;
 					align-items: center;
-					color: #6a6d78;
+					padding: 10px 16px 6px;
 					font-weight: 400;
+					color: #6a6d78;
 
 					&.align-end {
 						justify-content: end;
+						text-align: end;
 					}
 				}
 			}
