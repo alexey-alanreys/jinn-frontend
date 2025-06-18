@@ -7,11 +7,11 @@
 	min-height: 0;
 	background-color: #fff;
 
-	& ::-webkit-scrollbar {
+	> ::-webkit-scrollbar {
 		width: 6px;
 	}
 
-	& ::-webkit-scrollbar-thumb {
+	> ::-webkit-scrollbar-thumb {
 		background-color: #d3cdcd;
 		border-radius: 3px;
 	}

@@ -8,17 +8,17 @@
 	border-bottom: 1px solid #e0e3eb;
 	border-radius: 6px 6px 0 0;
 
-	.report-tab-buttons,
-	.report-size-buttons {
+	> .report-tab-buttons,
+	> .report-size-buttons {
 		display: flex;
 		gap: 2px;
 	}
 
-	.report-tab-buttons {
+	> .report-tab-buttons {
 		margin-left: 2px;
 	}
 
-	.report-size-buttons {
+	> .report-size-buttons {
 		margin-right: 2px;
 	}
 }

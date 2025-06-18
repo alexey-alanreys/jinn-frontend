@@ -31,8 +31,6 @@ export class TradesTab extends BaseComponent {
 
 			item.update(trade);
 		});
-
-		const keys = Array.from(this.#itemsMap.keys());
 	}
 
 	hide() {

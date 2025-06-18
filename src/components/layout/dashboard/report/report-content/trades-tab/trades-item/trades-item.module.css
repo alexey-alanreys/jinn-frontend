@@ -14,15 +14,17 @@
 		background-color: #f5f5f5;
 	}
 
-	.cell {
+	> .cell {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 
-		> div {
-			display: flex;
-			align-items: center;
-			flex: 1;
+		&:first-child {
+			padding-left: 16px;
+		}
+
+		&:last-child {
+			padding-right: 16px;
 		}
 
 		&.align-end {
@@ -33,24 +35,22 @@
 			}
 		}
 
-		.border-bottom {
-			border-bottom: 1px solid #e9e6e6;
-		}
-
 		&.compact {
-			gap: 5px;
+			gap: 3px;
 		}
 
-		.text-sm {
+		> div {
+			display: flex;
+			align-items: center;
+			flex: 1;
+
+			&.border-bottom {
+				border-bottom: 1px solid #e9e6e6;
+			}
+		}
+
+		> .text-sm {
 			font-size: 1.2rem;
 		}
-	}
-
-	.cell:first-child {
-		padding-left: 16px;
-	}
-
-	.cell:last-child {
-		padding-right: 16px;
 	}
 }

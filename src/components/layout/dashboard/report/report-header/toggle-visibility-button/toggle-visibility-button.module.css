@@ -3,18 +3,20 @@
 	height: 34px;
 	border-radius: 6px;
 
-	.icon-visible {
+	> .icon-visible {
 		display: none;
 	}
-	.icon-hidden {
+
+	> .icon-hidden {
 		display: block;
 	}
 
 	&[data-active='false'] {
-		.icon-visible {
+		> .icon-visible {
 			display: block;
 		}
-		.icon-hidden {
+
+		> .icon-hidden {
 			display: none;
 		}
 	}

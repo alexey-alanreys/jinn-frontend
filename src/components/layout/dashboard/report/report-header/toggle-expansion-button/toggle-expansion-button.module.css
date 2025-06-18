@@ -3,19 +3,20 @@
 	height: 34px;
 	border-radius: 6px;
 
-	.icon-collapsed {
+	> .icon-collapsed {
 		display: none;
 	}
 
-	.icon-expanded {
+	> .icon-expanded {
 		display: block;
 	}
 
 	&[data-active='false'] {
-		.icon-collapsed {
+		> .icon-collapsed {
 			display: block;
 		}
-		.icon-expanded {
+
+		> .icon-expanded {
 			display: none;
 		}
 	}
