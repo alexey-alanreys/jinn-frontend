@@ -1,62 +1,69 @@
-const equityChartOptions = {
+const chartOptions = {
 	autoSize: true,
 	layout: {
-		background: { type: 'solid', color: '#FFFFFF' },
-		textColor: 'black',
-		fontSize: 12,
+		background: { type: 'solid', color: '#fff' },
+		textColor: '#292121',
+		fontFamily: 'system-ui, sans-serif',
 		attributionLogo: false,
 	},
 	rightPriceScale: {
-		visible: false,
-	},
-	leftPriceScale: {
 		scaleMargins: { top: 0.05, bottom: 0.05 },
 		borderVisible: false,
-		visible: true,
+		entireTextOnly: true,
 	},
 	crosshair: {
-		mode: 0,
 		vertLine: {
-			color: '#A5A5A5',
-			style: 3,
+			color: '#e8e8e8',
+			style: 0,
+			labelVisible: false,
 		},
 		horzLine: {
-			color: '#A5A5A5',
-			style: 3,
+			visible: false,
+			labelVisible: false,
 		},
 	},
 	grid: {
 		vertLines: { visible: false },
 		horzLines: { visible: false },
 	},
-	handleScroll: {
-		mouseWheel: false,
-		pressedMouseMove: false,
-		horzTouchDrag: false,
-		vertTouchDrag: false,
-	},
-	handleScale: {
-		mouseWheel: false,
-		pinch: false,
-		axisPressedMouseMove: false,
-		axisDoubleClickReset: false,
-	},
 	timeScale: {
-		rightOffset: 1,
+		maxBarSpacing: 50,
+		fixLeftEdge: true,
+		fixRightEdge: true,
 		borderVisible: false,
-		allowBoldLabels: false,
+
+		tickMarkFormatter: (time, tickMarkType) => {
+			const date = new Date(time * 1000);
+
+			const year = String(date.getUTCFullYear());
+			const month = date.toLocaleString('ru-RU', { month: 'short' });
+			const day = String(date.getUTCDate());
+
+			if (tickMarkType === 0) {
+				return String(year);
+			}
+
+			if (tickMarkType === 1) {
+				return month;
+			}
+
+			if (tickMarkType === 2) {
+				return day;
+			}
+		},
 	},
 };
 
-const equityAreaSeriesOptions = {
-	lineColor: '#00A9FF',
-	lineWidth: 1,
-	topColor: '#78CEFF',
-	bottomColor: '#EBF5FB',
-	lineVisible: true,
-	crosshairMarkerVisible: false,
+const seriesOptions = {
 	lastValueVisible: false,
 	priceLineVisible: false,
+
+	topColor: '#78CEFF',
+	bottomColor: '#EBF5FB',
+	lineColor: '#00A9FF',
+	lineWidth: 3,
+	crosshairMarkerBorderColor: '#fff',
+	crosshairMarkerBorderWidth: 3,
 };
 
-export { equityChartOptions, equityAreaSeriesOptions };
+export { chartOptions, seriesOptions };

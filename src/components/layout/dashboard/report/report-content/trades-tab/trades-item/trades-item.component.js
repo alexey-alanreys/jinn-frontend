@@ -29,7 +29,7 @@ export class TradesItem extends BaseComponent {
 	update(trade) {
 		this.#dataFields.forEach(({ element, isProfitField }, index) => {
 			const value = trade[index];
-			element.html(value);
+			element.text(value);
 
 			if (isProfitField) {
 				this.#applyColorClass(element, value);

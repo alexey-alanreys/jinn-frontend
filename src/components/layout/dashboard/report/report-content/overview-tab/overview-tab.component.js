@@ -37,12 +37,19 @@ export class OverviewTab extends BaseComponent {
 	update(overview) {
 		this.#dataFields.forEach(({ element, isProfitField }, index) => {
 			const value = overview.metrics[index];
-			element.html(value);
+			element.text(value);
 
 			if (isProfitField) {
 				this.#applyColorClass(element, value);
 			}
 		});
+
+		this.equityCurve.update(overview.equity);
+
+		// test;
+		// setTimeout(() => {
+		// 	this.equityCurve.update(overview.equity.slice(0, 100));
+		// }, 5000);
 	}
 
 	hide() {

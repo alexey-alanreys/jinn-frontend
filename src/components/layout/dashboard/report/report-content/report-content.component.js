@@ -53,9 +53,5 @@ export class ReportContent extends BaseComponent {
 		this.tabs.overview.update(data.overview);
 		this.tabs.metrics.update(data.metrics);
 		this.tabs.trades.update(data.trades);
-
-		// setTimeout(() => {
-		// 	this.tabs.trades.update(data.trades.slice(0, 100));
-		// }, 5000);
 	}
 }

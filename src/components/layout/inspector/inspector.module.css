@@ -1,5 +1,6 @@
 .inspector {
-	display: flex;
+	display: none;
+	/* display: flex; */
 	flex-direction: row;
 	flex: 0 0 350px;
 	max-width: 100%;

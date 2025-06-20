@@ -1,6 +1,6 @@
 .equity-curve {
+	overflow: hidden;
 	width: 100%;
 	height: 100%;
-
-	background-color: antiquewhite;
+	padding: 0px 16px 6px 16px;
 }

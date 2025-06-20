@@ -6,7 +6,7 @@ body {
 	height: 100vh;
 	background-color: #ebebeb;
 	font-family: system-ui, sans-serif;
-	color: #212529;
+	color: #292121;
 
 	&.resizing * {
 		cursor: ns-resize;

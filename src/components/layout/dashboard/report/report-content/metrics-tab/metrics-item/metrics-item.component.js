@@ -29,7 +29,7 @@ export class MetricsItem extends BaseComponent {
 
 	update(metric) {
 		this.#dataFields.forEach(({ element, group, index }) => {
-			element.html(metric[group][index]);
+			element.text(metric[group][index]);
 		});
 	}
 }

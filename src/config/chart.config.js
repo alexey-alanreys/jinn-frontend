@@ -1,25 +1,25 @@
 const daysOfWeek = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 
 const months = [
-	'Янв',
-	'Фев',
-	'Мар',
-	'Апр',
-	'Май',
-	'Июн',
-	'Июл',
-	'Авг',
-	'Сен',
-	'Окт',
-	'Ноя',
-	'Дек',
+	'янв',
+	'фев',
+	'мар',
+	'апр',
+	'май',
+	'июн',
+	'июл',
+	'авг',
+	'сен',
+	'окт',
+	'ноя',
+	'дек',
 ];
 
 const chartOptions = {
 	autoSize: true,
 	layout: {
-		background: { type: 'solid', color: '#ffffff' },
-		textColor: '#191919',
+		background: { type: 'solid', color: '#fff' },
+		textColor: '#212529',
 		attributionLogo: false,
 	},
 	rightPriceScale: {
