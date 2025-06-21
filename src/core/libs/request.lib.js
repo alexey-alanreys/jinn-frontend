@@ -17,7 +17,23 @@ import { SERVER_URL } from '@/config/url.config';
  * @returns {string} Extracted error message.
  */
 export function extractErrorMessage(error) {
-	return typeof error.message === 'object' ? error.message[0] : error.message;
+	if (typeof error === 'string') return error;
+
+	if (error && typeof error.message !== 'undefined') {
+		return typeof error.message === 'object'
+			? error.message[0]
+			: error.message;
+	}
+
+	if (error && error.type) {
+		return error.type;
+	}
+
+	if (error && typeof error === 'object') {
+		return JSON.stringify(error);
+	}
+
+	return 'Unknown error occurred';
 }
 
 /**

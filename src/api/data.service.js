@@ -1,12 +1,11 @@
 import { request } from '@/core/libs/request.lib';
-import { NotificationService } from '@/core/services/notification.service';
+import { notificationService } from '@/core/services/notification.service';
 
 /**
  * Service for interacting with backend data API endpoints.
  */
 class DataService {
 	#BASE_URL = '/api';
-	#notificationService = new NotificationService();
 
 	/**
 	 * Fetches strategy alerts.
@@ -18,7 +17,7 @@ class DataService {
 		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/alerts`,
 			method: 'GET',
-			errorMessage: 'Error fetching alerts',
+			errorMessage: 'Не удалось загрузить оповещения',
 		});
 		return data;
 	}
@@ -33,7 +32,7 @@ class DataService {
 		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/summary`,
 			method: 'GET',
-			errorMessage: 'Error fetching summary',
+			errorMessage: 'Не удалось загрузить сводку',
 		});
 		return data;
 	}
@@ -48,7 +47,7 @@ class DataService {
 		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/updates`,
 			method: 'GET',
-			errorMessage: 'Error fetching updates',
+			errorMessage: 'Не удалось загрузить обновления',
 		});
 		return data;
 	}
@@ -67,7 +66,7 @@ class DataService {
 		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/details/chart/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Error fetching chart details',
+			errorMessage: 'Не удалось загрузить данные графика',
 		});
 		return data;
 	}
@@ -86,7 +85,7 @@ class DataService {
 		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/report/overview/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Error fetching report overview',
+			errorMessage: 'Не удалось загрузить обзор отчёта',
 		});
 		return data;
 	}
@@ -105,7 +104,7 @@ class DataService {
 		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/report/metrics/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Error fetching report metrics',
+			errorMessage: 'Не удалось загрузить метрики отчёта',
 		});
 		return data;
 	}
@@ -124,7 +123,7 @@ class DataService {
 		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/report/trades/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Error fetching report trades',
+			errorMessage: 'Не удалось загрузить сделки по отчёту',
 		});
 		return data;
 	}
@@ -149,11 +148,26 @@ class DataService {
 			path: `${this.#BASE_URL}/contexts/${contextId}`,
 			method: 'PATCH',
 			body: { param, value },
-			errorMessage: 'Error updating parameter',
+			errorMessage: '	Не удалось изменить параметр стратегии',
 		});
 		return data;
 	}
 
+	/**
+	 * Handles API request execution with error processing.
+	 *
+	 * @private
+	 * @param {string} path
+	 * - Endpoint path.
+	 * @param {string} method
+	 * - HTTP method.
+	 * @param {Object} [body]
+	 * - Request payload.
+	 * @param {string} errorMessage
+	 * - Context for error reporting.
+	 * @returns {Promise<Object>} Response data.
+	 * @throws {Error} If request errors occur.
+	 */
 	async #executeRequest({ path, method, body, errorMessage }) {
 		try {
 			const { data, error } = await request({ path, method, body });
@@ -164,7 +178,7 @@ class DataService {
 
 			return data;
 		} catch (error) {
-			this.#handleError(errorMessage, error);
+			this.#handleError(errorMessage);
 			throw error;
 		}
 	}
@@ -172,6 +186,7 @@ class DataService {
 	/**
 	 * Validates that required parameters are provided.
 	 *
+	 * @private
 	 * @param {Object} params
 	 * - Parameters to validate (key-value pairs).
 	 * @param {string} [message]
@@ -193,18 +208,15 @@ class DataService {
 	/**
 	 * Handles errors by logging and showing notification.
 	 *
+	 * @private
 	 * @param {string} message
 	 * - Error message to log and display.
-	 * @param {*} error
-	 * - Error object or response.
 	 */
-	#handleError(message, error) {
-		console.error(message, error);
-
+	#handleError(message) {
 		try {
-			this.#notificationService.show('error', message);
+			notificationService.show('error', message);
 		} catch (err) {
-			console.warn('Notification display failed:', err);
+			console.error('Notification display failed:', err);
 		}
 	}
 }

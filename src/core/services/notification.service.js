@@ -5,34 +5,51 @@ import styles from '@/components/layout/notification/notification.module.css';
 /**
  * Service for displaying temporary notifications (success or error).
  */
-export class NotificationService {
-	#timeout = null;
+class NotificationService {
+	#queue = [];
+	#isShowing = false;
 
 	/**
-	 * Clears existing timeout and sets a new one.
-	 * @param {Function} callback
-	 * - Function to execute after timeout.
-	 * @param {number} duration
-	 * - Duration in milliseconds.
+	 * Processes next notification in queue.
+	 *
 	 * @private
 	 */
-	#setTimeout(callback, duration) {
-		if (this.#timeout) {
-			clearTimeout(this.#timeout);
-		}
+	#showNext() {
+		if (this.#queue.length === 0 || this.#isShowing) return;
 
-		this.#timeout = setTimeout(callback, duration);
+		const { type, message } = this.#queue.shift();
+		const notification = $Q('#notification');
+		const className = styles[type];
+
+		const animationDuration =
+			parseFloat(notification.css('animation-duration')) * 1000;
+		const delayToRemoveClass = animationDuration + 100;
+		const delayToShowNext = animationDuration + 500;
+
+		notification
+			.addClass(className)
+			.find('[data-field="content"]')
+			.text(message);
+		this.#isShowing = true;
+
+		setTimeout(() => {
+			notification.removeClass(className);
+			this.#isShowing = false;
+		}, delayToRemoveClass);
+
+		setTimeout(() => {
+			this.#showNext();
+		}, delayToShowNext);
 	}
 
 	/**
-	 * Displays a notification with the specified type and message.
-	 * Automatically hides the notification after a delay.
+	 * Adds a notification to the queue and displays it if possible.
 	 *
 	 * @param {('success'|'error')} type
-	 * - Notification type.
+	 * - Notification type
 	 * @param {string} message
-	 * - Text to display.
-	 * @throws {Error} If the type is not 'success' or 'error'.
+	 * - Text to display
+	 * @throws {Error} If the type is invalid
 	 */
 	show(type, message) {
 		if (!['success', 'error'].includes(type)) {
@@ -41,13 +58,12 @@ export class NotificationService {
 			);
 		}
 
-		const notification = $Q('#notification');
-		const className = styles[type];
+		this.#queue.push({ type, message });
 
-		notification.text(message).addClass(className);
-
-		this.#setTimeout(() => {
-			notification.removeClass(className);
-		}, 3000);
+		if (!this.#isShowing) {
+			this.#showNext();
+		}
 	}
 }
+
+export const notificationService = new NotificationService();

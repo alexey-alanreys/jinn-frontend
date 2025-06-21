@@ -7,7 +7,6 @@ import template from './notification.template.html?raw';
 export class Notification extends BaseComponent {
 	render() {
 		this.element = renderService.htmlToElement(template, [], styles);
-
 		return this.element;
 	}
 }
