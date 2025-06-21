@@ -1,11 +1,11 @@
 .report-content {
 	display: flex;
+	flex: 1;
 	justify-content: center;
 	align-items: center;
-	flex: 1;
-	overflow: auto;
 	min-height: 0;
 	background-color: #fff;
+	overflow: auto;
 
 	> ::-webkit-scrollbar {
 		width: 6px;

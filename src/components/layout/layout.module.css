@@ -1,14 +1,14 @@
 .layout {
+	position: relative;
 	display: flex;
 	flex-direction: row;
-	position: relative;
-	overflow: hidden;
 	height: 100vh;
+	overflow: hidden;
 }
 
 .content {
 	display: flex;
-	flex-direction: row;
 	flex: 1;
+	flex-direction: row;
 	overflow: hidden;
 }

@@ -4,7 +4,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"lint:css": "stylelint \"**/*.css\" --fix"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.28.0",
@@ -12,6 +13,9 @@
 		"eslint": "^9.28.0",
 		"eslint-import-resolver-alias": "^1.1.2",
 		"prettier": "^3.5.3",
+		"stylelint": "^16.21.0",
+		"stylelint-config-standard": "^38.0.0",
+		"stylelint-order": "^7.0.0",
 		"vite": "^6.3.5",
 		"vite-plugin-string": "^1.2.3"
 	},

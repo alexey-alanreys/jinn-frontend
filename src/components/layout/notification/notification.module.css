@@ -1,36 +1,36 @@
 .notification {
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-	display: none;
-	justify-content: center;
-	align-items: center;
 	position: fixed;
 	z-index: 1000;
 	top: 2rem;
 	right: 2rem;
-	opacity: 0;
+	display: none;
+	justify-content: center;
+	align-items: center;
 	padding: 1.2rem 1.6rem;
-	animation: slideUpFade 2.5s;
-	border-radius: 1rem;
 	font-size: 1.8rem;
 	font-weight: 500;
 	color: #fff;
+	border-radius: 1rem;
+	box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
+	opacity: 0;
+	animation: slide-up-fade 2.5s;
 	transform: translateY(-50px);
+
+	&.success,
+	&.error {
+		display: block;
+	}
+
+	&.success {
+		background-color: #2e8677;
+	}
+
+	&.error {
+		background-color: #ff4a4a;
+	}
 }
 
-.notification.success,
-.notification.error {
-	display: block;
-}
-
-.notification.success {
-	background-color: #2e8677;
-}
-
-.notification.error {
-	background-color: #ff4a4a;
-}
-
-@keyframes slideUpFade {
+@keyframes slide-up-fade {
 	0% {
 		opacity: 0;
 		transform: translateY(-50px);

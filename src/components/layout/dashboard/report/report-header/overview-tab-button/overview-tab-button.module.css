@@ -1,9 +1,9 @@
 .overview-tab-button {
 	height: 34px;
 	padding: 0 8px;
-	border-radius: 6px;
 	font-size: 1.4rem;
 	color: inherit;
+	border-radius: 6px;
 
 	&[data-active='true'] {
 		color: #2962ff;

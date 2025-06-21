@@ -10,10 +10,10 @@
 	}
 
 	> .cell {
-		padding: 0 16px;
 		display: flex;
 		flex-direction: column;
 		gap: 3px;
+		padding: 0 16px;
 
 		&.align-end {
 			text-align: end;

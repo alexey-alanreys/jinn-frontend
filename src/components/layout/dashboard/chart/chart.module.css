@@ -1,11 +1,8 @@
 .chart {
 	position: absolute;
-	top: 0;
-	bottom: 40%;
-	left: 0;
-	right: 0;
+	inset: 0 0 40%;
 	min-height: 345px;
 	background: #fff;
-	cursor: crosshair;
 	border-radius: 0 0 6px 6px;
+	cursor: crosshair;
 }

@@ -1,12 +1,12 @@
-@import './_reset.css';
+@import url('./_reset.css');
 
 body {
-	overflow-x: hidden;
 	width: 100vw;
 	height: 100vh;
-	background-color: #ebebeb;
 	font-family: system-ui, sans-serif;
 	color: #292121;
+	background-color: #ebebeb;
+	overflow-x: hidden;
 
 	&.resizing * {
 		cursor: ns-resize;

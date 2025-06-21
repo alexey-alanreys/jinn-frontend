@@ -1,0 +1,104 @@
+{
+	"extends": ["stylelint-config-standard"],
+	"plugins": ["stylelint-order"],
+	"rules": {
+		"order/order": [
+			"custom-properties",
+			"declarations",
+			"rules",
+			{
+				"type": "at-rule",
+				"name": "media"
+			}
+		],
+		"order/properties-order": [
+			{
+				"groupName": "Positioning",
+				"properties": [
+					"position",
+					"z-index",
+					"top",
+					"right",
+					"bottom",
+					"left",
+					"inset"
+				]
+			},
+			{
+				"groupName": "Flex / Grid / Display",
+				"properties": [
+					"display",
+					"flex",
+					"flex-grow",
+					"flex-shrink",
+					"flex-basis",
+					"flex-direction",
+					"flex-wrap",
+					"justify-content",
+					"align-items",
+					"align-content",
+					"align-self",
+					"order",
+					"grid",
+					"grid-area",
+					"grid-template",
+					"grid-template-columns",
+					"grid-template-rows",
+					"grid-auto-flow"
+				]
+			},
+			{
+				"groupName": "Sizing and Spacing",
+				"properties": [
+					"box-sizing",
+					"width",
+					"min-width",
+					"max-width",
+					"height",
+					"min-height",
+					"max-height",
+					"padding",
+					"margin"
+				]
+			},
+			{
+				"groupName": "Typography",
+				"properties": [
+					"font",
+					"font-size",
+					"font-weight",
+					"font-family",
+					"line-height",
+					"text-align",
+					"text-transform",
+					"color"
+				]
+			},
+			{
+				"groupName": "Visual Appearance",
+				"properties": [
+					"background",
+					"background-color",
+					"border",
+					"border-radius",
+					"box-shadow",
+					"opacity"
+				]
+			},
+			{
+				"groupName": "Animations and Transformations",
+				"properties": ["transition", "animation", "transform"]
+			},
+			{
+				"groupName": "Miscellaneous",
+				"properties": ["cursor", "overflow", "pointer-events"]
+			}
+		],
+		"order/properties-alphabetical-order": null,
+		"block-no-empty": true,
+		"color-no-invalid-hex": true,
+		"declaration-block-no-duplicate-properties": true,
+		"declaration-block-no-shorthand-property-overrides": true
+	},
+	"ignoreFiles": ["**/*.js", "**/*.ts", "**/*.html"]
+}

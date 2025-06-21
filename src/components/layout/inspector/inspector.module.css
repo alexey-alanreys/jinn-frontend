@@ -1,10 +1,10 @@
 .inspector {
 	display: none;
+	flex: 0 0 350px;
+
 	/* display: flex; */
 	flex-direction: row;
-	flex: 0 0 350px;
 	max-width: 100%;
-	margin-left: 4px;
-
 	background-color: #fff;
+	margin-left: 4px;
 }
