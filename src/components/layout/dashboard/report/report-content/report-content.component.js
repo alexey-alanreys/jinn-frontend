@@ -25,7 +25,6 @@ export class ReportContent extends BaseComponent {
 		);
 
 		this.requestToTest();
-
 		return this.element;
 	}
 
@@ -35,13 +34,18 @@ export class ReportContent extends BaseComponent {
 		}
 	}
 
-	requestToTest() {
-		dataService.getSummary((data) => {
+	async requestToTest() {
+		try {
+			const data = await dataService.getSummary();
 			const contextId = Object.keys(data)[0];
 
-			this.tabs.overview.update({ contextId });
-			this.tabs.metrics.update({ contextId });
-			this.tabs.trades.update({ contextId });
-		});
+			await Promise.all([
+				this.tabs.overview.update(contextId),
+				this.tabs.metrics.update(contextId),
+				this.tabs.trades.update(contextId),
+			]);
+		} catch (error) {
+			console.error('Failed to load report data:', error);
+		}
 	}
 }

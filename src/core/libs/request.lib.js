@@ -32,21 +32,14 @@ export function extractErrorMessage(error) {
  * @param {Object|null} [options.body=null]
  * - JSON payload to send with the request.
  * @param {Object} [options.headers={}]
- * - Additional headers to include in the request.
- * @param {Function|null} [options.onSuccess=null]
- * - Callback called on success with response data.
- * @param {Function|null} [options.onError=null]
- * - Callback called on error with error message.
- * @returns {Promise<{isLoading: boolean, data: any|null, error: string|null}>}
- * A promise resolving to the state of the request.
+ * - Additional headers.
+ * @returns {Promise<{data: any|null, error: string|null}>} Result object
  */
 export async function request({
 	path,
 	method = 'GET',
 	body = null,
 	headers = {},
-	onSuccess = null,
-	onError = null,
 }) {
 	let isLoading = true;
 	let error = null;
@@ -79,9 +72,6 @@ export async function request({
 	} finally {
 		isLoading = false;
 	}
-
-	if (error && onError) onError(error);
-	else if (onSuccess) onSuccess(data);
 
 	return { isLoading, data, error };
 }

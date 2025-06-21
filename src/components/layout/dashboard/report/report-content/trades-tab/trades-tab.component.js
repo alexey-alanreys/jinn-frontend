@@ -30,30 +30,20 @@ export class TradesTab extends BaseComponent {
 		return this.element;
 	}
 
-	update({ contextId }) {
-		dataService.getReportTrades(contextId, (trades) => {
-			this.#cachedTrades = [...trades];
-			this.#ensureCorrectSortOrder();
-			this.#removeOrphanedItems();
-
-			const container = this.#$element.find('[data-ref="trades-items"]');
-
-			this.#cachedTrades.forEach((trade, index) => {
-				let item = this.#itemsMap.get(index);
-
-				if (!item) {
-					item = new TradesItem();
-					this.#itemsMap.set(index, item);
-					container.append(item.render());
-				}
-
-				item.update(trade);
-			});
-		});
+	async update(contextId) {
+		try {
+			const trades = await dataService.getReportTrades(contextId);
+			this.#updateTradesList(trades);
+		} catch (error) {
+			console.error('Failed to update trades:', error);
+		}
 	}
 
 	handleSortingToggle() {
-		this.update(this.#cachedTrades);
+		if (this.#cachedTrades.length > 0) {
+			this.#applySorting();
+			this.#renderTrades();
+		}
 	}
 
 	hide() {
@@ -64,6 +54,35 @@ export class TradesTab extends BaseComponent {
 		this.#$element.css('display', 'flex');
 	}
 
+	#updateTradesList(trades) {
+		this.#cachedTrades = [...trades];
+
+		this.#ensureCorrectSortOrder();
+		this.#renderTrades();
+	}
+
+	#renderTrades() {
+		const container = this.#$element.find('[data-ref="trades-items"]');
+
+		this.#removeOrphanedItems();
+
+		this.#cachedTrades.forEach((trade, index) => {
+			let item = this.#itemsMap.get(index);
+
+			if (!item) {
+				item = new TradesItem();
+				this.#itemsMap.set(index, item);
+				container.append(item.render());
+			}
+
+			item.update(trade);
+		});
+	}
+
+	#applySorting() {
+		this.#cachedTrades.reverse();
+	}
+
 	#ensureCorrectSortOrder() {
 		if (this.#cachedTrades.length < 2) return;
 
@@ -72,7 +91,7 @@ export class TradesTab extends BaseComponent {
 			: this.#cachedTrades[0][0] > this.#cachedTrades[1][0];
 
 		if (shouldReverse) {
-			this.#cachedTrades.reverse();
+			this.#applySorting();
 		}
 	}
 

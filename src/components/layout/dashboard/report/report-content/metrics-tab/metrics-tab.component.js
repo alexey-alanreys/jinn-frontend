@@ -19,8 +19,9 @@ export class MetricsTab extends BaseComponent {
 		return this.element;
 	}
 
-	update({ contextId }) {
-		dataService.getReportMetrics(contextId, (metrics) => {
+	async update(contextId) {
+		try {
+			const metrics = await dataService.getReportMetrics(contextId);
 			const container = this.#$element.find('[data-ref="metrics-items"]');
 
 			metrics.forEach((metric, index) => {
@@ -34,7 +35,9 @@ export class MetricsTab extends BaseComponent {
 
 				item.update(metric);
 			});
-		});
+		} catch (error) {
+			console.error('Failed to update metrics:', error);
+		}
 	}
 
 	hide() {

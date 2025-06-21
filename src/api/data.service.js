@@ -4,68 +4,53 @@ import { NotificationService } from '@/core/services/notification.service';
 /**
  * Service for interacting with backend data API endpoints.
  */
-export class DataService {
+class DataService {
 	#BASE_URL = '/api';
 	#notificationService = new NotificationService();
 
 	/**
-	 * Fetches strategy alerts from the backend.
+	 * Fetches strategy alerts.
 	 *
-	 * @param {function} onSuccess
-	 * - Callback executed on successful response with data.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
+	 * @returns {Promise<Object>} Resolves with alerts.
+	 * @throws {Error} If request errors occur.
 	 */
-	getAlerts(onSuccess, onError) {
-		return request({
+	async getAlerts() {
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/alerts`,
 			method: 'GET',
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error fetching alerts', error, onError);
-			},
+			errorMessage: 'Error fetching alerts',
 		});
+		return data;
 	}
 
 	/**
 	 * Fetches the summary of strategies.
 	 *
-	 * @param {function} onSuccess
-	 * - Callback executed on successful response with data.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
+	 * @returns {Promise<Object>} Resolves with summary.
+	 * @throws {Error} If request errors occur.
 	 */
-	getSummary(onSuccess, onError) {
-		return request({
+	async getSummary() {
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/summary`,
 			method: 'GET',
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error fetching summary', error, onError);
-			},
+			errorMessage: 'Error fetching summary',
 		});
+		return data;
 	}
 
 	/**
 	 * Fetches data updates.
 	 *
-	 * @param {function} onSuccess
-	 * - Callback executed on successful response with data.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
+	 * @returns {Promise<Object>} Resolves with data updates.
+	 * @throws {Error} If request errors occur.
 	 */
-	getUpdates(onSuccess, onError) {
-		return request({
+	async getUpdates() {
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/updates`,
 			method: 'GET',
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error fetching updates', error, onError);
-			},
+			errorMessage: 'Error fetching updates',
 		});
+		return data;
 	}
 
 	/**
@@ -73,25 +58,18 @@ export class DataService {
 	 *
 	 * @param {string} contextId
 	 * - Strategy context identifier.
-	 * @param {function} onSuccess
-	 * - Callback executed on successful response with data.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
-	 * @throws {Error} Throws if contextId is falsy.
+	 * @returns {Promise<Object>} Resolves with chart details.
+	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	getChartDetails(contextId, onSuccess, onError) {
-		if (!contextId) {
-			throw new Error('contextId is required');
-		}
-		return request({
+	async getChartDetails(contextId) {
+		this.#validateRequired({ contextId }, 'contextId is required');
+
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/details/chart/${contextId}`,
 			method: 'GET',
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error fetching chart details', error, onError);
-			},
+			errorMessage: 'Error fetching chart details',
 		});
+		return data;
 	}
 
 	/**
@@ -99,25 +77,18 @@ export class DataService {
 	 *
 	 * @param {string} contextId
 	 * - Strategy context identifier.
-	 * @param {function} onSuccess
-	 * - Callback executed on successful response with data.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
-	 * @throws {Error} Throws if contextId is falsy.
+	 * @returns {Promise<Object>} Resolves with report overview.
+	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	getReportOverview(contextId, onSuccess, onError) {
-		if (!contextId) {
-			throw new Error('contextId is required');
-		}
-		return request({
+	async getReportOverview(contextId) {
+		this.#validateRequired({ contextId }, 'contextId is required');
+
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/report/overview/${contextId}`,
 			method: 'GET',
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error fetching report overview', error, onError);
-			},
+			errorMessage: 'Error fetching report overview',
 		});
+		return data;
 	}
 
 	/**
@@ -125,25 +96,18 @@ export class DataService {
 	 *
 	 * @param {string} contextId
 	 * - Strategy context identifier.
-	 * @param {function} onSuccess
-	 * - Callback executed on successful response with data.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
-	 * @throws {Error} Throws if contextId is falsy.
+	 * @returns {Promise<Object>} Resolves with report metrics.
+	 * @throws {Error} If validation fails or request errors occur..
 	 */
-	getReportMetrics(contextId, onSuccess, onError) {
-		if (!contextId) {
-			throw new Error('contextId is required');
-		}
-		return request({
+	async getReportMetrics(contextId) {
+		this.#validateRequired({ contextId }, 'contextId is required');
+
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/report/metrics/${contextId}`,
 			method: 'GET',
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error fetching report metrics', error, onError);
-			},
+			errorMessage: 'Error fetching report metrics',
 		});
+		return data;
 	}
 
 	/**
@@ -151,56 +115,79 @@ export class DataService {
 	 *
 	 * @param {string} contextId
 	 * - Strategy context identifier.
-	 * @param {function} onSuccess
-	 * - Callback executed on successful response with data.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
-	 * @throws {Error} Throws if contextId is falsy.
+	 * @returns {Promise<Object>} Resolves with report trades.
+	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	getReportTrades(contextId, onSuccess, onError) {
-		if (!contextId) {
-			throw new Error('contextId is required');
-		}
-		return request({
+	async getReportTrades(contextId) {
+		this.#validateRequired({ contextId }, 'contextId is required');
+
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/report/trades/${contextId}`,
 			method: 'GET',
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error fetching report trades', error, onError);
-			},
+			errorMessage: 'Error fetching report trades',
 		});
+		return data;
 	}
 
 	/**
 	 * Updates a parameter value for a specific strategy context.
 	 *
-	 * @param {string} contextId
-	 * - Strategy context identifier.
-	 * @param {string} param
-	 * - Parameter name to update.
-	 * @param {*} value
-	 * - New value for the parameter.
-	 * @param {function} onSuccess
-	 * - Callback executed on successful update.
-	 * @param {function} [onError]
-	 * - Optional callback executed on error.
-	 * @returns {Promise<void>}
-	 * @throws {Error} Throws if contextId or param is falsy.
+	 * @param {string} contextId - Strategy context identifier.
+	 * @param {string} param - Parameter name to update.
+	 * @param {*} value - New value for the parameter.
+	 * @returns {Promise<{status: string, type?: string}>} Resolves
+	 * with operation status.
+	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	updateContext(contextId, param, value, onSuccess, onError) {
-		if (!contextId || !param) {
-			throw new Error('contextId and param are required');
-		}
-		return request({
+	async updateContext(contextId, param, value) {
+		this.#validateRequired(
+			{ contextId, param },
+			'contextId and param are required',
+		);
+
+		const data = await this.#executeRequest({
 			path: `${this.#BASE_URL}/contexts/${contextId}`,
 			method: 'PATCH',
 			body: { param, value },
-			onSuccess,
-			onError: (error) => {
-				this.#handleError('Error updating parameter', error, onError);
-			},
+			errorMessage: 'Error updating parameter',
 		});
+		return data;
+	}
+
+	async #executeRequest({ path, method, body, errorMessage }) {
+		try {
+			const { data, error } = await request({ path, method, body });
+
+			if (error) {
+				throw new Error(error);
+			}
+
+			return data;
+		} catch (error) {
+			this.#handleError(errorMessage, error);
+			throw error;
+		}
+	}
+
+	/**
+	 * Validates that required parameters are provided.
+	 *
+	 * @param {Object} params
+	 * - Parameters to validate (key-value pairs).
+	 * @param {string} [message]
+	 * - Custom error message (default: lists missing params).
+	 * @throws {Error} If any required parameters are missing.
+	 */
+	#validateRequired(params, message) {
+		const missing = Object.entries(params)
+			.filter(([_, value]) => !value)
+			.map(([key]) => key);
+
+		if (missing.length > 0) {
+			throw new Error(
+				message || `Missing required parameters: ${missing.join(', ')}`,
+			);
+		}
 	}
 
 	/**
@@ -210,20 +197,14 @@ export class DataService {
 	 * - Error message to log and display.
 	 * @param {*} error
 	 * - Error object or response.
-	 * @param {function} [callback]
-	 * - Optional callback for further error handling.
 	 */
-	#handleError(message, error, callback) {
+	#handleError(message, error) {
 		console.error(message, error);
 
 		try {
 			this.#notificationService.show('error', message);
 		} catch (err) {
 			console.warn('Notification display failed:', err);
-		}
-
-		if (callback) {
-			callback(error);
 		}
 	}
 }

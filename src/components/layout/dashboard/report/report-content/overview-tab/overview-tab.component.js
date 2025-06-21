@@ -36,8 +36,10 @@ export class OverviewTab extends BaseComponent {
 		return this.element;
 	}
 
-	update({ contextId }) {
-		dataService.getReportOverview(contextId, (overview) => {
+	async update(contextId) {
+		try {
+			const overview = await dataService.getReportOverview(contextId);
+
 			this.#dataFields.forEach(({ element, isProfitField }, index) => {
 				const value = overview.metrics[index];
 				element.text(value);
@@ -46,9 +48,10 @@ export class OverviewTab extends BaseComponent {
 					this.#applyColorClass(element, value);
 				}
 			});
-
 			this.equityCurve.update(overview.equity);
-		});
+		} catch (error) {
+			console.error('Failed to update overview:', error);
+		}
 	}
 
 	hide() {
