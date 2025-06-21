@@ -1,12 +1,11 @@
 .trades-item {
 	display: grid;
 	grid-template-columns: 10% 18% 18% 10% 10% 10% 10% 14%;
-	min-height: 100px;
+	height: 100px;
 	padding: 8px 0;
 	border-bottom: 1px solid #dcd1d1;
 
 	&:hover {
-		transition: background-color 0.2s ease;
 		background-color: #f5f5f5;
 	}
 

@@ -1,4 +1,5 @@
 .trades-tab {
+	contain: strict;
 	display: none;
 	overflow-y: auto;
 	width: 100%;
@@ -14,6 +15,7 @@
 
 		> .table-header {
 			position: sticky;
+			z-index: 3;
 			top: 0;
 			background-color: #fff;
 

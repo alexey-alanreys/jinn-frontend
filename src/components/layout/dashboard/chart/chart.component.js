@@ -15,7 +15,7 @@ export class Chart extends BaseComponent {
 		return this.element;
 	}
 
-	setHeight(height) {
+	set height(height) {
 		this.#$element.css('bottom', `${height}px`);
 	}
 }

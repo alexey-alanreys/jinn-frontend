@@ -38,25 +38,20 @@ export class Report extends BaseComponent {
 		return this.element;
 	}
 
-	getHeight() {
+	get height() {
 		return parseInt(this.#$element.css('height'));
 	}
 
-	getMinHeight() {
+	set height(height) {
+		this.#$element.css('height', `${height}px`);
+	}
+
+	get minHeight() {
 		const reportHandle = this.#$element.find('[data-ref="handle"]');
 
 		return (
-			parseInt(reportHandle.css('min-height')) +
-			this.reportHeader.getMinHeight()
+			parseInt(reportHandle.css('min-height')) + this.reportHeader.minHeight
 		);
-	}
-
-	getOffsetHeight() {
-		return this.#$element.element.offsetHeight;
-	}
-
-	setHeight(height) {
-		this.#$element.css('height', `${height}px`);
 	}
 
 	#handleMousedown(event) {

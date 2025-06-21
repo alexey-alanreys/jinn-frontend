@@ -51,7 +51,7 @@ export class ReportHeader extends BaseComponent {
 		});
 	}
 
-	getMinHeight() {
+	get minHeight() {
 		return parseInt(this.#$element.css('min-height'));
 	}
 

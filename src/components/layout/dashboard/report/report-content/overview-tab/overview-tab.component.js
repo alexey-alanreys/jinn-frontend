@@ -46,7 +46,6 @@ export class OverviewTab extends BaseComponent {
 
 		this.equityCurve.update(overview.equity);
 
-		// test;
 		// setTimeout(() => {
 		// 	this.equityCurve.update(overview.equity.slice(0, 100));
 		// }, 5000);
