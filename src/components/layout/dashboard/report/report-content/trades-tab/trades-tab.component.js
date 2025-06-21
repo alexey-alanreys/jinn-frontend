@@ -2,6 +2,8 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
+import { dataService } from '@/api/data.service';
+
 import styles from './trades-tab.module.css';
 import templateHTML from './trades-tab.template.html?raw';
 
@@ -28,23 +30,25 @@ export class TradesTab extends BaseComponent {
 		return this.element;
 	}
 
-	update(trades) {
-		this.#cachedTrades = [...trades];
-		this.#ensureCorrectSortOrder();
-		this.#removeOrphanedItems();
+	update({ contextId }) {
+		dataService.getReportTrades(contextId, (trades) => {
+			this.#cachedTrades = [...trades];
+			this.#ensureCorrectSortOrder();
+			this.#removeOrphanedItems();
 
-		const container = this.#$element.find('[data-ref="trades-items"]');
+			const container = this.#$element.find('[data-ref="trades-items"]');
 
-		this.#cachedTrades.forEach((trade, index) => {
-			let item = this.#itemsMap.get(index);
+			this.#cachedTrades.forEach((trade, index) => {
+				let item = this.#itemsMap.get(index);
 
-			if (!item) {
-				item = new TradesItem();
-				this.#itemsMap.set(index, item);
-				container.append(item.render());
-			}
+				if (!item) {
+					item = new TradesItem();
+					this.#itemsMap.set(index, item);
+					container.append(item.render());
+				}
 
-			item.update(trade);
+				item.update(trade);
+			});
 		});
 	}
 

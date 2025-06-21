@@ -6,11 +6,7 @@ import { NotificationService } from '@/core/services/notification.service';
  */
 export class DataService {
 	#BASE_URL = '/api';
-	#notificationService;
-
-	constructor() {
-		this.#notificationService = new NotificationService();
-	}
+	#notificationService = new NotificationService();
 
 	/**
 	 * Fetches strategy alerts from the backend.
@@ -99,7 +95,7 @@ export class DataService {
 	}
 
 	/**
-	 * Fetches report details for a given strategy context ID.
+	 * Fetches report overview data.
 	 *
 	 * @param {string} contextId
 	 * - Strategy context identifier.
@@ -110,16 +106,68 @@ export class DataService {
 	 * @returns {Promise<void>}
 	 * @throws {Error} Throws if contextId is falsy.
 	 */
-	getReportDetails(contextId, onSuccess, onError) {
+	getReportOverview(contextId, onSuccess, onError) {
 		if (!contextId) {
 			throw new Error('contextId is required');
 		}
 		return request({
-			path: `${this.#BASE_URL}/details/report/${contextId}`,
+			path: `${this.#BASE_URL}/report/overview/${contextId}`,
 			method: 'GET',
 			onSuccess,
 			onError: (error) => {
-				this.#handleError('Error fetching report details', error, onError);
+				this.#handleError('Error fetching report overview', error, onError);
+			},
+		});
+	}
+
+	/**
+	 * Fetches report metrics data.
+	 *
+	 * @param {string} contextId
+	 * - Strategy context identifier.
+	 * @param {function} onSuccess
+	 * - Callback executed on successful response with data.
+	 * @param {function} [onError]
+	 * - Optional callback executed on error.
+	 * @returns {Promise<void>}
+	 * @throws {Error} Throws if contextId is falsy.
+	 */
+	getReportMetrics(contextId, onSuccess, onError) {
+		if (!contextId) {
+			throw new Error('contextId is required');
+		}
+		return request({
+			path: `${this.#BASE_URL}/report/metrics/${contextId}`,
+			method: 'GET',
+			onSuccess,
+			onError: (error) => {
+				this.#handleError('Error fetching report metrics', error, onError);
+			},
+		});
+	}
+
+	/**
+	 * Fetches report trades data.
+	 *
+	 * @param {string} contextId
+	 * - Strategy context identifier.
+	 * @param {function} onSuccess
+	 * - Callback executed on successful response with data.
+	 * @param {function} [onError]
+	 * - Optional callback executed on error.
+	 * @returns {Promise<void>}
+	 * @throws {Error} Throws if contextId is falsy.
+	 */
+	getReportTrades(contextId, onSuccess, onError) {
+		if (!contextId) {
+			throw new Error('contextId is required');
+		}
+		return request({
+			path: `${this.#BASE_URL}/report/trades/${contextId}`,
+			method: 'GET',
+			onSuccess,
+			onError: (error) => {
+				this.#handleError('Error fetching report trades', error, onError);
 			},
 		});
 	}
@@ -179,3 +227,5 @@ export class DataService {
 		}
 	}
 }
+
+export const dataService = new DataService();

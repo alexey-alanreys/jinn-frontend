@@ -2,6 +2,8 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
+import { dataService } from '@/api/data.service';
+
 import styles from './overview-tab.module.css';
 import templateHTML from './overview-tab.template.html?raw';
 
@@ -34,21 +36,19 @@ export class OverviewTab extends BaseComponent {
 		return this.element;
 	}
 
-	update(overview) {
-		this.#dataFields.forEach(({ element, isProfitField }, index) => {
-			const value = overview.metrics[index];
-			element.text(value);
+	update({ contextId }) {
+		dataService.getReportOverview(contextId, (overview) => {
+			this.#dataFields.forEach(({ element, isProfitField }, index) => {
+				const value = overview.metrics[index];
+				element.text(value);
 
-			if (isProfitField) {
-				this.#applyColorClass(element, value);
-			}
+				if (isProfitField) {
+					this.#applyColorClass(element, value);
+				}
+			});
+
+			this.equityCurve.update(overview.equity);
 		});
-
-		this.equityCurve.update(overview.equity);
-
-		// setTimeout(() => {
-		// 	this.equityCurve.update(overview.equity.slice(0, 100));
-		// }, 5000);
 	}
 
 	hide() {

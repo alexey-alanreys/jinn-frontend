@@ -1,7 +1,7 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { renderService } from '@/core/services/render.service';
 
-import { DataService } from '@/api/data.service';
+import { dataService } from '@/api/data.service';
 
 import styles from './report-content.module.css';
 import templateHTML from './report-content.template.html?raw';
@@ -24,7 +24,7 @@ export class ReportContent extends BaseComponent {
 			styles,
 		);
 
-		this.testRequest();
+		this.requestToTest();
 
 		return this.element;
 	}
@@ -35,23 +35,13 @@ export class ReportContent extends BaseComponent {
 		}
 	}
 
-	testRequest() {
-		this.dataService = new DataService();
-		this.dataService.getSummary(this.onSuccessSummary.bind(this));
-	}
+	requestToTest() {
+		dataService.getSummary((data) => {
+			const contextId = Object.keys(data)[0];
 
-	onSuccessSummary(data) {
-		const contextId = Object.keys(data)[0];
-
-		this.dataService.getReportDetails(
-			contextId,
-			this.onSuccessDetails.bind(this),
-		);
-	}
-
-	onSuccessDetails(data) {
-		this.tabs.overview.update(data.overview);
-		this.tabs.metrics.update(data.metrics);
-		this.tabs.trades.update(data.trades);
+			this.tabs.overview.update({ contextId });
+			this.tabs.metrics.update({ contextId });
+			this.tabs.trades.update({ contextId });
+		});
 	}
 }
