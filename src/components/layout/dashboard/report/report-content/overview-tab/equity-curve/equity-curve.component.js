@@ -5,37 +5,28 @@ import { renderService } from '@/core/services/render.service';
 
 import { chartOptions, seriesOptions } from '@/config/equity.config';
 
+import {
+	MARKER_RANGE_THRESHOLD,
+	TOOLTIP_MIN_LEFT,
+} from '@/constants/equity-curve.constants';
+
 import styles from './equity-curve.module.css';
 import templateHTML from './equity-curve.template.html?raw';
 
 import { EquityTooltip } from './equity-tooltip/equity-tooltip.component';
 
 export class EquityCurve extends BaseComponent {
-	static #TOOLTIP_MIN_LEFT = 50;
-	static #MARKER_RANGE_THRESHOLD = 100;
-
 	#chart;
 	#timeScale;
 	#equitySeries;
+	#containerLeftOffset;
+	#containerBottomOffset;
 	#markersVisible = false;
 
 	render() {
-		this.equityTooltip = new EquityTooltip();
-		this.element = renderService.htmlToElement(
-			templateHTML,
-			[this.equityTooltip],
-			styles,
-		);
-
-		this.#chart = createChart(this.element, chartOptions);
-		this.#chart.subscribeCrosshairMove(this.#handleCrosshairMove.bind(this));
-
-		this.#timeScale = this.#chart.timeScale();
-		this.#equitySeries = this.#chart.addSeries(AreaSeries, seriesOptions);
-
-		this.#timeScale.subscribeVisibleLogicalRangeChange(
-			this.#handleVisibleLogicalRangeChange.bind(this),
-		);
+		this.#initComponents();
+		this.#initDOM();
+		this.#setupInitialState();
 
 		return this.element;
 	}
@@ -43,6 +34,37 @@ export class EquityCurve extends BaseComponent {
 	update(equity) {
 		this.#equitySeries.setData(equity);
 		this.#timeScale.fitContent();
+	}
+
+	#initComponents() {
+		this.equityTooltip = new EquityTooltip();
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[this.equityTooltip],
+			styles,
+		);
+
+		this.#chart = createChart(this.element, chartOptions);
+		this.#timeScale = this.#chart.timeScale();
+		this.#equitySeries = this.#chart.addSeries(AreaSeries, seriesOptions);
+	}
+
+	#setupInitialState() {
+		this.#chart.subscribeCrosshairMove(this.#handleCrosshairMove.bind(this));
+		this.#timeScale.subscribeVisibleLogicalRangeChange(
+			this.#handleVisibleLogicalRangeChange.bind(this),
+		);
+		this.#timeScale.subscribeSizeChange(this.#handleSizeChange.bind(this));
+
+		requestAnimationFrame(() => {
+			const rect = this.element.getBoundingClientRect();
+
+			this.#containerLeftOffset = rect.left;
+			this.#containerBottomOffset = rect.bottom;
+		});
 	}
 
 	#handleCrosshairMove(param) {
@@ -57,35 +79,11 @@ export class EquityCurve extends BaseComponent {
 			this.equityTooltip.activate();
 		}
 
+		this.#updateTooltipContent(param);
+
 		if (sourceEvent) {
 			this.#updateTooltipPosition(sourceEvent);
 		}
-
-		this.#updateTooltipContent(param);
-	}
-
-	#updateTooltipPosition(sourceEvent) {
-		const containerRect = this.element.getBoundingClientRect();
-
-		let left =
-			sourceEvent.clientX -
-			containerRect.left -
-			this.equityTooltip.getWidth() -
-			this.equityTooltip.getOffsetX();
-
-		if (left < EquityCurve.#TOOLTIP_MIN_LEFT) {
-			left =
-				sourceEvent.clientX -
-				containerRect.left +
-				this.equityTooltip.getOffsetX();
-		}
-
-		const bottom =
-			containerRect.bottom -
-			sourceEvent.clientY -
-			this.equityTooltip.getHeight() / 2;
-
-		this.equityTooltip.updatePosition({ left, bottom });
 	}
 
 	#updateTooltipContent(param) {
@@ -101,9 +99,24 @@ export class EquityCurve extends BaseComponent {
 		});
 	}
 
+	#updateTooltipPosition(sourceEvent) {
+		const { clientX, clientY } = sourceEvent;
+		const { width, height, offsetX } = this.equityTooltip;
+
+		let left = clientX - this.#containerLeftOffset - width - offsetX;
+
+		if (left < TOOLTIP_MIN_LEFT) {
+			left = clientX - this.#containerLeftOffset + offsetX;
+		}
+
+		const bottom = this.#containerBottomOffset - clientY - height / 2;
+
+		this.equityTooltip.updatePosition({ left, bottom });
+	}
+
 	#handleVisibleLogicalRangeChange(newRange) {
 		const markersShouldBeVisible =
-			newRange.to - newRange.from <= EquityCurve.#MARKER_RANGE_THRESHOLD;
+			newRange.to - newRange.from <= MARKER_RANGE_THRESHOLD;
 
 		if (markersShouldBeVisible !== this.#markersVisible) {
 			this.#markersVisible = markersShouldBeVisible;
@@ -111,5 +124,9 @@ export class EquityCurve extends BaseComponent {
 				pointMarkersVisible: markersShouldBeVisible,
 			});
 		}
+	}
+
+	#handleSizeChange() {
+		this.#timeScale.fitContent();
 	}
 }

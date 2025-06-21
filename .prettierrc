@@ -12,6 +12,7 @@
 		"^@/components/ui/(.*)$",
 		"^@/styles/(.*)$",
 		"^@/config/(.*)$",
+		"^@/constants/(.*)$",
 		"^@/utils/(.*)$",
 		"^@/services/(.*)$",
 		"^@/store/(.*)$",
