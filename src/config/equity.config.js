@@ -30,6 +30,7 @@ const chartOptions = {
 		maxBarSpacing: 50,
 		fixLeftEdge: true,
 		fixRightEdge: true,
+		lockVisibleTimeRangeOnResize: true,
 		borderVisible: false,
 
 		tickMarkFormatter: (time, tickMarkType) => {

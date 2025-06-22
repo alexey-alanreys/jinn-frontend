@@ -41,7 +41,7 @@ export class Chart extends BaseComponent {
 			const contextId = stateService.get('contextId');
 			const chartData = await dataService.getChartDetails(contextId);
 
-			console.log(chartData);
+			// console.log(chartData);
 		} catch (error) {
 			console.error('Failed to load chart data:', error);
 		}

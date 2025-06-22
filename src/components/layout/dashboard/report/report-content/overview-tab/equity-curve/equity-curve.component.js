@@ -25,7 +25,6 @@ export class EquityCurve extends BaseComponent {
 
 	#markersVisible = false;
 
-	#previousWidth;
 	#containerLeftOffset;
 	#containerBottomOffset;
 
@@ -71,15 +70,9 @@ export class EquityCurve extends BaseComponent {
 			this.#handleVisibleLogicalRangeChange.bind(this),
 		);
 
-		const resizeObserver = new ResizeObserver(
-			this.#handleSizeChange.bind(this),
-		);
-		resizeObserver.observe(this.element);
-
 		requestAnimationFrame(() => {
 			const rect = this.element.getBoundingClientRect();
 
-			this.#previousWidth = rect.width;
 			this.#containerLeftOffset = rect.left;
 			this.#containerBottomOffset = rect.bottom;
 		});
@@ -141,17 +134,6 @@ export class EquityCurve extends BaseComponent {
 			this.#equitySeries.applyOptions({
 				pointMarkersVisible: markersShouldBeVisible,
 			});
-		}
-	}
-
-	#handleSizeChange(entries) {
-		for (const entry of entries) {
-			const newWidth = entry.contentRect.width;
-
-			if (newWidth !== this.#previousWidth) {
-				this.#previousWidth = newWidth;
-				this.#timeScale.fitContent();
-			}
 		}
 	}
 
