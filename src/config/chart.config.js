@@ -1,20 +1,3 @@
-const daysOfWeek = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
-
-const months = [
-	'янв',
-	'фев',
-	'мар',
-	'апр',
-	'май',
-	'июн',
-	'июл',
-	'авг',
-	'сен',
-	'окт',
-	'ноя',
-	'дек',
-];
-
 const chartOptions = {
 	autoSize: true,
 	layout: {
@@ -35,18 +18,19 @@ const chartOptions = {
 		vertLines: { color: '#edf0ee' },
 		horzLines: { color: '#edf0ee' },
 	},
-	localization: {
-		timeFormatter: (time) => {
-			const date = new Date(time * 1000);
-			const dayOfWeek = daysOfWeek[date.getUTCDay()];
-			const day = date.getUTCDate();
-			const month = months[date.getUTCMonth()];
-			const year = date.getUTCFullYear();
-			const hours = String(date.getUTCHours()).padStart(2, '0');
-			const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-			return `${dayOfWeek} ${day} ${month} ${year}   ${hours}:${minutes}`;
-		},
-	},
+
+	// localization: {
+	// 	timeFormatter: (time) => {
+	// 		const date = new Date(time * 1000);
+	// 		const dayOfWeek = daysOfWeek[date.getUTCDay()];
+	// 		const day = date.getUTCDate();
+	// 		const month = months[date.getUTCMonth()];
+	// 		const year = date.getUTCFullYear();
+	// 		const hours = String(date.getUTCHours()).padStart(2, '0');
+	// 		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+	// 		return `${dayOfWeek} ${day} ${month} ${year}   ${hours}:${minutes}`;
+	// 	},
+	// },
 	timeScale: {
 		rightOffset: 5,
 		barSpacing: 8,
@@ -54,30 +38,30 @@ const chartOptions = {
 		borderVisible: false,
 		rightBarStaysOnScroll: true,
 
-		tickMarkFormatter: (time) => {
-			const date = new Date(time * 1000);
-			const day = date.getUTCDate();
-			const month = date.getUTCMonth();
-			const year = date.getUTCFullYear();
-			const hours = date.getUTCHours();
-			const minutes = date.getUTCMinutes();
+		// tickMarkFormatter: (time) => {
+		// 	const date = new Date(time * 1000);
+		// 	const day = date.getUTCDate();
+		// 	const month = date.getUTCMonth();
+		// 	const year = date.getUTCFullYear();
+		// 	const hours = date.getUTCHours();
+		// 	const minutes = date.getUTCMinutes();
 
-			if (month === 0 && day === 1 && hours === 0 && minutes === 0) {
-				return String(year);
-			}
+		// 	if (month === 0 && day === 1 && hours === 0 && minutes === 0) {
+		// 		return String(year);
+		// 	}
 
-			if (day === 1 && hours === 0 && minutes === 0) {
-				return months[month];
-			}
+		// 	if (day === 1 && hours === 0 && minutes === 0) {
+		// 		return months[month];
+		// 	}
 
-			if (hours === 0 && minutes === 0) {
-				return String(day);
-			}
+		// 	if (hours === 0 && minutes === 0) {
+		// 		return String(day);
+		// 	}
 
-			const formattedHours = String(hours).padStart(2, '0');
-			const formattedMinutes = String(minutes).padStart(2, '0');
-			return `${formattedHours}:${formattedMinutes}`;
-		},
+		// 	const formattedHours = String(hours).padStart(2, '0');
+		// 	const formattedMinutes = String(minutes).padStart(2, '0');
+		// 	return `${formattedHours}:${formattedMinutes}`;
+		// },
 	},
 };
 
@@ -96,10 +80,4 @@ const indicatorOptions = {
 	crosshairMarkerVisible: false,
 };
 
-export {
-	chartOptions,
-	candlestickOptions,
-	indicatorOptions,
-	daysOfWeek,
-	months,
-};
+export { chartOptions, candlestickOptions, indicatorOptions };
