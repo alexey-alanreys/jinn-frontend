@@ -6,17 +6,15 @@ import templateHTML from './layout.template.html?raw';
 
 import { Dashboard } from './dashboard/dashboard.component';
 import { Inspector } from './inspector/inspector.component';
-import { Notification } from './notification/notification.component';
 import { Toolbox } from './toolbox/toolbox.component';
 
 export class Layout extends BaseComponent {
 	render() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[Notification, Toolbox, Dashboard, Inspector],
+			[Toolbox, Dashboard, Inspector],
 			styles,
 		);
-
 		return this.element;
 	}
 }

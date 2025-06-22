@@ -59,13 +59,13 @@ export class EquityCurve extends BaseComponent {
 			styles,
 		);
 		this.#$element = $Q(this.element);
-
-		this.#chart = createChart(this.element, chartOptions);
-		this.#timeScale = this.#chart.timeScale();
-		this.#equitySeries = this.#chart.addSeries(AreaSeries, seriesOptions);
 	}
 
 	#setupInitialState() {
+		this.#chart = createChart(this.element, chartOptions);
+		this.#timeScale = this.#chart.timeScale();
+		this.#equitySeries = this.#chart.addSeries(AreaSeries, seriesOptions);
+
 		this.#chart.subscribeCrosshairMove(this.#handleCrosshairMove.bind(this));
 		this.#timeScale.subscribeVisibleLogicalRangeChange(
 			this.#handleVisibleLogicalRangeChange.bind(this),

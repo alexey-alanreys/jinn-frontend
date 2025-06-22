@@ -148,7 +148,7 @@ class DataService {
 			path: `${this.#BASE_URL}/contexts/${contextId}`,
 			method: 'PATCH',
 			body: { param, value },
-			errorMessage: '	Не удалось изменить параметр стратегии',
+			errorMessage: 'Не удалось изменить параметр стратегии',
 		});
 		return data;
 	}

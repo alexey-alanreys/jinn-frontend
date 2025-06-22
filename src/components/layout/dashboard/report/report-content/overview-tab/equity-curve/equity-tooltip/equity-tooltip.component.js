@@ -16,13 +16,8 @@ export class EquityTooltip extends BaseComponent {
 	#dataFields = new Map();
 
 	render() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
-		this.#$element = $Q(this.element);
-
-		['deal', 'equity', 'time'].forEach((field) => {
-			const el = this.#$element.find(`[data-field="${field}"]`);
-			this.#dataFields.set(field, el);
-		});
+		this.#initDOM();
+		this.#setupInitialState();
 
 		return this.element;
 	}
@@ -64,6 +59,18 @@ export class EquityTooltip extends BaseComponent {
 	deactivate() {
 		this.#$element.data('active', 'false');
 		this.#active = false;
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		['deal', 'equity', 'time'].forEach((field) => {
+			const el = this.#$element.find(`[data-field="${field}"]`);
+			this.#dataFields.set(field, el);
+		});
 	}
 
 	#setText(field, text) {

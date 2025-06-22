@@ -12,19 +12,9 @@ import { TradesTab } from './trades-tab/trades-tab.component';
 
 export class ReportContent extends BaseComponent {
 	render() {
-		this.tabs = {
-			overview: new OverviewTab(),
-			metrics: new MetricsTab(),
-			trades: new TradesTab(),
-		};
+		this.#initComponents();
+		this.#initDOM();
 
-		this.element = renderService.htmlToElement(
-			templateHTML,
-			[this.tabs.overview, this.tabs.metrics, this.tabs.trades],
-			styles,
-		);
-
-		this.requestToTest();
 		return this.element;
 	}
 
@@ -34,18 +24,19 @@ export class ReportContent extends BaseComponent {
 		}
 	}
 
-	async requestToTest() {
-		try {
-			const data = await dataService.getSummary();
-			const contextId = Object.keys(data)[0];
+	#initComponents() {
+		this.tabs = {
+			overview: new OverviewTab(),
+			metrics: new MetricsTab(),
+			trades: new TradesTab(),
+		};
+	}
 
-			await Promise.all([
-				this.tabs.overview.update(contextId),
-				this.tabs.metrics.update(contextId),
-				this.tabs.trades.update(contextId),
-			]);
-		} catch (error) {
-			console.error('Failed to load report data:', error);
-		}
+	#initDOM() {
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[this.tabs.overview, this.tabs.metrics, this.tabs.trades],
+			styles,
+		);
 	}
 }

@@ -17,10 +17,8 @@ export class ToggleVisibilityButton extends BaseComponent {
 	}
 
 	render() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
-
-		this.#$element = $Q(this.element);
-		this.#$element.on('click', this.#handleClick.bind(this));
+		this.#initComponents();
+		this.#setupInitialState();
 
 		return this.element;
 	}
@@ -35,6 +33,15 @@ export class ToggleVisibilityButton extends BaseComponent {
 
 	isActive() {
 		return this.#$element.is('data-active');
+	}
+
+	#initComponents() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		this.#$element.on('click', this.#handleClick.bind(this));
 	}
 
 	#handleClick() {

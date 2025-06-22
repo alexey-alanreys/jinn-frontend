@@ -10,9 +10,24 @@ export class MetricsItem extends BaseComponent {
 	#dataFields = new Map();
 
 	render() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#initDOM();
+		this.#setupInitialState();
 
+		return this.element;
+	}
+
+	update(metric) {
+		this.#dataFields.forEach(({ element, group, index }) => {
+			element.text(metric[group][index]);
+		});
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
 		this.#$element.findAll('[data-field]').forEach((el) => {
 			const fieldKey = el.data('field');
 			const [group, index] = fieldKey.split('.');
@@ -22,14 +37,6 @@ export class MetricsItem extends BaseComponent {
 				group,
 				index: Number(index),
 			});
-		});
-
-		return this.element;
-	}
-
-	update(metric) {
-		this.#dataFields.forEach(({ element, group, index }) => {
-			element.text(metric[group][index]);
 		});
 	}
 }

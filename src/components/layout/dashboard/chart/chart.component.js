@@ -7,6 +7,7 @@ import {
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
+import { stateService } from '@/core/services/state.service';
 
 import { candlestickOptions, chartOptions } from '@/config/chart.config';
 
@@ -26,8 +27,8 @@ export class Chart extends BaseComponent {
 	render() {
 		this.#initComponents();
 		this.#initDOM();
+		this.#setupInitialState();
 
-		// this.requestToTest();
 		return this.element;
 	}
 
@@ -35,15 +36,16 @@ export class Chart extends BaseComponent {
 		this.#$element.css('bottom', `${height}px`);
 	}
 
-	// async requestToTest() {
-	// 	try {
-	// 		const summary = await dataService.getSummary();
-	// 		const contextId = Object.keys(summary)[0];
-	// 		const chartData = await dataService.getChartDetails(contextId);
-	// 	} catch (error) {
-	// 		console.error('Failed to load chart data:', error);
-	// 	}
-	// }
+	async update() {
+		try {
+			const contextId = stateService.get('contextId');
+			const chartData = await dataService.getChartDetails(contextId);
+
+			console.log(chartData);
+		} catch (error) {
+			console.error('Failed to load chart data:', error);
+		}
+	}
 
 	#initComponents() {}
 
@@ -58,5 +60,12 @@ export class Chart extends BaseComponent {
 			CandlestickSeries,
 			candlestickOptions,
 		);
+	}
+
+	#setupInitialState() {
+		stateService.subscribe('contextId', this.update.bind(this));
+		stateService.subscribe('summary', this.update.bind(this));
+
+		this.update();
 	}
 }

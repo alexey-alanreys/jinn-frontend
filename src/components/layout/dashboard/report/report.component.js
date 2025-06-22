@@ -18,22 +18,9 @@ export class Report extends BaseComponent {
 	}
 
 	render() {
-		this.reportContent = new ReportContent();
-
-		this.element = renderService.htmlToElement(
-			templateHTML,
-			[this.reportHeader, this.reportContent],
-			styles,
-		);
-
-		this.#$element = $Q(this.element);
-		this.#$element
-			.find('[data-ref="handle"]')
-			.on('mousedown', this.#handleMousedown.bind(this));
-
-		this.reportHeader.connectButtons((tabName) => {
-			this.reportContent.showOnly(tabName);
-		});
+		this.#initComponents();
+		this.#initDOM();
+		this.#setupInitialState();
 
 		return this.element;
 	}
@@ -52,6 +39,29 @@ export class Report extends BaseComponent {
 		return (
 			parseInt(reportHandle.css('min-height')) + this.reportHeader.minHeight
 		);
+	}
+
+	#initComponents() {
+		this.reportContent = new ReportContent();
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[this.reportHeader, this.reportContent],
+			styles,
+		);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		this.#$element
+			.find('[data-ref="handle"]')
+			.on('mousedown', this.#handleMousedown.bind(this));
+
+		this.reportHeader.connectButtons((tabName) => {
+			this.reportContent.showOnly(tabName);
+		});
 	}
 
 	#handleMousedown(event) {

@@ -14,14 +14,8 @@ export class TradesItem extends BaseComponent {
 	#greenTextClass = styles['text-green'];
 
 	render() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
-
-		this.#$element = $Q(this.element);
-		this.#$element.findAll('[data-field]').forEach((el) => {
-			const index = Number(el.data('field'));
-			const isProfitField = this.#isProfitField(index);
-			this.#dataFields.set(index, { element: el, isProfitField });
-		});
+		this.#initDOM();
+		this.#setupInitialState();
 
 		return this.element;
 	}
@@ -39,6 +33,19 @@ export class TradesItem extends BaseComponent {
 
 	remove() {
 		this.element.remove();
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		this.#$element.findAll('[data-field]').forEach((el) => {
+			const index = Number(el.data('field'));
+			const isProfitField = this.#isProfitField(index);
+			this.#dataFields.set(index, { element: el, isProfitField });
+		});
 	}
 
 	#isProfitField(index) {

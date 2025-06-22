@@ -1,6 +1,6 @@
 import { $Q } from '@/core/libs/query.lib';
 
-import styles from '@/components/layout/notification/notification.module.css';
+import styles from '@/components/notification/notification.module.css';
 
 /**
  * Service for displaying temporary notifications (success or error).
@@ -17,8 +17,8 @@ class NotificationService {
 	#showNext() {
 		if (this.#queue.length === 0 || this.#isShowing) return;
 
+		const notification = $Q('[data-ref="notification"]');
 		const { type, message } = this.#queue.shift();
-		const notification = $Q('#notification');
 		const className = styles[type];
 
 		const animationDuration =

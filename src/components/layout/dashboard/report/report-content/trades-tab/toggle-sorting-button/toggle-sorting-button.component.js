@@ -15,10 +15,8 @@ export class ToggleSortingButton extends BaseComponent {
 	}
 
 	render() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
-
-		this.#$element = $Q(this.element);
-		this.#$element.on('click', this.#handleClick.bind(this));
+		this.#initDOM();
+		this.#setupInitialState();
 
 		return this.element;
 	}
@@ -29,6 +27,15 @@ export class ToggleSortingButton extends BaseComponent {
 
 	isActive() {
 		return this.#$element.is('data-active');
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		this.#$element.on('click', this.#handleClick.bind(this));
 	}
 
 	#handleClick() {

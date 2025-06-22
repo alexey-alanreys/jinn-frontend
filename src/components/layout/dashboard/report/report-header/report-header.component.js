@@ -20,25 +20,9 @@ export class ReportHeader extends BaseComponent {
 	}
 
 	render() {
-		this.buttons = {
-			overview: new OverviewTabButton(),
-			metrics: new MetricsTabButton(),
-			trades: new TradesTabButton(),
-		};
+		this.#initComponents();
+		this.#initDOM();
 
-		this.element = renderService.htmlToElement(
-			templateHTML,
-			[
-				this.buttons.overview,
-				this.buttons.metrics,
-				this.buttons.trades,
-				this.toggleVisibilityButton,
-				this.toggleExpansionButton,
-			],
-			styles,
-		);
-
-		this.#$element = $Q(this.element);
 		return this.element;
 	}
 
@@ -53,6 +37,29 @@ export class ReportHeader extends BaseComponent {
 
 	get minHeight() {
 		return parseInt(this.#$element.css('min-height'));
+	}
+
+	#initComponents() {
+		this.buttons = {
+			overview: new OverviewTabButton(),
+			metrics: new MetricsTabButton(),
+			trades: new TradesTabButton(),
+		};
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[
+				this.buttons.overview,
+				this.buttons.metrics,
+				this.buttons.trades,
+				this.toggleVisibilityButton,
+				this.toggleExpansionButton,
+			],
+			styles,
+		);
+		this.#$element = $Q(this.element);
 	}
 
 	#setActiveOnly(buttonName) {
