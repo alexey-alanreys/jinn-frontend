@@ -37,7 +37,10 @@ const chartOptions = {
 			const date = new Date(time * 1000);
 
 			const year = String(date.getUTCFullYear());
-			const month = date.toLocaleString('ru-RU', { month: 'short' });
+			const month = date
+				.toLocaleString('ru-RU', { month: 'short' })
+				.replace('.', '')
+				.slice(0, 3);
 			const day = String(date.getUTCDate());
 
 			if (tickMarkType === 0) {

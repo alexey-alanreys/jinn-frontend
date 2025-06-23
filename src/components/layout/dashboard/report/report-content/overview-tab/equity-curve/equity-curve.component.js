@@ -18,13 +18,9 @@ import { EquityTooltip } from './equity-tooltip/equity-tooltip.component';
 
 export class EquityCurve extends BaseComponent {
 	#$element;
-
 	#chart;
-	#timeScale;
 	#equitySeries;
-
 	#markersVisible = false;
-
 	#containerLeftOffset;
 	#containerBottomOffset;
 
@@ -41,7 +37,7 @@ export class EquityCurve extends BaseComponent {
 			this.#show();
 
 			this.#equitySeries.setData(equity);
-			this.#timeScale.fitContent();
+			this.#chart.timeScale().fitContent();
 		} else {
 			this.#hide();
 		}
@@ -62,13 +58,14 @@ export class EquityCurve extends BaseComponent {
 
 	#setupInitialState() {
 		this.#chart = createChart(this.element, chartOptions);
-		this.#timeScale = this.#chart.timeScale();
 		this.#equitySeries = this.#chart.addSeries(AreaSeries, seriesOptions);
 
 		this.#chart.subscribeCrosshairMove(this.#handleCrosshairMove.bind(this));
-		this.#timeScale.subscribeVisibleLogicalRangeChange(
-			this.#handleVisibleLogicalRangeChange.bind(this),
-		);
+		this.#chart
+			.timeScale()
+			.subscribeVisibleLogicalRangeChange(
+				this.#handleVisibleLogicalRangeChange.bind(this),
+			);
 
 		requestAnimationFrame(() => {
 			const rect = this.element.getBoundingClientRect();
