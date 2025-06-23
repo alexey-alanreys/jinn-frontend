@@ -233,7 +233,8 @@ class Query {
 	 * @param {Object} [options]
 	 * - Optional event options like bubbles, cancelable, etc.
 	 * @returns {boolean} The return value is false if event is cancelable and
-	 * at least one of the event handlers called preventDefault(), otherwise true.
+	 * at least one of the event handlers called preventDefault(),
+	 * otherwise true.
 	 */
 	trigger(eventName, detail = {}, options = {}) {
 		if (typeof eventName !== 'string') {
@@ -324,13 +325,12 @@ class Query {
 	/**
 	 * Adds one or more CSS classes to the current element.
 	 *
-	 * @param {string | string[]} classNames
-	 * - A single class name as a string or an array of class names to add.
-	 * If an array is provided, each class
-	 * name in the array will be added to the element.
-	 * @throws {Error} Throws an error if the provided classNames is neither
-	 * a string nor an array of strings.
+	 * @param {string | string[]} classNames A single class name as a string
+	 *        or an array of class names to add. If an array is provided,
+	 *        each class name in the array will be added to the element.
 	 * @returns {Query} The current Query instance for method chaining.
+	 * @throws {Error} Throws an error if the provided classNames
+	 *         is neither a string nor an array of strings.
 	 */
 	addClass(classNames) {
 		if (Array.isArray(classNames)) {

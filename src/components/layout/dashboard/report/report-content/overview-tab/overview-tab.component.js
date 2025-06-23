@@ -3,7 +3,7 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { dataService } from '@/api/data.service';
+import { reportService } from '@/api/services/report.service';
 
 import styles from './overview-tab.module.css';
 import templateHTML from './overview-tab.template.html?raw';
@@ -29,7 +29,7 @@ export class OverviewTab extends BaseComponent {
 	async update() {
 		try {
 			const contextId = stateService.get('contextId');
-			const overview = await dataService.getReportOverview(contextId);
+			const overview = await reportService.getOverview(contextId);
 
 			this.#dataFields.forEach(({ element, isProfitField }, index) => {
 				const value = overview.metrics[index];
@@ -73,8 +73,8 @@ export class OverviewTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
+		stateService.subscribe('contexts', this.update.bind(this));
 		stateService.subscribe('contextId', this.update.bind(this));
-		stateService.subscribe('summary', this.update.bind(this));
 
 		this.update();
 	}

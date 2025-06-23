@@ -3,7 +3,7 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { dataService } from '@/api/data.service';
+import { reportService } from '@/api/services/report.service';
 
 import styles from './trades-tab.module.css';
 import templateHTML from './trades-tab.template.html?raw';
@@ -27,7 +27,7 @@ export class TradesTab extends BaseComponent {
 	async update() {
 		try {
 			const contextId = stateService.get('contextId');
-			const trades = await dataService.getReportTrades(contextId);
+			const trades = await reportService.getTrades(contextId);
 			this.#cachedTrades = [...trades];
 
 			this.#ensureCorrectSortOrder();
@@ -68,8 +68,8 @@ export class TradesTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
+		stateService.subscribe('contexts', this.update.bind(this));
 		stateService.subscribe('contextId', this.update.bind(this));
-		stateService.subscribe('summary', this.update.bind(this));
 
 		this.update();
 	}

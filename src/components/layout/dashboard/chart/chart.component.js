@@ -11,7 +11,7 @@ import { stateService } from '@/core/services/state.service';
 
 import { candlestickOptions, chartOptions } from '@/config/chart.config';
 
-import { dataService } from '@/api/data.service';
+import { chartService } from '@/api/services/chart.service';
 
 import styles from './chart.module.css';
 import templateHTML from './chart.template.html?raw';
@@ -39,9 +39,9 @@ export class Chart extends BaseComponent {
 	async update() {
 		try {
 			const contextId = stateService.get('contextId');
-			const chartData = await dataService.getChartDetails(contextId);
+			const chartData = await chartService.getAllChartData(contextId);
 
-			// console.log(chartData);
+			console.log(chartData);
 		} catch (error) {
 			console.error('Failed to load chart data:', error);
 		}
@@ -64,7 +64,7 @@ export class Chart extends BaseComponent {
 
 	#setupInitialState() {
 		stateService.subscribe('contextId', this.update.bind(this));
-		stateService.subscribe('summary', this.update.bind(this));
+		stateService.subscribe('contexts', this.update.bind(this));
 
 		this.update();
 	}

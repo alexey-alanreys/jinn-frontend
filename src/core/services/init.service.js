@@ -1,6 +1,6 @@
 import { stateService } from '@/core/services/state.service.js';
 
-import { dataService } from '@/api/data.service.js';
+import { contextsService } from '@/api/services/contexts.service';
 
 /**
  * Service for initial application data loading.
@@ -12,10 +12,10 @@ class InitService {
 	 * Stores results in global state for other components to use.
 	 */
 	async initialize() {
-		const summary = await dataService.getSummary();
-		const contextId = Object.keys(summary)[0];
+		const contexts = await contextsService.getAll();
+		const contextId = Object.keys(contexts)[0];
 
-		stateService.set('summary', summary);
+		stateService.set('contexts', contexts);
 		stateService.set('contextId', contextId);
 	}
 }

@@ -3,7 +3,7 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { dataService } from '@/api/data.service';
+import { reportService } from '@/api/services/report.service';
 
 import styles from './metrics-tab.module.css';
 import templateHTML from './metrics-tab.template.html?raw';
@@ -24,7 +24,7 @@ export class MetricsTab extends BaseComponent {
 	async update() {
 		try {
 			const contextId = stateService.get('contextId');
-			const metrics = await dataService.getReportMetrics(contextId);
+			const metrics = await reportService.getMetrics(contextId);
 			const container = this.#$element.find('[data-ref="metrics-items"]');
 
 			metrics.forEach((metric, index) => {
@@ -57,8 +57,8 @@ export class MetricsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
+		stateService.subscribe('contexts', this.update.bind(this));
 		stateService.subscribe('contextId', this.update.bind(this));
-		stateService.subscribe('summary', this.update.bind(this));
 
 		this.update();
 	}

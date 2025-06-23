@@ -1,8 +1,6 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { renderService } from '@/core/services/render.service';
 
-import { dataService } from '@/api/data.service';
-
 import styles from './report-content.module.css';
 import templateHTML from './report-content.template.html?raw';
 
