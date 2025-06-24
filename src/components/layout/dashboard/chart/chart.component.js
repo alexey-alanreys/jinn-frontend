@@ -32,12 +32,12 @@ export class Chart extends BaseComponent {
 	#chartApi;
 
 	#currentContextId = null;
-	#chartData = {
+	#data = {
 		candlesticks: null,
 		indicators: null,
 		markers: null,
 	};
-	#chartSeries = {
+	#series = {
 		candlesticks: null,
 		indicators: new Map(),
 		markers: null,
@@ -108,61 +108,47 @@ export class Chart extends BaseComponent {
 	}
 
 	async #loadData() {
-		await Promise.all([
-			this.#loadСandlesticks(),
-			this.#loadIndicators(),
-			this.#loadMarkers(),
-		]);
+		try {
+			await Promise.all([
+				this.#loadCandlesticks(),
+				this.#loadIndicators(),
+				this.#loadMarkers(),
+			]);
+		} catch (error) {
+			console.error('Error loading chart data:', error);
+		}
 	}
 
-	async #loadСandlesticks() {
-		try {
-			this.#chartData.candlesticks = await chartService.getKlines(
-				stateService.get('context').id,
-			);
-		} catch (error) {
-			console.error('Failed to load candlesticks data:', error);
-		}
+	async #loadCandlesticks() {
+		this.#data.candlesticks = await chartService.getKlines(
+			stateService.get('context').id,
+		);
 	}
 
 	async #loadIndicators() {
-		try {
-			this.#chartData.indicators = await chartService.getIndicators(
-				stateService.get('context').id,
-			);
-		} catch (error) {
-			console.error('Failed to load indicators data:', error);
-		}
+		this.#data.indicators = await chartService.getIndicators(
+			stateService.get('context').id,
+		);
 	}
 
 	async #loadMarkers() {
-		try {
-			this.#chartData.markers = await chartService.getMarkers(
-				stateService.get('context').id,
-			);
-		} catch (error) {
-			console.error('Failed to load trade markers:', error);
-		}
+		this.#data.markers = await chartService.getMarkers(
+			stateService.get('context').id,
+		);
 	}
 
 	#removeSeries() {
-		if (this.#chartSeries.candlesticks) {
-			this.#chartApi.removeSeries(this.#chartSeries.candlesticks);
+		const { candlesticks, indicators } = this.#series;
+
+		if (candlesticks) {
+			this.#chartApi.removeSeries(candlesticks);
+			this.#series.candlesticks = null;
 		}
 
-		if (this.#chartSeries.indicators.size) {
-			this.#chartSeries.indicators.forEach((series) => {
-				this.#chartApi.removeSeries(series);
-			});
-		}
+		indicators.forEach((series) => this.#chartApi.removeSeries(series));
+		this.#series.indicators.clear();
 
-		this.chartSeries = {
-			candlesticks: null,
-			indicators: new Map(),
-			markers: null,
-		};
-
-		this.#visibleRange = DATA_BATCH_SIZE;
+		this.#series.markers = null;
 	}
 
 	#createSeries() {
@@ -171,28 +157,25 @@ export class Chart extends BaseComponent {
 	}
 
 	#createCandlestickSeries() {
-		const context = stateService.get('context');
+		const { minMove } = stateService.get('context');
 
-		this.#chartSeries.candlesticks = this.#chartApi.addSeries(
-			CandlestickSeries,
-			candlestickStyleOptions,
-		);
-		this.#chartSeries.candlesticks.applyOptions({
+		this.#series.candlesticks = this.#chartApi.addSeries(CandlestickSeries, {
+			...candlestickStyleOptions,
 			priceFormat: {
 				type: 'price',
-				precision: String(context.mintick).split('.')[1]?.length || 0,
-				minMove: context.mintick,
+				precision: String(minMove).split('.')[1]?.length || 0,
+				minMove,
 			},
 		});
 	}
 
 	#createIndicatorSeries() {
-		const context = stateService.get('context');
+		const { indicatorOptions } = stateService.get('context');
 
-		Object.entries(context.indicators).forEach(([key, options]) => {
+		Object.entries(indicatorOptions).forEach(([key, options]) => {
 			const series = this.#chartApi.addSeries(LineSeries);
 			series.applyOptions({ ...lineStyleOptions, ...options });
-			this.#chartSeries.indicators.set(key, series);
+			this.#series.indicators.set(key, series);
 		});
 	}
 
@@ -203,40 +186,41 @@ export class Chart extends BaseComponent {
 	}
 
 	#updateCandlesticks() {
-		this.#chartSeries.candlesticks.setData(
-			this.#chartData.candlesticks.slice(-this.#visibleRange),
+		this.#series.candlesticks.setData(
+			this.#data.candlesticks.slice(-this.#visibleRange),
 		);
 	}
 
 	#updateIndicators() {
-		this.#chartSeries.indicators.forEach((series, key) => {
-			const data = this.#chartData.indicators[key];
+		this.#series.indicators.forEach((series, key) => {
+			const data = this.#data.indicators[key];
 			series.setData(data.slice(-this.#visibleRange));
 		});
 	}
 
 	#updateMarkers() {
-		if (!this.#chartData.markers) return;
+		if (!this.#data.markers) return;
 
-		const startTime = this.#chartSeries.candlesticks.data()[0].time;
-		const visibleMarkers = this.#chartData.markers.filter(
+		const startTime = this.#series.candlesticks.data()[0].time;
+		const visibleMarkers = this.#data.markers.filter(
 			(marker) => marker.time >= startTime,
 		);
 
-		if (!this.#chartSeries.markers) {
-			this.#chartSeries.markers = createSeriesMarkers(
-				this.#chartSeries.candlesticks,
+		if (!this.#series.markers) {
+			this.#series.markers = createSeriesMarkers(
+				this.#series.candlesticks,
 				visibleMarkers,
 			);
 		} else {
-			this.#chartSeries.markers.setMarkers(visibleMarkers);
+			this.#series.markers.setMarkers(visibleMarkers);
 		}
 	}
 
 	#resetInfoPanels() {
-		const candlestick = this.#chartSeries.candlesticks.data().at(-1);
+		const candlestick = this.#series.candlesticks.data().at(-1);
+
 		const indicators = Object.fromEntries(
-			Array.from(this.#chartSeries.indicators, ([key, series]) => [
+			Array.from(this.#series.indicators, ([key, series]) => [
 				key,
 				series.data().at(-1),
 			]),
@@ -246,16 +230,14 @@ export class Chart extends BaseComponent {
 		this.indicatorsInfoPanel.update(indicators, true);
 	}
 
-	#handleCrosshairMove(param) {
-		if (!param.time) {
-			return;
-		}
+	#handleCrosshairMove({ point, time, seriesData }) {
+		if (!point || !time) return;
 
-		const candlestick = param.seriesData.get(this.#chartSeries.candlesticks);
+		const candlestick = seriesData.get(this.#series.candlesticks);
 		const indicators = Object.fromEntries(
-			Array.from(this.#chartSeries.indicators, ([key, series]) => [
+			[...this.#series.indicators].map(([key, series]) => [
 				key,
-				param.seriesData.get(series),
+				seriesData.get(series),
 			]),
 		);
 
@@ -264,7 +246,12 @@ export class Chart extends BaseComponent {
 	}
 
 	#handleVisibleLogicalRangeChange(newRange) {
-		if (this.#visibleRange >= this.#chartData.candlesticks.length) return;
+		if (newRange === null) {
+			this.#visibleRange = DATA_BATCH_SIZE;
+			return;
+		}
+
+		if (this.#visibleRange >= this.#data.candlesticks.length) return;
 
 		if (newRange.from < 50) {
 			this.#visibleRange += DATA_BATCH_SIZE;

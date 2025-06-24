@@ -18,10 +18,13 @@ export class IndicatorsInfoPanel extends BaseComponent {
 
 	update(indicators, fullUpdate = false) {
 		if (fullUpdate) {
+			this.#dataFields.clear();
 			this.#renderIndicatorFields();
 		}
 
 		this.#dataFields.forEach(({ element }, key) => {
+			if (!indicators[key]) return;
+
 			let { value, color } = indicators[key];
 
 			if (color === 'transparent') {
@@ -34,8 +37,8 @@ export class IndicatorsInfoPanel extends BaseComponent {
 	}
 
 	#renderIndicatorFields() {
-		const context = stateService.get('context');
-		const html = this.#generateIndicatorsHTML(context.indicators);
+		const { indicatorOptions } = stateService.get('context');
+		const html = this.#generateIndicatorsHTML(indicatorOptions);
 
 		this.#$element
 			.html(html)
@@ -46,8 +49,8 @@ export class IndicatorsInfoPanel extends BaseComponent {
 			});
 	}
 
-	#generateIndicatorsHTML(indicators) {
-		return Object.keys(indicators)
+	#generateIndicatorsHTML(indicatorOptions) {
+		return Object.keys(indicatorOptions)
 			.map((key) => {
 				return `
 					<div>

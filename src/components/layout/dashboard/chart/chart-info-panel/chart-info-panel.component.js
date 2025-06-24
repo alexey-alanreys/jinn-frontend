@@ -19,6 +19,8 @@ export class ChartInfoPanel extends BaseComponent {
 	}
 
 	update(candlestick, fullUpdate = false) {
+		if (!candlestick) return;
+
 		if (fullUpdate) {
 			this.#updateMeta();
 		}
