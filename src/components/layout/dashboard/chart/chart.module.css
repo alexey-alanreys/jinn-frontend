@@ -5,14 +5,4 @@
 	background: #fff;
 	border-radius: 0 0 6px 6px;
 	cursor: crosshair;
-
-	> .indicators-info-panel {
-		position: absolute;
-		display: flex;
-		gap: 10px;
-		z-index: 3;
-		top: 40px;
-		left: 12px;
-		font-size: 1.4rem;
-	}
 }

@@ -24,6 +24,7 @@ import styles from './chart.module.css';
 import templateHTML from './chart.template.html?raw';
 
 import { ChartInfoPanel } from './chart-info-panel/chart-info-panel.component';
+import { IndicatorsInfoPanel } from './indicators-info-panel/indicators-info-panel.component';
 import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-realtime-button.component';
 
 export class Chart extends BaseComponent {
@@ -31,7 +32,6 @@ export class Chart extends BaseComponent {
 	#chartApi;
 
 	#currentContextId = null;
-	#visibleRange = DATA_BATCH_SIZE;
 	#chartData = {
 		candlesticks: null,
 		indicators: null,
@@ -42,7 +42,7 @@ export class Chart extends BaseComponent {
 		indicators: new Map(),
 		markers: null,
 	};
-	#dataFields = new Map();
+	#visibleRange = DATA_BATCH_SIZE;
 
 	render() {
 		this.#initComponents();
@@ -67,18 +67,23 @@ export class Chart extends BaseComponent {
 		}
 
 		this.#updateSeries();
-		this.#initInfoPanels();
+		this.#resetInfoPanels();
 	}
 
 	#initComponents() {
 		this.chartInfoPanel = new ChartInfoPanel();
+		this.indicatorsInfoPanel = new IndicatorsInfoPanel();
 		this.scrollToRealtimeButton = new ScrollToRealtimeButton();
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.chartInfoPanel, this.scrollToRealtimeButton],
+			[
+				this.chartInfoPanel,
+				this.indicatorsInfoPanel,
+				this.scrollToRealtimeButton,
+			],
 			styles,
 		);
 		this.#$element = $Q(this.element);
@@ -228,9 +233,17 @@ export class Chart extends BaseComponent {
 		}
 	}
 
-	#initInfoPanels() {
+	#resetInfoPanels() {
 		const candlestick = this.#chartSeries.candlesticks.data().at(-1);
+		const indicators = Object.fromEntries(
+			Array.from(this.#chartSeries.indicators, ([key, series]) => [
+				key,
+				series.data().at(-1),
+			]),
+		);
+
 		this.chartInfoPanel.update(candlestick, true);
+		this.indicatorsInfoPanel.update(indicators, true);
 	}
 
 	#handleCrosshairMove(param) {
@@ -238,9 +251,16 @@ export class Chart extends BaseComponent {
 			return;
 		}
 
-		this.chartInfoPanel.update(
-			param.seriesData.get(this.#chartSeries.candlesticks),
+		const candlestick = param.seriesData.get(this.#chartSeries.candlesticks);
+		const indicators = Object.fromEntries(
+			Array.from(this.#chartSeries.indicators, ([key, series]) => [
+				key,
+				param.seriesData.get(series),
+			]),
 		);
+
+		this.chartInfoPanel.update(candlestick);
+		this.indicatorsInfoPanel.update(indicators);
 	}
 
 	#handleVisibleLogicalRangeChange(newRange) {

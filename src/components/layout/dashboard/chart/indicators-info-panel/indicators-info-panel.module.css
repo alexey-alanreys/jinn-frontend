@@ -1,0 +1,9 @@
+.indicators-info-panel {
+	position: absolute;
+	display: flex;
+	gap: 6px;
+	z-index: 3;
+	top: 40px;
+	left: 12px;
+	font-size: 1.4rem;
+}

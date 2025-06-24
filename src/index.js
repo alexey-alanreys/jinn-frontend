@@ -30,7 +30,7 @@ class AppInitializer {
 
 	static handleFatalError(error) {
 		console.error('App initialization failed:', error);
-		notificationService.show('error', 'Не удалось загрузить приложение');
+		notificationService.show('error', 'Не удалось запустить приложение');
 	}
 }
 

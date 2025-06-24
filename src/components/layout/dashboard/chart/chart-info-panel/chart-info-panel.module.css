@@ -12,13 +12,15 @@
 	}
 
 	> .candlestick {
+		display: flex;
+		gap: 6px;
 		font-size: 1.4rem;
 
-		> .red {
+		.red {
 			color: #f23645;
 		}
 
-		> .green {
+		.green {
 			color: #008984;
 		}
 	}
