@@ -16,23 +16,36 @@ import {
 	lineStyleOptions,
 } from '@/config/chart.config';
 
-import { INITIAL_VISIBLE_RANGE } from '@/constants/chart.constants';
+import { DATA_BATCH_SIZE } from '@/constants/chart.constants';
 
 import { chartService } from '@/api/services/chart.service';
 
 import styles from './chart.module.css';
 import templateHTML from './chart.template.html?raw';
 
+import { ChartInfoPanel } from './chart-info-panel/chart-info-panel.component';
+import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-realtime-button.component';
+
 export class Chart extends BaseComponent {
 	#$element;
-	#contextId;
-	#chart;
-	#chartData = {};
-	#chartSeries = {};
-	#boundVisibleRangeChangeHandler;
-	#visibleRange = INITIAL_VISIBLE_RANGE;
+	#chartApi;
+
+	#currentContextId = null;
+	#visibleRange = DATA_BATCH_SIZE;
+	#chartData = {
+		candlesticks: null,
+		indicators: null,
+		markers: null,
+	};
+	#chartSeries = {
+		candlesticks: null,
+		indicators: new Map(),
+		markers: null,
+	};
+	#dataFields = new Map();
 
 	render() {
+		this.#initComponents();
 		this.#initDOM();
 		this.#setupInitialState();
 
@@ -43,57 +56,119 @@ export class Chart extends BaseComponent {
 		this.#$element.css('bottom', `${height}px`);
 	}
 
-	async update() {
-		try {
-			if (this.#contextId !== stateService.get('contextId')) {
-				await this.#loadAllData();
+	async update(context) {
+		await this.#loadData();
 
-				if (this.#contextId !== undefined) {
-					this.#removeSeries();
-				}
+		if (this.#currentContextId !== context.id) {
+			this.#currentContextId = context.id;
 
-				this.#contextId = stateService.get('contextId');
-				this.#createAllSeries();
-				this.#updateAllSeries();
-			} else {
-				await Promise.all([this.#loadIndicators(), this.#loadMarkers()]);
-
-				this.#updateIndicators();
-				this.#updateMarkers();
-			}
-		} catch (error) {
-			console.error('Failed to update chart data:', error);
+			this.#removeSeries();
+			this.#createSeries();
 		}
+
+		this.#updateSeries();
+		this.#initInfoPanels();
+	}
+
+	#initComponents() {
+		this.chartInfoPanel = new ChartInfoPanel();
+		this.scrollToRealtimeButton = new ScrollToRealtimeButton();
 	}
 
 	#initDOM() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[this.chartInfoPanel, this.scrollToRealtimeButton],
+			styles,
+		);
 		this.#$element = $Q(this.element);
 	}
 
 	#setupInitialState() {
-		this.#createChart();
-		this.#createAllSeries();
-		this.#addEventListeners();
+		this.#chartApi = createChart(this.element, chartOptions);
 
-		this.update();
+		this.#chartApi.subscribeCrosshairMove(
+			this.#handleCrosshairMove.bind(this),
+		);
+		this.#chartApi
+			.timeScale()
+			.subscribeVisibleLogicalRangeChange(
+				this.#handleVisibleLogicalRangeChange.bind(this),
+			);
+
+		stateService.subscribe('context', this.update.bind(this));
+		stateService.set('chartApi', this.#chartApi);
+
+		this.update(stateService.get('context'));
 	}
 
-	#createChart() {
-		this.#chart = createChart(this.element, chartOptions);
-		stateService.set('iChartApi', this.#chart);
+	async #loadData() {
+		await Promise.all([
+			this.#loadСandlesticks(),
+			this.#loadIndicators(),
+			this.#loadMarkers(),
+		]);
 	}
 
-	#createAllSeries() {
+	async #loadСandlesticks() {
+		try {
+			this.#chartData.candlesticks = await chartService.getKlines(
+				stateService.get('context').id,
+			);
+		} catch (error) {
+			console.error('Failed to load candlesticks data:', error);
+		}
+	}
+
+	async #loadIndicators() {
+		try {
+			this.#chartData.indicators = await chartService.getIndicators(
+				stateService.get('context').id,
+			);
+		} catch (error) {
+			console.error('Failed to load indicators data:', error);
+		}
+	}
+
+	async #loadMarkers() {
+		try {
+			this.#chartData.markers = await chartService.getMarkers(
+				stateService.get('context').id,
+			);
+		} catch (error) {
+			console.error('Failed to load trade markers:', error);
+		}
+	}
+
+	#removeSeries() {
+		if (this.#chartSeries.candlesticks) {
+			this.#chartApi.removeSeries(this.#chartSeries.candlesticks);
+		}
+
+		if (this.#chartSeries.indicators.size) {
+			this.#chartSeries.indicators.forEach((series) => {
+				this.#chartApi.removeSeries(series);
+			});
+		}
+
+		this.chartSeries = {
+			candlesticks: null,
+			indicators: new Map(),
+			markers: null,
+		};
+
+		this.#visibleRange = DATA_BATCH_SIZE;
+	}
+
+	#createSeries() {
 		this.#createCandlestickSeries();
 		this.#createIndicatorSeries();
 	}
 
 	#createCandlestickSeries() {
-		const contextId = stateService.get('contextId');
-		const context = stateService.get('contexts')[contextId];
+		const context = stateService.get('context');
 
-		this.#chartSeries.candlesticks = this.#chart.addSeries(
+		this.#chartSeries.candlesticks = this.#chartApi.addSeries(
 			CandlestickSeries,
 			candlestickStyleOptions,
 		);
@@ -107,81 +182,16 @@ export class Chart extends BaseComponent {
 	}
 
 	#createIndicatorSeries() {
-		const contextId = stateService.get('contextId');
-		const context = stateService.get('contexts')[contextId];
-
-		this.#chartSeries.indicators = new Map();
+		const context = stateService.get('context');
 
 		Object.entries(context.indicators).forEach(([key, options]) => {
-			const series = this.#chart.addSeries(LineSeries);
+			const series = this.#chartApi.addSeries(LineSeries);
 			series.applyOptions({ ...lineStyleOptions, ...options });
 			this.#chartSeries.indicators.set(key, series);
 		});
 	}
 
-	#addEventListeners() {
-		this.#boundVisibleRangeChangeHandler =
-			this.#handleVisibleLogicalRangeChange.bind(this);
-		this.#chart
-			.timeScale()
-			.subscribeVisibleLogicalRangeChange(
-				this.#boundVisibleRangeChangeHandler,
-			);
-
-		stateService.subscribe('contextId', this.update.bind(this));
-		stateService.subscribe('contexts', this.update.bind(this));
-	}
-
-	async #loadAllData() {
-		await Promise.all([
-			this.#loadСandlesticks(),
-			this.#loadIndicators(),
-			this.#loadMarkers(),
-		]);
-	}
-	async #loadСandlesticks() {
-		try {
-			this.#chartData.candlesticks = await chartService.getKlines(
-				stateService.get('contextId'),
-			);
-		} catch (error) {
-			console.error('Failed to load candlesticks data:', error);
-		}
-	}
-
-	async #loadIndicators() {
-		try {
-			this.#chartData.indicators = await chartService.getIndicators(
-				stateService.get('contextId'),
-			);
-		} catch (error) {
-			console.error('Failed to load indicators data:', error);
-		}
-	}
-
-	async #loadMarkers() {
-		try {
-			this.#chartData.markers = await chartService.getMarkers(
-				stateService.get('contextId'),
-			);
-		} catch (error) {
-			console.error('Failed to load trade markers:', error);
-		}
-	}
-
-	#removeSeries() {
-		this.#chart.removeSeries(this.#chartSeries.candlesticks);
-		this.#chartSeries.candlesticks = null;
-
-		this.#chartSeries.indicators.forEach((series) =>
-			this.#chart.removeSeries(series),
-		);
-		this.#chartSeries.indicators.clear();
-
-		this.#chartSeries.markers = null;
-	}
-
-	#updateAllSeries() {
+	#updateSeries() {
 		this.#updateCandlesticks();
 		this.#updateIndicators();
 		this.#updateMarkers();
@@ -195,8 +205,8 @@ export class Chart extends BaseComponent {
 
 	#updateIndicators() {
 		this.#chartSeries.indicators.forEach((series, key) => {
-			const values = this.#chartData.indicators[key];
-			series.setData(values.slice(-this.#visibleRange));
+			const data = this.#chartData.indicators[key];
+			series.setData(data.slice(-this.#visibleRange));
 		});
 	}
 
@@ -218,18 +228,27 @@ export class Chart extends BaseComponent {
 		}
 	}
 
-	#handleVisibleLogicalRangeChange(newRange) {
-		if (this.#visibleRange >= this.#chartData.candlesticks.length) {
-			this.#chart
-				.timeScale()
-				.unsubscribeVisibleLogicalRangeChange(
-					this.#boundVisibleRangeChangeHandler,
-				);
+	#initInfoPanels() {
+		const candlestick = this.#chartSeries.candlesticks.data().at(-1);
+		this.chartInfoPanel.update(candlestick, true);
+	}
+
+	#handleCrosshairMove(param) {
+		if (!param.time) {
+			return;
 		}
 
+		this.chartInfoPanel.update(
+			param.seriesData.get(this.#chartSeries.candlesticks),
+		);
+	}
+
+	#handleVisibleLogicalRangeChange(newRange) {
+		if (this.#visibleRange >= this.#chartData.candlesticks.length) return;
+
 		if (newRange.from < 50) {
-			this.#visibleRange += INITIAL_VISIBLE_RANGE;
-			this.#updateAllSeries();
+			this.#visibleRange += DATA_BATCH_SIZE;
+			this.#updateSeries();
 		}
 	}
 }

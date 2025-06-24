@@ -13,6 +13,7 @@ import { TradesItem } from './trades-item/trades-item.component';
 
 export class TradesTab extends BaseComponent {
 	#$element;
+
 	#cachedTrades = [];
 	#itemsMap = new Map();
 
@@ -24,10 +25,9 @@ export class TradesTab extends BaseComponent {
 		return this.element;
 	}
 
-	async update() {
+	async update(context) {
 		try {
-			const contextId = stateService.get('contextId');
-			const trades = await reportService.getTrades(contextId);
+			const trades = await reportService.getTrades(context.id);
 			this.#cachedTrades = [...trades];
 
 			this.#ensureCorrectSortOrder();
@@ -68,10 +68,8 @@ export class TradesTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		stateService.subscribe('contexts', this.update.bind(this));
-		stateService.subscribe('contextId', this.update.bind(this));
-
-		this.update();
+		stateService.subscribe('context', this.update.bind(this));
+		this.update(stateService.get('context'));
 	}
 
 	#ensureCorrectSortOrder() {
@@ -87,7 +85,7 @@ export class TradesTab extends BaseComponent {
 	}
 
 	#renderTrades() {
-		const container = this.#$element.find('[data-ref="trades-items"]');
+		const tradesItems = this.#$element.find('[data-ref="tradesItems"]');
 		this.#removeOrphanedItems();
 
 		this.#cachedTrades.forEach((trade, index) => {
@@ -96,7 +94,7 @@ export class TradesTab extends BaseComponent {
 			if (!item) {
 				item = new TradesItem();
 				this.#itemsMap.set(index, item);
-				container.append(item.render());
+				tradesItems.append(item.render());
 			}
 
 			item.update(trade);

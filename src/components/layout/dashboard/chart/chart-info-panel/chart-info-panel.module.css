@@ -1,0 +1,25 @@
+.chart-info-panel {
+	display: flex;
+	align-items: end;
+	gap: 15px;
+	position: absolute;
+	z-index: 3;
+	top: 12px;
+	left: 12px;
+
+	> .meta {
+		font-size: 1.6rem;
+	}
+
+	> .candlestick {
+		font-size: 1.4rem;
+
+		> .red {
+			color: #f23645;
+		}
+
+		> .green {
+			color: #008984;
+		}
+	}
+}

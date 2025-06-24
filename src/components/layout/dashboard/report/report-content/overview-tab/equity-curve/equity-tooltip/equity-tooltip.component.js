@@ -12,6 +12,7 @@ import templateHTML from './equity-tooltip.template.html?raw';
 
 export class EquityTooltip extends BaseComponent {
 	#$element;
+
 	#active = false;
 	#dataFields = new Map();
 

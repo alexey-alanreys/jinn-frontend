@@ -18,11 +18,12 @@ import { EquityTooltip } from './equity-tooltip/equity-tooltip.component';
 
 export class EquityCurve extends BaseComponent {
 	#$element;
-	#chart;
-	#equitySeries;
-	#markersVisible = false;
+	#chartApi;
+	#series;
 	#containerLeftOffset;
 	#containerBottomOffset;
+
+	#markersVisible = false;
 
 	render() {
 		this.#initComponents();
@@ -36,8 +37,8 @@ export class EquityCurve extends BaseComponent {
 		if (equity.length !== 0) {
 			this.#show();
 
-			this.#equitySeries.setData(equity);
-			this.#chart.timeScale().fitContent();
+			this.#series.setData(equity);
+			this.#chartApi.timeScale().fitContent();
 		} else {
 			this.#hide();
 		}
@@ -57,11 +58,13 @@ export class EquityCurve extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#chart = createChart(this.element, chartOptions);
-		this.#equitySeries = this.#chart.addSeries(AreaSeries, seriesOptions);
+		this.#chartApi = createChart(this.element, chartOptions);
+		this.#series = this.#chartApi.addSeries(AreaSeries, seriesOptions);
 
-		this.#chart.subscribeCrosshairMove(this.#handleCrosshairMove.bind(this));
-		this.#chart
+		this.#chartApi.subscribeCrosshairMove(
+			this.#handleCrosshairMove.bind(this),
+		);
+		this.#chartApi
 			.timeScale()
 			.subscribeVisibleLogicalRangeChange(
 				this.#handleVisibleLogicalRangeChange.bind(this),
@@ -96,7 +99,7 @@ export class EquityCurve extends BaseComponent {
 
 	#updateTooltipContent(param) {
 		const { logical, seriesData } = param;
-		const equityData = seriesData.get(this.#equitySeries);
+		const equityData = seriesData.get(this.#series);
 
 		if (!equityData) return;
 
@@ -128,7 +131,7 @@ export class EquityCurve extends BaseComponent {
 
 		if (markersShouldBeVisible !== this.#markersVisible) {
 			this.#markersVisible = markersShouldBeVisible;
-			this.#equitySeries.applyOptions({
+			this.#series.applyOptions({
 				pointMarkersVisible: markersShouldBeVisible,
 			});
 		}

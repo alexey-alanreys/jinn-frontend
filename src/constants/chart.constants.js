@@ -1,1 +1,1 @@
-export const INITIAL_VISIBLE_RANGE = 1000;
+export const DATA_BATCH_SIZE = 1000;

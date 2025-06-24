@@ -1,0 +1,70 @@
+import { BaseComponent } from '@/core/component/base.component';
+import { $Q } from '@/core/libs/query.lib';
+import { renderService } from '@/core/services/render.service';
+import { stateService } from '@/core/services/state.service';
+
+import styles from './chart-info-panel.module.css';
+import templateHTML from './chart-info-panel.template.html?raw';
+
+export class ChartInfoPanel extends BaseComponent {
+	#$element;
+	#metaFields = new Map();
+	#candleFields = new Map();
+
+	render() {
+		this.#initDOM();
+		this.#setupInitialState();
+
+		return this.element;
+	}
+
+	update(candlestick, fullUpdate = false) {
+		if (fullUpdate) this.#updateMeta();
+
+		this.#updateCandlestick(candlestick);
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		this.#$element
+			.find('[data-ref="meta"]')
+			.findAll('[data-field]')
+			.forEach((el) => {
+				const key = el.data('field');
+				this.#metaFields.set(key, { element: el });
+			});
+
+		this.#$element
+			.find('[data-ref="candlestick"]')
+			.findAll('[data-field]')
+			.forEach((el) => {
+				const key = el.data('field');
+				this.#candleFields.set(key, { element: el });
+			});
+	}
+
+	#updateMeta() {
+		const context = stateService.get('context');
+
+		this.#metaFields.forEach(({ element }, key) => {
+			element.text(context[key]);
+		});
+	}
+
+	#updateCandlestick(candlestick) {
+		const isBullish = candlestick.close > candlestick.open;
+		const classToAdd = isBullish ? styles.green : styles.red;
+		const classToRemove = isBullish ? styles.red : styles.green;
+
+		this.#candleFields.forEach(({ element }, key) => {
+			element
+				.text(candlestick[key])
+				.removeClass(classToRemove)
+				.addClass(classToAdd);
+		});
+	}
+}

@@ -21,11 +21,10 @@ export class MetricsTab extends BaseComponent {
 		return this.element;
 	}
 
-	async update() {
+	async update(context) {
 		try {
-			const contextId = stateService.get('contextId');
-			const metrics = await reportService.getMetrics(contextId);
-			const container = this.#$element.find('[data-ref="metrics-items"]');
+			const metrics = await reportService.getMetrics(context.id);
+			const metricsItems = this.#$element.find('[data-ref="metricsItems"]');
 
 			metrics.forEach((metric, index) => {
 				let item = this.#itemsMap.get(index);
@@ -33,7 +32,7 @@ export class MetricsTab extends BaseComponent {
 				if (!item) {
 					item = new MetricsItem();
 					this.#itemsMap.set(index, item);
-					container.append(item.render());
+					metricsItems.append(item.render());
 				}
 
 				item.update(metric);
@@ -57,9 +56,7 @@ export class MetricsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		stateService.subscribe('contexts', this.update.bind(this));
-		stateService.subscribe('contextId', this.update.bind(this));
-
-		this.update();
+		stateService.subscribe('context', this.update.bind(this));
+		this.update(stateService.get('context'));
 	}
 }

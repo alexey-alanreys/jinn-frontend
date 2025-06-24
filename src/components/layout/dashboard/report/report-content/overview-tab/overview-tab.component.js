@@ -15,8 +15,6 @@ export class OverviewTab extends BaseComponent {
 
 	#$element;
 	#dataFields = new Map();
-	#redTextClass = styles['text-red'];
-	#greenTextClass = styles['text-green'];
 
 	render() {
 		this.#initComponents();
@@ -26,10 +24,9 @@ export class OverviewTab extends BaseComponent {
 		return this.element;
 	}
 
-	async update() {
+	async update(context) {
 		try {
-			const contextId = stateService.get('contextId');
-			const overview = await reportService.getOverview(contextId);
+			const overview = await reportService.getOverview(context.id);
 
 			this.#dataFields.forEach(({ element, isProfitField }, index) => {
 				const value = overview.metrics[index];
@@ -73,10 +70,8 @@ export class OverviewTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		stateService.subscribe('contexts', this.update.bind(this));
-		stateService.subscribe('contextId', this.update.bind(this));
-
-		this.update();
+		stateService.subscribe('context', this.update.bind(this));
+		this.update(stateService.get('context'));
 	}
 
 	#isProfitField(index) {
@@ -85,11 +80,9 @@ export class OverviewTab extends BaseComponent {
 
 	#applyColorClass(element, value) {
 		if (value.startsWith('-')) {
-			element.addClass(this.#redTextClass);
-			element.removeClass(this.#greenTextClass);
+			element.removeClass(styles.green).addClass(styles.red);
 		} else {
-			element.addClass(this.#greenTextClass);
-			element.removeClass(this.#redTextClass);
+			element.removeClass(styles.red).addClass(styles.green);
 		}
 	}
 }

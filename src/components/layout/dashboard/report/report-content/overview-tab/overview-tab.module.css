@@ -27,11 +27,11 @@
 				gap: 6px;
 				font-size: 1.6rem;
 
-				> .text-red {
+				> .red {
 					color: #d6333f;
 				}
 
-				> .text-green {
+				> .green {
 					color: #06755f;
 				}
 			}

@@ -13,10 +13,11 @@ class InitService {
 	 */
 	async initialize() {
 		const contexts = await contextsService.getAll();
-		const contextId = Object.keys(contexts)[0];
+		const [id, data] = Object.entries(contexts)[0];
+		const context = { id, ...data };
 
 		stateService.set('contexts', contexts);
-		stateService.set('contextId', contextId);
+		stateService.set('context', context);
 	}
 }
 
