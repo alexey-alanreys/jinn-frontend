@@ -12,13 +12,13 @@ class Query {
 	/**
 	 * Initializes a new instance of the Query class.
 	 *
-	 * @param {string | HTMLElement | Document} selector
-	 * - A CSS selector string, HTMLElement, or Document.
-	 * If a string is provided, the first matching element in the DOM
-	 * will be selected.
-	 * If an HTMLElement or Document is provided, it will be used directly.
-	 * @throws {Error} Throws an error if the selector is invalid
-	 * or if no element is found for a string selector.
+	 * @param {string | HTMLElement | Document} selector A CSS selector string,
+	 *        HTMLElement, or Document. If a string is provided,
+	 *        the first matching element in the DOM will be selected.
+	 *        If an HTMLElement or Document is provided,
+	 *        it will be used directly.
+	 * @throws {Error} If the selector is invalid
+	 *         or if no element is found for a string selector.
 	 */
 	constructor(selector) {
 		if (typeof selector === 'string') {
@@ -45,11 +45,10 @@ class Query {
 	 * Finds the first element that matches the specified selector
 	 * within the current element.
 	 *
-	 * @param {string} selector
-	 * - A CSS selector string to search for within the current element.
-	 * @throws {Error} Throws an error
-	 * if no element matching the selector is found.
+	 * @param {string} selector A CSS selector string
+	 *        to search for within the current element.
 	 * @returns {Query} A new Query instance wrapping the found element.
+	 * @throws {Error} If no element matching the selector is found.
 	 */
 	find(selector) {
 		const element = new Query(this.element.querySelector(selector));
@@ -64,10 +63,11 @@ class Query {
 	/**
 	 * Find all elements that match the specified selector
 	 * within the selected element.
-	 * @param {string} selector
-	 * - A CSS selector string to search for within the selected element.
+	 *
+	 * @param {string} selector A CSS selector string
+	 *        to search for within the selected element.
 	 * @returns {RQuery[]} An array of new Query instances
-	 * for the found elements.
+	 *          for the found elements.
 	 */
 	findAll(selector) {
 		const elements = this.element.querySelectorAll(selector);
@@ -79,11 +79,10 @@ class Query {
 	/**
 	 * Appends a new child element to the current element.
 	 *
-	 * @param {HTMLElement} childElement
-	 * - The child element to append.
-	 * @throws {Error} Throws an error
-	 * if the provided childElement is not an instance of HTMLElement.
+	 * @param {HTMLElement} childElement The child element to append.
 	 * @returns {Query} The current Query instance for method chaining.
+	 * @throws {Error} If the provided childElement
+	 *         is not an instance of HTMLElement.
 	 */
 	append(childElement) {
 		if (!(childElement instanceof HTMLElement)) {
@@ -99,13 +98,11 @@ class Query {
 	/**
 	 * Inserts a new element immediately before the current element in the DOM.
 	 *
-	 * @param {HTMLElement} newElement
-	 * - The new element to insert.
-	 * @throws {Error} Throws an error
-	 * if the provided newElement is not an instance of HTMLElement or
-	 * if the current element
-	 * does not have a parent element.
+	 * @param {HTMLElement} newElement The new element to insert.
 	 * @returns {Query} The current Query instance for method chaining.
+	 * @throws {Error} If the provided newElement
+	 *         is not an instance of HTMLElement
+	 *         or if the current element does not have a parent element.
 	 */
 	before(newElement) {
 		if (!(newElement instanceof HTMLElement)) {
@@ -127,11 +124,12 @@ class Query {
 	/**
 	 * Gets or sets the inner HTML content of the current element.
 	 *
-	 * @param {string} [htmlContent]
-	 * - The HTML content to set.
-	 * If omitted, the method will return the current inner HTML of the element.
+	 * @param {string} [htmlContent] The HTML content to set.
+	 *        If omitted, the method will return the current
+	 *        inner HTML of the element.
 	 * @returns {Query | string} The current Query instance for method chaining
-	 * when setting HTML content, or the current inner HTML when getting.
+	 *          when setting HTML content,
+	 *          or the current inner HTML when getting.
 	 */
 	html(htmlContent) {
 		if (typeof htmlContent === 'undefined') {
@@ -145,11 +143,10 @@ class Query {
 	/**
 	 * Get or set the text content of the selected element.
 	 *
-	 * @param {string} [textContent]
-	 * - Optional text content to set.
-	 * If not provided, the current text content will be returned.
-	 * @returns {Query | string} The current Query instance for method
-	 * chaining when setting text content, or the current text content.
+	 * @param {string} [textContent] Optional text content to set.
+	 *        If not provided, the current text content will be returned.
+	 * @returns {Query | string} The current Query instance for method chaining
+	 *          when setting text content, or the current text content.
 	 */
 	text(textContent) {
 		if (typeof textContent === 'undefined') {
@@ -165,9 +162,9 @@ class Query {
 	/**
 	 * Adds a click event listener to the current element.
 	 *
-	 * @param {function(Event): void} callback
-	 * - The function to execute when the element is clicked.
-	 * The callback receives the event object as its argument.
+	 * @param {function(Event): void} callback The function
+	 *        to execute when the element is clicked.
+	 *        The callback receives the event object as its argument.
 	 * @returns {Query} The current Query instance for method chaining.
 	 */
 	click(callback) {
@@ -177,11 +174,13 @@ class Query {
 
 	/**
 	 * Add event listener to selected element.
-	 * @param {string} eventType
-	 * - Event type ('click', 'input' etc.)
-	 * @param {function(Event): void} callback
-	 * - Handler function receiving event object
+	 *
+	 * @param {string} eventType Event type ('click', 'input' etc.)
+	 * @param {function(Event): void} callback Handler function
+	 *        receiving event object
 	 * @returns {RQuery} Current instance for chaining
+	 * @throws {Error} If `eventType` is not a string
+	 *         or `callback` is not a function.
 	 */
 	on(eventType, callback) {
 		if (typeof eventType !== 'string' || typeof callback !== 'function') {
@@ -196,11 +195,11 @@ class Query {
 
 	/**
 	 * Remove event listener from selected element.
-	 * @param {string} eventType
-	 * - Event type to remove
-	 * @param {function(Event): void} [callback]
-	 * - Optional callback to remove
-	 * @returns {Query} Current instance for chaining
+	 *
+	 * @param {string} eventType Event type to remove.
+	 * @param {function(Event): void} [callback] Optional callback to remove
+	 * @returns {Query} Current instance for chaining.
+	 * @throws {Error} If `eventType` is not a string.
 	 */
 	off(eventType, callback) {
 		if (typeof eventType !== 'string') {
@@ -226,15 +225,15 @@ class Query {
 	/**
 	 * Dispatches a custom event on the current element.
 	 *
-	 * @param {string} eventName
-	 * - The name of the custom event.
-	 * @param {Object} [detail]
-	 * - Optional data to pass with the event (available in event.detail).
-	 * @param {Object} [options]
-	 * - Optional event options like bubbles, cancelable, etc.
-	 * @returns {boolean} The return value is false if event is cancelable and
-	 * at least one of the event handlers called preventDefault(),
-	 * otherwise true.
+	 * @param {string} eventName The name of the custom event.
+	 * @param {Object} [detail] Optional data to pass with the event
+	 *        (available in event.detail).
+	 * @param {Object} [options] Optional event options
+	 *        (bubbles, cancelable, composed).
+	 * @returns {boolean} The return value is false if event is cancelable
+	 *          and at least one of the event handlers called preventDefault(),
+	 *          otherwise true.
+	 *  @throws {Error} If `eventName` is not a string.
 	 */
 	trigger(eventName, detail = {}, options = {}) {
 		if (typeof eventName !== 'string') {
@@ -255,14 +254,14 @@ class Query {
 
 	/**
 	 * Sets attributes and event listeners for an input element.
-	 * @param {Object} options
-	 * - An object containing input options.
-	 * @param {function(Event): void} [options.onInput]
-	 * - Function to be called when the input event occurs.
-	 * @param {Object} [options.rest]
-	 * - Optional attributes to set on the input element.
-	 * @throws {Error} If the current element is not an input element.
+	 *
+	 * @param {Object} options An object containing input options.
+	 * @param {function(Event): void} [options.onInput] Function to be called
+	 *        when the input event occurs.
+	 * @param {Object} [options.rest] Optional attributes
+	 *        to set on the input element.
 	 * @returns {Query} The current Query instance for method chaining.
+	 * @throws {Error} If the current element is not an input element.
 	 */
 	input({ onInput, ...rest }) {
 		if (this.element.tagName.toLowerCase() !== 'input') {
@@ -283,12 +282,14 @@ class Query {
 	/* STYLES */
 
 	/**
-	 * Get or set CSS properties
-	 * @param {string|Object} prop
-	 * - Property name or object of properties
-	 * @param {string} [value]
-	 * - Value to set
-	 * @returns {Query|string} Current instance or property value
+	 * Get or set CSS properties.
+	 *
+	 * @param {string|Object} prop Property name or object of properties.
+	 * @param {string} [value] Value to set.
+	 * @returns {Query|string} Current instance or property value.
+	 * @throws {Error} If arguments are invalid
+	 *         (e.g., prop is neither string nor object).
+	 *
 	 */
 	css(prop, value) {
 		if (typeof prop === 'string' && typeof value === 'undefined') {
@@ -309,8 +310,8 @@ class Query {
 	}
 
 	/**
-	 * Set document cursor style
-	 * @param {string} cursorStyle - CSS cursor value
+	 * Set document cursor style.
+	 * @param {string} cursorStyle CSS cursor value.
 	 * @returns {Query}
 	 */
 	cursor(cursorStyle) {
@@ -329,7 +330,7 @@ class Query {
 	 *        or an array of class names to add. If an array is provided,
 	 *        each class name in the array will be added to the element.
 	 * @returns {Query} The current Query instance for method chaining.
-	 * @throws {Error} Throws an error if the provided classNames
+	 * @throws {Error} If the provided classNames
 	 *         is neither a string nor an array of strings.
 	 */
 	addClass(classNames) {
@@ -351,9 +352,8 @@ class Query {
 	/**
 	 * Removes one or more CSS classes from the element.
 	 *
-	 * @param {string | string[]} classNames
-	 * - The class name(s) to remove.
-	 * Can be a single class name as a string or an array of class names.
+	 * @param {string | string[]} classNames The class name(s) to remove.
+	 *        Can be a single class name as a string or an array of class names.
 	 * @returns {this} The current Query instance for method chaining.
 	 */
 	removeClass(classNames) {
@@ -371,13 +371,13 @@ class Query {
 	/**
 	 * Set or get the value of an attribute on the selected element.
 	 *
-	 * @param {string} attributeName
-	 * - The name of the attribute to set or get.
-	 * @param {string} [value]
-	 * - The value to set for the attribute.
-	 * If not provided, the current value of the attribute will be returned.
+	 * @param {string} attributeName The name of the attribute to set or get.
+	 * @param {string} [value] The value to set for the attribute.
+	 *        If not provided, the current value of the attribute
+	 *        will be returned.
 	 * @returns {Query|string} The current Query instance for method chaining
-	 * (if setting) or the attribute value (if getting).
+	 *          (if setting) or the attribute value (if getting).
+	 * @throws {Error} If `attributeName` is not a string.
 	 */
 	attr(attributeName, value) {
 		if (typeof attributeName !== 'string') {
@@ -395,12 +395,12 @@ class Query {
 	/**
 	 * Gets or sets a data attribute on the element.
 	 *
-	 * @param {string} key
-	 * - The data attribute name (without 'data-' prefix).
-	 * @param {string} [value]
-	 * - The value to set. If omitted, returns the current value.
+	 * @param {string} key The data attribute name (without 'data-' prefix).
+	 * @param {string} [value] The value to set.
+	 *        If omitted, returns the current value.
 	 * @returns {Query|string} The current Query instance (if setting)
-	 * or the data value (if getting).
+	 *          or the data value (if getting).
+	 * @throws {Error} If `key` is not a string.
 	 */
 	data(key, value) {
 		if (typeof key !== 'string') {
@@ -420,10 +420,10 @@ class Query {
 	/**
 	 * Checks if an attribute is set to a boolean value.
 	 *
-	 * @param {string} attrName
-	 * - The attribute name to check.
+	 * @param {string} attrName The attribute name to check.
 	 * @returns {boolean} `true` if the attribute exists and is not `false`,
-	 * otherwise `false`.
+	 *          otherwise `false`.
+	 * @throws {Error} If `attrName` is not a string.
 	 */
 	is(attrName) {
 		if (typeof attrName !== 'string') {
@@ -436,9 +436,10 @@ class Query {
 
 	/**
 	 * Removes an attribute from the current element.
-	 * @param {string} attrName
-	 * - The name of the attribute to remove.
+	 *
+	 * @param {string} attrName The name of the attribute to remove.
 	 * @return {RQuery} Returns the RQuery instance.
+	 * @throws {Error} If `attrName` is not a string.
 	 */
 	removeAttr(attrName) {
 		if (typeof attrName !== 'string') {
@@ -453,8 +454,8 @@ class Query {
 /**
  * Creates a new Query instance for the specified selector or element.
  *
- * @param {string | HTMLElement} selector
- * - A CSS selector string or an HTMLElement.
+ * @param {string | HTMLElement} selector A CSS selector string
+ *        or an HTMLElement.
  * @returns {Query} A new Query instance wrapping the selected element.
  */
 export const $Q = (selector) => new Query(selector);

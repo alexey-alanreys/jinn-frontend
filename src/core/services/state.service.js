@@ -10,10 +10,8 @@ class StateService {
 	/**
 	 * Sets a value by key and notifies subscribers.
 	 *
-	 * @param {string} key
-	 * - The key to set.
-	 * @param {*} value
-	 * - The value to store.
+	 * @param {string} key The key to set.
+	 * @param {*} value The value to store.
 	 */
 	set(key, value) {
 		this.state[key] = value;
@@ -23,8 +21,7 @@ class StateService {
 	/**
 	 * Gets a value by key.
 	 *
-	 * @param {string} key
-	 * - The key to retrieve.
+	 * @param {string} key The key to retrieve.
 	 * @returns {*} The stored value or undefined.
 	 */
 	get(key) {
@@ -34,10 +31,8 @@ class StateService {
 	/**
 	 * Subscribes to changes for a key.
 	 *
-	 * @param {string} key
-	 * - Key to observe.
-	 * @param {function} callback
-	 * - Function to call on change.
+	 * @param {string} key Key to observe.
+	 * @param {function} callback Function to call on change.
 	 */
 	subscribe(key, callback) {
 		if (!this.subscribers.has(key)) {
@@ -50,10 +45,8 @@ class StateService {
 	/**
 	 * Unsubscribes from key changes.
 	 *
-	 * @param {string} key
-	 * - Observed key.
-	 * @param {function} callback
-	 * - Function to remove.
+	 * @param {string} key Observed key.
+	 * @param {function} callback Function to remove.
 	 */
 	unsubscribe(key, callback) {
 		if (this.subscribers.has(key)) {

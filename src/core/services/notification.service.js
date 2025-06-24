@@ -45,11 +45,9 @@ class NotificationService {
 	/**
 	 * Adds a notification to the queue and displays it if possible.
 	 *
-	 * @param {('success'|'error')} type
-	 * - Notification type
-	 * @param {string} message
-	 * - Text to display
-	 * @throws {Error} If the type is invalid
+	 * @param {('success'|'error')} type Notification type.
+	 * @param {string} message Text to display.
+	 * @throws {Error} If the type is invalid.
 	 */
 	show(type, message) {
 		if (!['success', 'error'].includes(type)) {

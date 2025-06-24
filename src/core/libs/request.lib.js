@@ -10,28 +10,22 @@ import { SERVER_URL } from '@/config/url.config';
 /**
  * Extracts an error message from an error object.
  *
- * @param {Object} error
- * - Error object containing a message.
- * @param {string|Object} error.message
- * - Error message, can be a string or an object.
- * @returns {string} Extracted error message.
+ * @param {Object} error Error object containing a message.
+ * @param {string|Object} error.message Error message,
+ *        can be a string or an object.
+ * @returns {string} Human-readable error message.
  */
 export function extractErrorMessage(error) {
 	if (typeof error === 'string') return error;
 
-	if (error && typeof error.message !== 'undefined') {
-		return typeof error.message === 'object'
-			? error.message[0]
-			: error.message;
+	if (error?.message) {
+		if (typeof error.message === 'string') return error.message;
+		if (Array.isArray(error.message)) return error.message[0];
 	}
 
-	if (error && error.type) {
-		return error.type;
-	}
+	if (error?.type) return error.type;
 
-	if (error && typeof error === 'object') {
-		return JSON.stringify(error);
-	}
+	if (typeof error === 'object') return JSON.stringify(error);
 
 	return 'Unknown error occurred';
 }
@@ -39,16 +33,13 @@ export function extractErrorMessage(error) {
 /**
  * Performs an HTTP request to the API.
  *
- * @param {Object} options
- * - Request configuration.
- * @param {string} options.path
- * - API endpoint path.
+ * @param {Object} options Request configuration.
+ * @param {string} options.path API endpoint path.
  * @param {'GET'|'POST'|'PATCH'|'DELETE'|'PUT'} [options.method='GET']
- * - HTTP method to use for the request.
- * @param {Object|null} [options.body=null]
- * - JSON payload to send with the request.
- * @param {Object} [options.headers={}]
- * - Additional headers.
+ *        HTTP method to use for the request.
+ * @param {Object|null} [options.body=null] JSON payload
+ *        to send with the request.
+ * @param {Object} [options.headers={}] Additional headers.
  * @returns {Promise<{data: any|null, error: string|null}>} Result object
  */
 export async function request({
