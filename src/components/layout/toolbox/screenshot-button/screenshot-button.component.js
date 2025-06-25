@@ -31,12 +31,16 @@ export class ScreenshotButton extends BaseComponent {
 		if (chartApi) {
 			chartApi.takeScreenshot().toBlob(this.#openScreenshot, 'image/png', 1);
 		} else {
-			console.warn('[ScreenshotButton] сhartApi not found in stateService');
+			console.warn('сhartApi not found in stateService');
 		}
 	}
 
 	#openScreenshot(blob) {
 		const url = URL.createObjectURL(blob);
-		window.open(url, '_blank');
+		const newTab = window.open(url, '_blank');
+
+		if (newTab) {
+			newTab.onload = () => URL.revokeObjectURL(url);
+		}
 	}
 }

@@ -31,9 +31,7 @@ export class ScrollToRealtimeButton extends BaseComponent {
 		if (chartApi) {
 			chartApi.timeScale().scrollToRealTime();
 		} else {
-			console.warn(
-				'[ScrollToRealtimeButton] сhartApi not found in stateService',
-			);
+			console.warn('сhartApi not found in stateService');
 		}
 	}
 }

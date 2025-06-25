@@ -30,7 +30,7 @@ export class ClearDrawingButton extends BaseComponent {
 		const lines = stateService.get('drawedLines');
 
 		if (!chartApi) {
-			console.warn('[ClearDrawingButton] сhartApi not found in stateService');
+			console.warn('сhartApi not found in stateService');
 		}
 
 		if (lines) {

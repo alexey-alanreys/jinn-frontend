@@ -26,13 +26,16 @@ export class FullScreenButton extends BaseComponent {
 
 	#handleClick() {
 		const chart = $Q('[data-ref="chart"]').element;
+		if (!chart) return;
 
-		if (chart.requestFullscreen) {
-			chart.requestFullscreen();
-		} else if (chart.webkitrequestFullscreen) {
-			chart.webkitRequestFullscreen();
-		} else if (chart.mozRequestFullscreen) {
-			chart.mozRequestFullScreen();
+		const requestFullScreen =
+			chart.requestFullscreen?.bind(chart) ||
+			chart.webkitRequestFullscreen?.bind(chart) ||
+			chart.mozRequestFullScreen?.bind(chart) ||
+			chart.msRequestFullscreen?.bind(chart);
+
+		if (requestFullScreen) {
+			requestFullScreen();
 		}
 	}
 }
