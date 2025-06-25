@@ -18,10 +18,10 @@ export class ChartInfoPanel extends BaseComponent {
 		return this.element;
 	}
 
-	update(candlestick, fullUpdate = false) {
+	update(candlestick, withMeta = false) {
 		if (!candlestick) return;
 
-		if (fullUpdate) {
+		if (withMeta) {
 			this.#updateMeta();
 		}
 
@@ -65,10 +65,16 @@ export class ChartInfoPanel extends BaseComponent {
 		const classToRemove = isBullish ? styles.red : styles.green;
 
 		this.#candleFields.forEach(({ element }, key) => {
-			element
-				.text(candlestick[key])
-				.removeClass(classToRemove)
-				.addClass(classToAdd);
+			const currentValue = element.text();
+			const newValue = candlestick[key];
+
+			if (currentValue !== String(newValue)) {
+				element.text(newValue);
+			}
+
+			if (!element.hasClass(classToAdd)) {
+				element.addClass(classToAdd).removeClass(classToRemove);
+			}
 		});
 	}
 }

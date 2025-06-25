@@ -31,14 +31,14 @@ export class Chart extends BaseComponent {
 	#$element;
 	#chartApi;
 
-	#currentContextId = null;
+	#currentId = null;
 	#data = {
 		candlesticks: null,
 		indicators: null,
 		markers: null,
 	};
 	#series = {
-		candlesticks: null,
+		candlestick: null,
 		indicators: new Map(),
 		markers: null,
 	};
@@ -59,8 +59,8 @@ export class Chart extends BaseComponent {
 	async update(context) {
 		await this.#loadData();
 
-		if (this.#currentContextId !== context.id) {
-			this.#currentContextId = context.id;
+		if (this.#currentId !== context.id) {
+			this.#currentId = context.id;
 
 			this.#removeSeries();
 			this.#createSeries();
@@ -138,11 +138,11 @@ export class Chart extends BaseComponent {
 	}
 
 	#removeSeries() {
-		const { candlesticks, indicators } = this.#series;
+		const { candlestick, indicators } = this.#series;
 
-		if (candlesticks) {
-			this.#chartApi.removeSeries(candlesticks);
-			this.#series.candlesticks = null;
+		if (candlestick) {
+			this.#chartApi.removeSeries(candlestick);
+			this.#series.candlestick = null;
 		}
 
 		indicators.forEach((series) => this.#chartApi.removeSeries(series));
@@ -159,7 +159,7 @@ export class Chart extends BaseComponent {
 	#createCandlestickSeries() {
 		const { minMove } = stateService.get('context');
 
-		this.#series.candlesticks = this.#chartApi.addSeries(CandlestickSeries, {
+		this.#series.candlestick = this.#chartApi.addSeries(CandlestickSeries, {
 			...candlestickStyleOptions,
 			priceFormat: {
 				type: 'price',
@@ -186,7 +186,7 @@ export class Chart extends BaseComponent {
 	}
 
 	#updateCandlesticks() {
-		this.#series.candlesticks.setData(
+		this.#series.candlestick.setData(
 			this.#data.candlesticks.slice(-this.#visibleRange),
 		);
 	}
@@ -201,14 +201,14 @@ export class Chart extends BaseComponent {
 	#updateMarkers() {
 		if (!this.#data.markers) return;
 
-		const startTime = this.#series.candlesticks.data()[0].time;
+		const startTime = this.#series.candlestick.data()[0].time;
 		const visibleMarkers = this.#data.markers.filter(
 			(marker) => marker.time >= startTime,
 		);
 
 		if (!this.#series.markers) {
 			this.#series.markers = createSeriesMarkers(
-				this.#series.candlesticks,
+				this.#series.candlestick,
 				visibleMarkers,
 			);
 		} else {
@@ -217,7 +217,7 @@ export class Chart extends BaseComponent {
 	}
 
 	#resetInfoPanels() {
-		const candlestick = this.#series.candlesticks.data().at(-1);
+		const candlestick = this.#series.candlestick.data().at(-1);
 
 		const indicators = Object.fromEntries(
 			Array.from(this.#series.indicators, ([key, series]) => [
@@ -233,7 +233,7 @@ export class Chart extends BaseComponent {
 	#handleCrosshairMove({ point, time, seriesData }) {
 		if (!point || !time) return;
 
-		const candlestick = seriesData.get(this.#series.candlesticks);
+		const candlestick = seriesData.get(this.#series.candlestick);
 		const indicators = Object.fromEntries(
 			[...this.#series.indicators].map(([key, series]) => [
 				key,

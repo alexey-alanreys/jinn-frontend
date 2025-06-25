@@ -369,6 +369,21 @@ class Query {
 	}
 
 	/**
+	 * Checks if the element has the specified CSS class.
+	 *
+	 * @param {string} className The class name to check for.
+	 * @returns {boolean} `true` if the element has the class, otherwise `false`.
+	 * @throws {Error} If `className` is not a string.
+	 */
+	hasClass(className) {
+		if (typeof className !== 'string') {
+			throw new Error('Class name must be a string.');
+		}
+
+		return this.element.classList.contains(className);
+	}
+
+	/**
 	 * Set or get the value of an attribute on the selected element.
 	 *
 	 * @param {string} attributeName The name of the attribute to set or get.

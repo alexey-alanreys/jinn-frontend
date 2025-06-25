@@ -16,23 +16,33 @@ export class IndicatorsInfoPanel extends BaseComponent {
 		return this.element;
 	}
 
-	update(indicators, fullUpdate = false) {
-		if (fullUpdate) {
+	update(indicators, withRender = false) {
+		if (withRender) {
 			this.#dataFields.clear();
 			this.#renderIndicatorFields();
 		}
 
 		this.#dataFields.forEach(({ element }, key) => {
-			if (!indicators[key]) return;
+			const data = indicators[key];
+			if (!data) return;
 
-			let { value, color } = indicators[key];
+			let { value, color } = data;
 
 			if (color === 'transparent') {
 				value = '∅';
-				color = 'inherit';
+				color = 'rgb(41, 33, 33)';
 			}
 
-			element.text(value).attr('style', `color:${color}`);
+			const currentText = element.text();
+			const currentColor = element.css('color');
+
+			if (currentText !== String(value)) {
+				element.text(value);
+			}
+
+			if (currentColor !== color) {
+				element.css('color', color);
+			}
 		});
 	}
 

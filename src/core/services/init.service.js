@@ -18,6 +18,12 @@ class InitService {
 
 		stateService.set('contexts', contexts);
 		stateService.set('context', context);
+
+		// setTimeout(() => {
+		// 	const [id, data] = Object.entries(contexts)[1];
+		// 	const context = { id, ...data };
+		// 	stateService.set('context', context);
+		// }, 5000);
 	}
 }
 
