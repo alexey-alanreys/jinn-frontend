@@ -2,6 +2,7 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
+import { storageService } from '@/core/services/storage.service';
 
 import styles from './clear-drawing-button.module.css';
 import templateHTML from './clear-drawing-button.template.html?raw';
@@ -26,17 +27,32 @@ export class ClearDrawingButton extends BaseComponent {
 	}
 
 	#handleClick() {
+		this.#removeSeries();
+		this.#clearStorage();
+	}
+
+	#removeSeries() {
 		const chartApi = stateService.get('chartApi');
 		if (!chartApi) return;
 
-		const lines = stateService.get('drawedLines');
+		const drawings = stateService.get('drawings') || [];
+		drawings.forEach((series) => chartApi.removeSeries(series));
 
-		if (lines) {
-			for (const line of lines) {
-				chartApi.removeSeries(line);
-			}
+		stateService.set('drawings', []);
+	}
 
-			stateService.set('drawedLines', []);
-		}
+	#clearStorage() {
+		const storedData = storageService.getItem('drawings');
+		if (!storedData) return;
+
+		const contextId = stateService.get('context').id;
+		const updated = Object.fromEntries(
+			Object.entries(storedData).map(([type, data]) => {
+				const { [contextId]: _, ...rest } = data || {};
+				return [type, rest];
+			}),
+		);
+
+		storageService.setItem('drawings', updated);
 	}
 }

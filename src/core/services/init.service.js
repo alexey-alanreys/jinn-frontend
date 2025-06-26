@@ -40,21 +40,17 @@ class InitService {
 	cleanupOrphanedDrawings(contextIds, type = 'trendlines') {
 		const storedData = storageService.getItem('drawings') || { [type]: {} };
 		const typeData = storedData[type] || {};
-		let needsUpdate = false;
 
-		Object.keys(typeData).forEach((contextId) => {
-			if (!contextIds.includes(contextId)) {
-				delete typeData[contextId];
-				needsUpdate = true;
-			}
+		const filteredTypeData = Object.fromEntries(
+			Object.entries(typeData).filter(([contextId]) =>
+				contextIds.includes(contextId),
+			),
+		);
+
+		storageService.setItem('drawings', {
+			...storedData,
+			[type]: filteredTypeData,
 		});
-
-		if (needsUpdate) {
-			storageService.setItem('drawings', {
-				...storedData,
-				[type]: typeData,
-			});
-		}
 	}
 }
 
