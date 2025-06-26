@@ -8,4 +8,7 @@ export const DATE_FMT = {
 	hour12: false,
 	timeZone: 'UTC',
 };
+
+export const TOOLTIP_MIN_LEFT = 50;
+
 export const TOOLTIP_OFFSET_X = 15;

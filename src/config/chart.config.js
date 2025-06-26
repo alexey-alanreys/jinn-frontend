@@ -1,4 +1,4 @@
-const chartOptions = {
+export const chartOptions = {
 	autoSize: true,
 	layout: {
 		background: { type: 'solid', color: '#fff' },
@@ -79,20 +79,3 @@ const chartOptions = {
 		},
 	},
 };
-
-const candlestickStyleOptions = {
-	upColor: '#008984',
-	downColor: '#f23645',
-	borderVisible: false,
-	wickUpColor: '#008984',
-	wickDownColor: '#f23645',
-};
-
-const lineStyleOptions = {
-	lastValueVisible: false,
-	priceLineVisible: false,
-	lineWidth: 2,
-	crosshairMarkerVisible: false,
-};
-
-export { chartOptions, candlestickStyleOptions, lineStyleOptions };

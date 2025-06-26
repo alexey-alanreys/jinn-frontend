@@ -4,12 +4,13 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { chartOptions, seriesOptions } from '@/config/equity.config';
+import { chartOptions } from '@/config/equity.config';
 
 import {
 	MARKER_RANGE_THRESHOLD,
-	TOOLTIP_MIN_LEFT,
+	SERIES_OPTIONS,
 } from '@/constants/equity-curve.constants';
+import { TOOLTIP_MIN_LEFT } from '@/constants/equity-tooltip.constants';
 
 import styles from './equity-curve.module.css';
 import templateHTML from './equity-curve.template.html?raw';
@@ -59,7 +60,7 @@ export class EquityCurve extends BaseComponent {
 
 	#setupInitialState() {
 		this.#chartApi = createChart(this.element, chartOptions);
-		this.#series = this.#chartApi.addSeries(AreaSeries, seriesOptions);
+		this.#series = this.#chartApi.addSeries(AreaSeries, SERIES_OPTIONS);
 
 		this.#chartApi.subscribeCrosshairMove(
 			this.#handleCrosshairMove.bind(this),

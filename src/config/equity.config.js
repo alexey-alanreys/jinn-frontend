@@ -1,4 +1,4 @@
-const chartOptions = {
+export const chartOptions = {
 	autoSize: true,
 	layout: {
 		background: { type: 'solid', color: '#fff' },
@@ -57,17 +57,3 @@ const chartOptions = {
 		},
 	},
 };
-
-const seriesOptions = {
-	lastValueVisible: false,
-	priceLineVisible: false,
-
-	topColor: '#78CEFF',
-	bottomColor: '#EBF5FB',
-	lineColor: '#00A9FF',
-	lineWidth: 3,
-	crosshairMarkerBorderColor: '#fff',
-	crosshairMarkerBorderWidth: 3,
-};
-
-export { chartOptions, seriesOptions };

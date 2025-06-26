@@ -26,13 +26,13 @@ class NotificationService {
 		const delayToRemoveClass = animationDuration + 100;
 		const delayToShowNext = animationDuration + 500;
 
-		notification
-			.addClass(className)
-			.find('[data-field="content"]')
-			.text(message);
+		notification.find('[data-field="content"]').text(message);
+		notification.addClass(styles['visible']);
+		notification.addClass(className);
 		this.#isShowing = true;
 
 		setTimeout(() => {
+			notification.removeClass(styles['visible']);
 			notification.removeClass(className);
 			this.#isShowing = false;
 		}, delayToRemoveClass);
@@ -50,7 +50,7 @@ class NotificationService {
 	 * @throws {Error} If the type is invalid.
 	 */
 	show(type, message) {
-		if (!['success', 'error'].includes(type)) {
+		if (!['info', 'success', 'warning', 'error'].includes(type)) {
 			throw new Error(
 				'Invalid notification type: expected "success" or "error".',
 			);

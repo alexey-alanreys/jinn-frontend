@@ -27,12 +27,9 @@ export class ScreenshotButton extends BaseComponent {
 
 	#handleClick() {
 		const chartApi = stateService.get('chartApi');
+		if (!chartApi) return;
 
-		if (chartApi) {
-			chartApi.takeScreenshot().toBlob(this.#openScreenshot, 'image/png', 1);
-		} else {
-			console.warn('сhartApi not found in stateService');
-		}
+		chartApi.takeScreenshot().toBlob(this.#openScreenshot, 'image/png', 1);
 	}
 
 	#openScreenshot(blob) {

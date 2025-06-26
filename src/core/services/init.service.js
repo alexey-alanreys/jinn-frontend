@@ -23,7 +23,7 @@ class InitService {
 		// 	const [id, data] = Object.entries(contexts)[1];
 		// 	const context = { id, ...data };
 		// 	stateService.set('context', context);
-		// }, 5000);
+		// }, 7000);
 	}
 }
 

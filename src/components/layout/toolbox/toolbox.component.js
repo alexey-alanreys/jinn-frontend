@@ -1,4 +1,5 @@
 import { BaseComponent } from '@/core/component/base.component';
+import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
 import styles from './toolbox.module.css';
@@ -12,19 +13,66 @@ import { RulerToolButton } from './ruler-tool-button/ruler-tool-button.component
 import { ScreenshotButton } from './screenshot-button/screenshot-button.component';
 
 export class Toolbox extends BaseComponent {
+	#$element;
+
 	render() {
+		this.#initComponents();
+		this.#initDOM();
+		this.#setupInitialState();
+
+		return this.element;
+	}
+
+	handleLineToolActivate() {
+		if (this.rulerToolButton.isActive()) {
+			this.rulerToolButton.deactivate();
+		}
+	}
+
+	handleRulerToolActivate() {
+		if (this.lineToolButton.isActive()) {
+			this.lineToolButton.deactivate();
+		}
+	}
+
+	#initComponents() {
+		this.lineToolButton = new LineToolButton({
+			onActivate: this.handleLineToolActivate.bind(this),
+		});
+		this.rulerToolButton = new RulerToolButton({
+			onActivate: this.handleRulerToolActivate.bind(this),
+		});
+	}
+
+	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
 			[
 				ScreenshotButton,
 				FullScreenButton,
-				LineToolButton,
-				RulerToolButton,
+				this.lineToolButton,
+				this.rulerToolButton,
 				HideDrawingButton,
 				ClearDrawingButton,
 			],
 			styles,
 		);
-		return this.element;
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		document.addEventListener('keydown', this.#handleKeydown.bind(this));
+	}
+
+	#handleKeydown(event) {
+		if (event.key === 'Escape') {
+			if (this.lineToolButton.isActive()) {
+				this.lineToolButton.deactivate();
+			}
+
+			if (this.rulerToolButton.isActive()) {
+				this.rulerToolButton.deactivate();
+			}
+		}
 	}
 }

@@ -10,8 +10,7 @@
 	animation: slide-up-fade 2.5s ease forwards;
 	pointer-events: none;
 
-	&.success,
-	&.error {
+	&.visible {
 		display: flex;
 	}
 
@@ -24,8 +23,16 @@
 		box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
 	}
 
+	&.info > .content {
+		background-color: #2a9df4;
+	}
+
 	&.success > .content {
 		background-color: #2e8677;
+	}
+
+	&.warning > .content {
+		background-color: #f0ad4e;
 	}
 
 	&.error > .content {

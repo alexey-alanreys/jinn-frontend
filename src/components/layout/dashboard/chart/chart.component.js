@@ -10,13 +10,13 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import {
-	candlestickStyleOptions,
-	chartOptions,
-	lineStyleOptions,
-} from '@/config/chart.config';
+import { chartOptions } from '@/config/chart.config';
 
-import { DATA_BATCH_SIZE } from '@/constants/chart.constants';
+import {
+	CANDLESTICK_STYLE_OPTIONS,
+	DATA_BATCH_SIZE,
+	LINE_STYLE_OPTIONS,
+} from '@/constants/chart.constants';
 
 import { chartService } from '@/api/services/chart.service';
 
@@ -157,16 +157,18 @@ export class Chart extends BaseComponent {
 	}
 
 	#createCandlestickSeries() {
-		const { minMove } = stateService.get('context');
+		const { precision, minMove } = stateService.get('context');
 
 		this.#series.candlestick = this.#chartApi.addSeries(CandlestickSeries, {
-			...candlestickStyleOptions,
+			...CANDLESTICK_STYLE_OPTIONS,
 			priceFormat: {
 				type: 'price',
-				precision: String(minMove).split('.')[1]?.length || 0,
+				precision,
 				minMove,
 			},
 		});
+
+		stateService.set('candlestickSeries', this.#series.candlestick);
 	}
 
 	#createIndicatorSeries() {
@@ -174,7 +176,7 @@ export class Chart extends BaseComponent {
 
 		Object.entries(indicatorOptions).forEach(([key, options]) => {
 			const series = this.#chartApi.addSeries(LineSeries);
-			series.applyOptions({ ...lineStyleOptions, ...options });
+			series.applyOptions({ ...LINE_STYLE_OPTIONS, ...options });
 			this.#series.indicators.set(key, series);
 		});
 	}

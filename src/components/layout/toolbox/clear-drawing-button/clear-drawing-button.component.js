@@ -27,11 +27,9 @@ export class ClearDrawingButton extends BaseComponent {
 
 	#handleClick() {
 		const chartApi = stateService.get('chartApi');
-		const lines = stateService.get('drawedLines');
+		if (!chartApi) return;
 
-		if (!chartApi) {
-			console.warn('сhartApi not found in stateService');
-		}
+		const lines = stateService.get('drawedLines');
 
 		if (lines) {
 			for (const line of lines) {
