@@ -32,14 +32,12 @@ export class TrendlineToolButton extends BaseComponent {
 	}
 
 	deactivate() {
+		if (!this.#isActive()) return;
+
 		this.#$element.data('active', 'false');
 		this.element.blur();
 		this.#selectedPoints = [];
 		this.#unsubscribeFromChart();
-	}
-
-	isActive() {
-		return this.#$element.is('data-active');
 	}
 
 	#initDOM() {
@@ -58,8 +56,16 @@ export class TrendlineToolButton extends BaseComponent {
 	}
 
 	#handleClick() {
-		this.isActive() ? this.deactivate() : this.#activate();
-		this.onActivate?.();
+		if (this.#isActive()) {
+			this.deactivate();
+		} else {
+			this.#activate();
+			this.onActivate?.();
+		}
+	}
+
+	#isActive() {
+		return this.#$element.is('data-active');
 	}
 
 	#activate() {
@@ -89,9 +95,8 @@ export class TrendlineToolButton extends BaseComponent {
 	#handleChartClick({ time, point }) {
 		const chartApi = stateService.get('chartApi');
 		const candlestickSeries = stateService.get('candlestickSeries');
-		const drawings = stateService.get('drawings');
 
-		if (!chartApi || !candlestickSeries || !drawings) return;
+		if (!chartApi || !candlestickSeries) return;
 
 		const x = time;
 		const y = candlestickSeries.coordinateToPrice(point.y);
@@ -130,6 +135,7 @@ export class TrendlineToolButton extends BaseComponent {
 		const lineSeries = chartApi.addSeries(LineSeries, TRENDLINE_OPTIONS);
 		lineSeries.setData(this.#selectedPoints);
 
+		const drawings = stateService.get('drawings');
 		stateService.set('drawings', [lineSeries, ...drawings]);
 		this.#saveTrendlineToStorage();
 		this.deactivate();

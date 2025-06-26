@@ -153,7 +153,7 @@ export class Chart extends BaseComponent {
 
 		this.#series.markers = null;
 
-		const drawings = stateService.get('drawings') || [];
+		const drawings = stateService.get('drawings');
 		drawings.forEach((series) => this.#chartApi.removeSeries(series));
 		stateService.set('drawings', []);
 	}

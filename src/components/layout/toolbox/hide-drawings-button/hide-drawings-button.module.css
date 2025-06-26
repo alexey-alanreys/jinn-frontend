@@ -1,6 +1,6 @@
-.toggle-visibility-button {
-	width: 34px;
-	height: 34px;
+.hide-drawings-button {
+	width: 38px;
+	height: 38px;
 	border-radius: 6px;
 
 	> .icon-visible {
@@ -12,6 +12,8 @@
 	}
 
 	&[data-active='true'] {
+		background-color: rgba(41, 98, 255, 0.1);
+
 		> .icon-visible {
 			display: none;
 		}

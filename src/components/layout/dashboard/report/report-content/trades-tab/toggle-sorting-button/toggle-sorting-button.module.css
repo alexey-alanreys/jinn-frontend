@@ -9,20 +9,20 @@
 	}
 
 	> .icon-ascending {
-		display: none;
-	}
-
-	> .icon-descending {
 		display: inline;
 	}
 
-	&[data-active='false'] {
+	> .icon-descending {
+		display: none;
+	}
+
+	&[data-active='true'] {
 		> .icon-ascending {
-			display: inline;
+			display: none;
 		}
 
 		> .icon-descending {
-			display: none;
+			display: inline;
 		}
 	}
 }

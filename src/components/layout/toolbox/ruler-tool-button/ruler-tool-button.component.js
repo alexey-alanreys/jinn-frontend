@@ -22,12 +22,10 @@ export class RulerToolButton extends BaseComponent {
 	}
 
 	deactivate() {
+		if (!this.#isActive()) return;
+
 		this.#$element.data('active', 'false');
 		this.element.blur();
-	}
-
-	isActive() {
-		return this.#$element.is('data-active');
 	}
 
 	#initDOM() {
@@ -40,13 +38,16 @@ export class RulerToolButton extends BaseComponent {
 	}
 
 	#handleClick() {
-		if (this.isActive()) {
+		if (this.#isActive()) {
 			this.deactivate();
-			return;
+		} else {
+			this.#activate();
+			this.onActivate?.();
 		}
+	}
 
-		this.#activate();
-		this.onActivate?.();
+	#isActive() {
+		return this.#$element.is('data-active');
 	}
 
 	#activate() {

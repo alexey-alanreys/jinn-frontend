@@ -4,20 +4,20 @@
 	border-radius: 6px;
 
 	> .icon-collapsed {
-		display: none;
-	}
-
-	> .icon-expanded {
 		display: block;
 	}
 
-	&[data-active='false'] {
+	> .icon-expanded {
+		display: none;
+	}
+
+	&[data-active='true'] {
 		> .icon-collapsed {
-			display: block;
+			display: none;
 		}
 
 		> .icon-expanded {
-			display: none;
+			display: block;
 		}
 	}
 }

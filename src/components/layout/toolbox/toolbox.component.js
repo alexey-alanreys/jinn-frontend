@@ -6,7 +6,7 @@ import templateHTML from './toolbox.template.html?raw';
 
 import { ClearDrawingsButton } from './clear-drawings-button/clear-drawings-button.component';
 import { FullScreenButton } from './full-screen-button/full-screen-button.component';
-import { HideDrawingButton } from './hide-drawing-button/hide-drawing-button.component';
+import { HideDrawingsButton } from './hide-drawings-button/hide-drawings-button.component';
 import { RulerToolButton } from './ruler-tool-button/ruler-tool-button.component';
 import { ScreenshotButton } from './screenshot-button/screenshot-button.component';
 import { TrendlineToolButton } from './trendline-tool-button/trendline-tool-button.component';
@@ -20,24 +20,28 @@ export class Toolbox extends BaseComponent {
 		return this.element;
 	}
 
-	handleLineToolActivate() {
-		if (this.rulerToolButton.isActive()) {
-			this.rulerToolButton.deactivate();
-		}
+	handleTrendlineToolActivate() {
+		this.rulerToolButton.deactivate();
+		this.hideDrawingsButton.deactivate();
 	}
 
 	handleRulerToolActivate() {
-		if (this.trendlineToolButton.isActive()) {
-			this.trendlineToolButton.deactivate();
-		}
+		this.trendlineToolButton.deactivate();
+	}
+
+	handleHideDrawingsButtonActivate() {
+		this.trendlineToolButton.deactivate();
 	}
 
 	#initComponents() {
 		this.trendlineToolButton = new TrendlineToolButton({
-			onActivate: this.handleLineToolActivate.bind(this),
+			onActivate: this.handleTrendlineToolActivate.bind(this),
 		});
 		this.rulerToolButton = new RulerToolButton({
 			onActivate: this.handleRulerToolActivate.bind(this),
+		});
+		this.hideDrawingsButton = new HideDrawingsButton({
+			onActivate: this.handleHideDrawingsButtonActivate.bind(this),
 		});
 	}
 
@@ -49,7 +53,7 @@ export class Toolbox extends BaseComponent {
 				FullScreenButton,
 				this.trendlineToolButton,
 				this.rulerToolButton,
-				HideDrawingButton,
+				this.hideDrawingsButton,
 				ClearDrawingsButton,
 			],
 			styles,
