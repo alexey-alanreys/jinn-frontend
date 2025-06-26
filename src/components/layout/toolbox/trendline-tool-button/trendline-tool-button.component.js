@@ -5,13 +5,14 @@ import { $Q } from '@/core/libs/query.lib';
 import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
+import { storageService } from '@/core/services/storage.service';
 
-import { LINE_TOOL_OPTIONS } from '@/constants/line-tool.constants';
+import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
-import styles from './line-tool-button.module.css';
-import templateHTML from './line-tool-button.template.html?raw';
+import styles from './trendline-tool-button.module.css';
+import templateHTML from './trendline-tool-button.template.html?raw';
 
-export class LineToolButton extends BaseComponent {
+export class TrendlineToolButton extends BaseComponent {
 	#$element;
 	#chartClickHandler;
 
@@ -54,10 +55,6 @@ export class LineToolButton extends BaseComponent {
 			'candlestickSeries',
 			this.#handleCandlestickSeriesChange.bind(this),
 		);
-
-		if (!stateService.get('drawings')) {
-			stateService.set('drawings', []);
-		}
 	}
 
 	#handleClick() {
@@ -130,10 +127,23 @@ export class LineToolButton extends BaseComponent {
 			this.#selectedPoints.unshift(newPoint);
 		}
 
-		const lineSeries = chartApi.addSeries(LineSeries, LINE_TOOL_OPTIONS);
+		const lineSeries = chartApi.addSeries(LineSeries, TRENDLINE_OPTIONS);
 		lineSeries.setData(this.#selectedPoints);
 
 		stateService.set('drawings', [lineSeries, ...drawings]);
+		this.#saveTrendlineToStorage();
 		this.deactivate();
+	}
+
+	#saveTrendlineToStorage() {
+		const contextId = stateService.get('context').id;
+		const drawings = storageService.getItem('drawings') || { trendlines: {} };
+
+		drawings.trendlines[contextId] = [
+			this.#selectedPoints,
+			...(drawings.trendlines[contextId] || []),
+		];
+
+		storageService.setItem('drawings', drawings);
 	}
 }

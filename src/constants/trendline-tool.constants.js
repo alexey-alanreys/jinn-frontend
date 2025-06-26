@@ -1,4 +1,4 @@
-export const LINE_TOOL_OPTIONS = {
+export const TRENDLINE_OPTIONS = {
 	lastValueVisible: false,
 	priceLineVisible: false,
 	lineWidth: 3,

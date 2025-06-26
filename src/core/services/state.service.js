@@ -1,5 +1,5 @@
 /**
- * Simple key-value store with subscription support.
+ * Key-value store with subscription support.
  */
 class StateService {
 	constructor() {

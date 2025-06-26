@@ -9,6 +9,7 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
+import { storageService } from '@/core/services/storage.service';
 
 import { chartOptions } from '@/config/chart.config';
 
@@ -17,6 +18,7 @@ import {
 	DATA_BATCH_SIZE,
 	LINE_STYLE_OPTIONS,
 } from '@/constants/chart.constants';
+import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import { chartService } from '@/api/services/chart.service';
 
@@ -31,7 +33,7 @@ export class Chart extends BaseComponent {
 	#$element;
 	#chartApi;
 
-	#currentId = null;
+	#contextId = null;
 	#data = {
 		candlesticks: null,
 		indicators: null,
@@ -59,11 +61,12 @@ export class Chart extends BaseComponent {
 	async update(context) {
 		await this.#loadData();
 
-		if (this.#currentId !== context.id) {
-			this.#currentId = context.id;
+		if (this.#contextId !== context.id) {
+			this.#contextId = context.id;
 
 			this.#removeSeries();
 			this.#createSeries();
+			this.#addTrendlines();
 		}
 
 		this.#updateSeries();
@@ -149,6 +152,10 @@ export class Chart extends BaseComponent {
 		this.#series.indicators.clear();
 
 		this.#series.markers = null;
+
+		const drawings = stateService.get('drawings') || [];
+		drawings.forEach((series) => this.#chartApi.removeSeries(series));
+		stateService.set('drawings', []);
 	}
 
 	#createSeries() {
@@ -181,7 +188,28 @@ export class Chart extends BaseComponent {
 		});
 	}
 
+	#addTrendlines() {
+		const drawings = storageService.getItem('drawings');
+		if (!drawings?.trendlines) return;
+
+		const contextTrendlines = drawings.trendlines[this.#contextId];
+		if (!contextTrendlines?.length) return;
+
+		const lineSeries = contextTrendlines.map((trendline) => {
+			const lineSeries = this.#chartApi.addSeries(
+				LineSeries,
+				TRENDLINE_OPTIONS,
+			);
+			lineSeries.setData(trendline);
+			return lineSeries;
+		});
+
+		stateService.set('drawings', lineSeries);
+	}
+
 	#updateSeries() {
+		if (!this.#series.candlestick) return;
+
 		this.#updateCandlesticks();
 		this.#updateIndicators();
 		this.#updateMarkers();
