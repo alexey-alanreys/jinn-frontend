@@ -4,10 +4,10 @@ import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
-import styles from './clear-drawing-button.module.css';
-import templateHTML from './clear-drawing-button.template.html?raw';
+import styles from './clear-drawings-button.module.css';
+import templateHTML from './clear-drawings-button.template.html?raw';
 
-export class ClearDrawingButton extends BaseComponent {
+export class ClearDrawingsButton extends BaseComponent {
 	#$element;
 
 	render() {
