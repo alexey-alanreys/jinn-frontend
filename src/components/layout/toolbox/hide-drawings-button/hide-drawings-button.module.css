@@ -12,7 +12,7 @@
 	}
 
 	&[data-active='true'] {
-		background-color: rgba(41, 98, 255, 0.1);
+		background-color: rgb(41 98 255 / 10%);
 
 		> .icon-visible {
 			display: none;

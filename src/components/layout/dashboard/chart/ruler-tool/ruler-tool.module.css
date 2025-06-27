@@ -1,0 +1,143 @@
+.ruler-tool {
+	position: absolute;
+	z-index: 3;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+
+	&[data-active='false'] {
+		display: none;
+	}
+
+	> .info {
+		position: absolute;
+		z-index: 4;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height: 50px;
+		padding: 6px 8px;
+		font-size: 1.4rem;
+		font-weight: 500;
+		text-align: center;
+		color: #fff;
+		border-radius: 4px;
+		gap: 6px;
+		white-space: nowrap;
+
+		> .price-diff {
+			display: flex;
+			gap: 6px;
+		}
+	}
+
+	> .line-x,
+	> .line-y {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	> .line-x {
+		width: 100%;
+		height: 1px;
+
+		> .arrow-right {
+			position: absolute;
+			right: 2px;
+			display: block;
+			padding: 4px;
+			transform: rotate(-45deg);
+		}
+
+		> .arrow-left {
+			position: absolute;
+			left: 2px;
+			display: none;
+			padding: 4px;
+			transform: rotate(135deg);
+		}
+
+		&[data-direction='left'] {
+			> .arrow-right {
+				display: none;
+			}
+
+			> .arrow-left {
+				display: block;
+			}
+		}
+	}
+
+	> .line-y {
+		width: 1px;
+		height: 100%;
+
+		> .arrow-up {
+			position: absolute;
+			top: 2px;
+			display: block;
+			padding: 4px;
+			transform: rotate(225deg);
+		}
+
+		> .arrow-down {
+			position: absolute;
+			bottom: 2px;
+			display: none;
+			padding: 4px;
+			transform: rotate(45deg);
+		}
+
+		&[data-direction='down'] {
+			> .arrow-up {
+				display: none;
+			}
+
+			> .arrow-down {
+				display: block;
+			}
+		}
+	}
+
+	&[data-trend='up'] {
+		background-color: #2962ff4b;
+
+		> .info {
+			top: -60px;
+		}
+
+		> .info,
+		> .line-x,
+		> .line-y {
+			background-color: #2962ff;
+		}
+
+		.arrow {
+			border: solid #2962ff;
+			border-width: 0 1px 1px 0;
+		}
+	}
+
+	&[data-trend='down'] {
+		background-color: #ff29294b;
+
+		> .info {
+			bottom: -60px;
+		}
+
+		> .info,
+		> .line-x,
+		> .line-y {
+			background-color: #f7525f;
+		}
+
+		.arrow {
+			border: solid #f7525f;
+			border-width: 0 1px 1px 0;
+		}
+	}
+}

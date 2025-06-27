@@ -49,14 +49,13 @@ export class IndicatorsInfoPanel extends BaseComponent {
 	#renderIndicatorFields() {
 		const { indicatorOptions } = stateService.get('context');
 		const html = this.#generateIndicatorsHTML(indicatorOptions);
+		this.#$element.html(html);
 
-		this.#$element
-			.html(html)
-			.findAll('[data-field]')
-			.forEach((el) => {
-				const key = el.data('field');
-				this.#dataFields.set(key, { element: el });
-			});
+		const dataFields = this.#$element.findAll('[data-field]');
+		dataFields.forEach((el) => {
+			const key = el.data('field');
+			this.#dataFields.set(key, { element: el });
+		});
 	}
 
 	#generateIndicatorsHTML(indicatorOptions) {

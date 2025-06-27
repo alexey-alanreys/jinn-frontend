@@ -49,10 +49,7 @@ export class TrendlineToolButton extends BaseComponent {
 		this.#$element.on('click', this.#handleClick.bind(this));
 		this.#chartClickHandler = this.#handleChartClick.bind(this);
 
-		stateService.subscribe(
-			'candlestickSeries',
-			this.#handleCandlestickSeriesChange.bind(this),
-		);
+		stateService.subscribe('candlestickSeries', this.deactivate.bind(this));
 	}
 
 	#handleClick() {
@@ -86,10 +83,6 @@ export class TrendlineToolButton extends BaseComponent {
 		if (!chartApi) return;
 
 		chartApi.unsubscribeClick(this.#chartClickHandler);
-	}
-
-	#handleCandlestickSeriesChange() {
-		this.deactivate();
 	}
 
 	#handleChartClick({ time, point }) {

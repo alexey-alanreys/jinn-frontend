@@ -1,6 +1,7 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
+import { stateService } from '@/core/services/state.service';
 
 import styles from './ruler-tool-button.module.css';
 import templateHTML from './ruler-tool-button.template.html?raw';
@@ -26,6 +27,9 @@ export class RulerToolButton extends BaseComponent {
 
 		this.#$element.data('active', 'false');
 		this.element.blur();
+
+		const rulerTool = stateService.get('rulerTool');
+		rulerTool.deactivate();
 	}
 
 	#initDOM() {
@@ -52,5 +56,8 @@ export class RulerToolButton extends BaseComponent {
 
 	#activate() {
 		this.#$element.data('active', 'true');
+
+		const rulerTool = stateService.get('rulerTool');
+		rulerTool.subscribeToChart(this.deactivate.bind(this));
 	}
 }

@@ -66,13 +66,8 @@ export class Toolbox extends BaseComponent {
 
 	#handleKeydown(event) {
 		if (event.key === 'Escape') {
-			if (this.trendlineToolButton.isActive()) {
-				this.trendlineToolButton.deactivate();
-			}
-
-			if (this.rulerToolButton.isActive()) {
-				this.rulerToolButton.deactivate();
-			}
+			this.trendlineToolButton.deactivate();
+			this.rulerToolButton.deactivate();
 		}
 	}
 }

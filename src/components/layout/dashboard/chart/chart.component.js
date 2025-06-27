@@ -27,6 +27,7 @@ import templateHTML from './chart.template.html?raw';
 
 import { ChartInfoPanel } from './chart-info-panel/chart-info-panel.component';
 import { IndicatorsInfoPanel } from './indicators-info-panel/indicators-info-panel.component';
+import { RulerTool } from './ruler-tool/ruler-tool.component';
 import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-realtime-button.component';
 
 export class Chart extends BaseComponent {
@@ -74,6 +75,7 @@ export class Chart extends BaseComponent {
 	}
 
 	#initComponents() {
+		this.rulerTool = new RulerTool();
 		this.chartInfoPanel = new ChartInfoPanel();
 		this.indicatorsInfoPanel = new IndicatorsInfoPanel();
 		this.scrollToRealtimeButton = new ScrollToRealtimeButton();
@@ -83,6 +85,7 @@ export class Chart extends BaseComponent {
 		this.element = renderService.htmlToElement(
 			templateHTML,
 			[
+				this.rulerTool,
 				this.chartInfoPanel,
 				this.indicatorsInfoPanel,
 				this.scrollToRealtimeButton,
@@ -105,6 +108,7 @@ export class Chart extends BaseComponent {
 			);
 
 		stateService.subscribe('context', this.update.bind(this));
+		stateService.set('rulerTool', this.rulerTool);
 		stateService.set('chartApi', this.#chartApi);
 
 		this.update(stateService.get('context'));
@@ -260,7 +264,7 @@ export class Chart extends BaseComponent {
 		this.indicatorsInfoPanel.update(indicators, true);
 	}
 
-	#handleCrosshairMove({ point, time, seriesData }) {
+	#handleCrosshairMove({ logical, point, seriesData, sourceEvent, time }) {
 		if (!point || !time) return;
 
 		const candlestick = seriesData.get(this.#series.candlestick);
@@ -273,6 +277,12 @@ export class Chart extends BaseComponent {
 
 		this.chartInfoPanel.update(candlestick);
 		this.indicatorsInfoPanel.update(indicators);
+		this.rulerTool.update({
+			logical,
+			point,
+			sourceEvent,
+			candlestickSeries: this.#series.candlestick,
+		});
 	}
 
 	#handleVisibleLogicalRangeChange(newRange) {
