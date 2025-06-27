@@ -23,12 +23,11 @@ export class RulerToolButton extends BaseComponent {
 	}
 
 	deactivate() {
-		if (!this.#isActive()) return;
+		const rulerTool = stateService.get('rulerTool');
+		if (!this.#isActive() || !rulerTool) return;
 
 		this.#$element.data('active', 'false');
 		this.element.blur();
-
-		const rulerTool = stateService.get('rulerTool');
 		rulerTool.deactivate();
 	}
 
@@ -39,6 +38,11 @@ export class RulerToolButton extends BaseComponent {
 
 	#setupInitialState() {
 		this.#$element.on('click', this.#handleClick.bind(this));
+
+		stateService.subscribe(
+			'rulerActive',
+			this.#handleRulerActiveChange.bind(this),
+		);
 	}
 
 	#handleClick() {
@@ -50,14 +54,21 @@ export class RulerToolButton extends BaseComponent {
 		}
 	}
 
+	#handleRulerActiveChange(rulerActive) {
+		if (!rulerActive) {
+			this.deactivate();
+		}
+	}
+
 	#isActive() {
 		return this.#$element.is('data-active');
 	}
 
 	#activate() {
-		this.#$element.data('active', 'true');
-
 		const rulerTool = stateService.get('rulerTool');
-		rulerTool.subscribeToChart(this.deactivate.bind(this));
+		if (this.#isActive() || !rulerTool) return;
+
+		this.#$element.data('active', 'true');
+		rulerTool.initialize();
 	}
 }

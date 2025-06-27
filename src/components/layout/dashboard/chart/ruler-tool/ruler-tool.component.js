@@ -10,11 +10,11 @@ export class RulerTool extends BaseComponent {
 	#$element;
 	#$lineX;
 	#$lineY;
-	#chartClickHandler;
-	#onFinalize;
 	#minMove;
 	#precision;
+	#chartClickHandler;
 
+	#isMeasuring = false;
 	#dataFields = new Map();
 	#startParams = {
 		chartX: null,
@@ -22,7 +22,6 @@ export class RulerTool extends BaseComponent {
 		localX: null,
 		localY: null,
 	};
-	#readyToUpdate = false;
 
 	render() {
 		this.#initDOM();
@@ -32,7 +31,7 @@ export class RulerTool extends BaseComponent {
 	}
 
 	update({ logical, point, sourceEvent, candlestickSeries }) {
-		if (!this.#readyToUpdate) return;
+		if (!this.#isMeasuring) return;
 
 		this.#updateSize({
 			localX: sourceEvent.localX,
@@ -43,6 +42,122 @@ export class RulerTool extends BaseComponent {
 			chartX: logical,
 			chartY: candlestickSeries.coordinateToPrice(point.y),
 		});
+	}
+
+	initialize() {
+		if (this.#isActive()) return;
+
+		this.#subscribeToChart();
+	}
+
+	deactivate() {
+		this.#unsubscribeFromChart();
+		this.#$element.data('active', 'false');
+		this.#isMeasuring = false;
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#$element = $Q(this.element);
+		this.#$lineX = this.#$element.find('[data-ref="lineX"]');
+		this.#$lineY = this.#$element.find('[data-ref="lineY"]');
+	}
+
+	#setupInitialState() {
+		this.#chartClickHandler = this.#handleChartClick.bind(this);
+
+		const dataFields = this.#$element.findAll('[data-field]');
+		dataFields.forEach((el) => {
+			const key = el.data('field');
+			this.#dataFields.set(key, { element: el });
+		});
+
+		stateService.subscribe(
+			'candlestickSeries',
+			this.#finishMeasurement.bind(this),
+		);
+	}
+
+	#isActive() {
+		return this.#$element.is('data-active');
+	}
+
+	#activate() {
+		if (this.#isActive()) return;
+
+		this.#$element.data('active', 'true');
+		this.#isMeasuring = true;
+	}
+
+	#subscribeToChart() {
+		const chartApi = stateService.get('chartApi');
+		if (!chartApi) return;
+
+		chartApi.subscribeClick(this.#chartClickHandler);
+	}
+
+	#unsubscribeFromChart() {
+		const chartApi = stateService.get('chartApi');
+		if (!chartApi) return;
+
+		chartApi.unsubscribeClick(this.#chartClickHandler);
+	}
+
+	#handleChartClick({ logical, point, sourceEvent }) {
+		if (this.#isActive()) {
+			this.#finishMeasurement();
+			return;
+		}
+
+		const series = stateService.get('candlestickSeries');
+		if (!series) return;
+
+		this.#prepareMeasurement({ logical, point, sourceEvent, series });
+	}
+
+	#finishMeasurement() {
+		if (this.#isActive()) {
+			stateService.set('rulerActive', false);
+		}
+	}
+
+	#prepareMeasurement({ logical, point, sourceEvent, series }) {
+		const { minMove, precision } = stateService.get('context');
+		this.#minMove = minMove;
+		this.#precision = precision;
+
+		this.#startParams = {
+			chartX: logical,
+			chartY: series.coordinateToPrice(point.y),
+			localX: sourceEvent.localX,
+			localY: sourceEvent.localY,
+		};
+
+		this.#setupRuler();
+		this.#activate();
+	}
+
+	#setupRuler() {
+		const initialValues = {
+			'price-abs': `0.${Array(this.#precision).fill('0').join('')}`,
+			'price-pct': '(0.00%)',
+			'price-ticks': '0',
+			'bar-distance': 'Бары: 0',
+		};
+
+		this.#dataFields.forEach(({ element }, key) => {
+			element.text(initialValues[key]);
+		});
+
+		this.#$element.data('trend', 'up');
+		this.#$lineX.data('direction', 'right');
+		this.#$lineY.data('direction', 'up');
+
+		this.#$element
+			.css('left', `${this.#startParams.localX}px`)
+			.css('top', `${this.#startParams.localY}px`)
+			.css('width', '0px')
+			.css('height', '0px');
 	}
 
 	#updateSize({ localX, localY }) {
@@ -98,105 +213,5 @@ export class RulerTool extends BaseComponent {
 		this.#dataFields.forEach(({ element }, key) => {
 			element.text(newValues[key]);
 		});
-	}
-
-	deactivate() {
-		this.#unsubscribeFromChart();
-
-		if (!this.#isActive()) return;
-		this.#$element.data('active', 'false');
-		this.#readyToUpdate = false;
-	}
-
-	subscribeToChart(onFinalize) {
-		const chartApi = stateService.get('chartApi');
-		if (!chartApi) return;
-
-		this.#onFinalize = onFinalize;
-		chartApi.subscribeClick(this.#chartClickHandler);
-	}
-
-	#initDOM() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
-		this.#$element = $Q(this.element);
-		this.#$lineX = this.#$element.find('[data-ref="lineX"]');
-		this.#$lineY = this.#$element.find('[data-ref="lineY"]');
-	}
-
-	#setupInitialState() {
-		this.#chartClickHandler = this.#handleChartClick.bind(this);
-
-		const dataFields = this.#$element.findAll('[data-field]');
-		dataFields.forEach((el) => {
-			const key = el.data('field');
-			this.#dataFields.set(key, { element: el });
-		});
-
-		stateService.subscribe(
-			'candlestickSeries',
-			this.#finalizeMeasurement.bind(this),
-		);
-	}
-
-	#isActive() {
-		return this.#$element.is('data-active');
-	}
-
-	#activate() {
-		this.#$element.data('active', 'true');
-	}
-
-	#unsubscribeFromChart() {
-		const chartApi = stateService.get('chartApi');
-		if (!chartApi) return;
-
-		chartApi.unsubscribeClick(this.#chartClickHandler);
-	}
-
-	#handleChartClick({ logical, point, sourceEvent }) {
-		if (this.#isActive()) {
-			this.#finalizeMeasurement();
-			return;
-		}
-
-		const candlestickSeries = stateService.get('candlestickSeries');
-		if (!candlestickSeries) return;
-
-		this.#startParams.chartX = logical;
-		this.#startParams.chartY = candlestickSeries.coordinateToPrice(point.y);
-		this.#startParams.localX = sourceEvent.localX;
-		this.#startParams.localY = sourceEvent.localY;
-
-		this.#initRuler();
-		this.#activate();
-
-		this.#readyToUpdate = true;
-	}
-
-	#finalizeMeasurement() {
-		this.#onFinalize?.();
-	}
-
-	#initRuler() {
-		const context = stateService.get('context');
-		this.#minMove = context.minMove;
-		this.#precision = context.precision;
-
-		const initialValues = {
-			'price-abs': `0.${Array(this.#precision).fill('0').join('')}`,
-			'price-pct': '(0.00%)',
-			'price-ticks': '0',
-			'bar-distance': 'Бары: 0',
-		};
-
-		this.#dataFields.forEach(({ element }, key) => {
-			element.text(initialValues[key]);
-		});
-
-		this.#$element
-			.css('left', `${this.#startParams.localX}px`)
-			.css('top', `${this.#startParams.localY}px`)
-			.css('width', '0px')
-			.css('height', '0px');
 	}
 }
