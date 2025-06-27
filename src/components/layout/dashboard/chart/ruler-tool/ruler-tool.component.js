@@ -10,11 +10,12 @@ export class RulerTool extends BaseComponent {
 	#$element;
 	#$lineX;
 	#$lineY;
-	#minMove;
-	#precision;
 	#chartClickHandler;
 
+	#minMove = null;
+	#precision = null;
 	#isMeasuring = false;
+
 	#dataFields = new Map();
 	#startParams = {
 		chartX: null,
@@ -139,10 +140,10 @@ export class RulerTool extends BaseComponent {
 
 	#setupRuler() {
 		const initialValues = {
-			'price-abs': `0.${Array(this.#precision).fill('0').join('')}`,
-			'price-pct': '(0.00%)',
-			'price-ticks': '0',
-			'bar-distance': 'Бары: 0',
+			'price-abs': this.#formatPriceAbs(this.#startParams.chartY),
+			'price-pct': this.#formatPricePct(this.#startParams.chartY),
+			'price-ticks': this.#formatPriceTicks(this.#startParams.chartY),
+			'bar-distance': this.#formatBarDistance(this.#startParams.chartX),
 		};
 
 		this.#dataFields.forEach(({ element }, key) => {
@@ -198,20 +199,36 @@ export class RulerTool extends BaseComponent {
 	}
 
 	#updateInfo({ chartX, chartY }) {
-		const priceAbs = chartY - this.#startParams.chartY;
-		const pricePct = (chartY / this.#startParams.chartY - 1) * 100;
-		const priceTicks = priceAbs / this.#minMove;
-		const barDistance = chartX - this.#startParams.chartX;
-
 		const newValues = {
-			'price-abs': priceAbs.toFixed(this.#precision),
-			'price-pct': `(${pricePct.toFixed(2)}%)`,
-			'price-ticks': priceTicks.toFixed(0),
-			'bar-distance': `Бары: ${barDistance.toFixed(0)}`,
+			'price-abs': this.#formatPriceAbs(chartY),
+			'price-pct': this.#formatPricePct(chartY),
+			'price-ticks': this.#formatPriceTicks(chartY),
+			'bar-distance': this.#formatBarDistance(chartX),
 		};
 
 		this.#dataFields.forEach(({ element }, key) => {
 			element.text(newValues[key]);
 		});
+	}
+
+	#formatPriceAbs(chartY) {
+		const priceAbs = chartY - this.#startParams.chartY;
+		return priceAbs.toFixed(this.#precision);
+	}
+
+	#formatPricePct(chartY) {
+		const pricePct = (chartY / this.#startParams.chartY - 1) * 100;
+		return `(${pricePct.toFixed(2)}%)`;
+	}
+
+	#formatPriceTicks(chartY) {
+		const priceAbs = chartY - this.#startParams.chartY;
+		const priceTicks = priceAbs / this.#minMove;
+		return priceTicks.toFixed(0);
+	}
+
+	#formatBarDistance(chartX) {
+		const barDistance = chartX - this.#startParams.chartX;
+		return `Бары: ${barDistance.toFixed(0)}`;
 	}
 }

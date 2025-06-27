@@ -6,4 +6,5 @@
 	display: flex;
 	font-size: 1.4rem;
 	gap: 6px;
+	pointer-events: none;
 }

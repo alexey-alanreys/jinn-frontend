@@ -66,7 +66,7 @@ export class RulerToolButton extends BaseComponent {
 
 	#activate() {
 		const rulerTool = stateService.get('rulerTool');
-		if (this.#isActive || !rulerTool) return;
+		if (!rulerTool) return;
 
 		this.#$element.data('active', 'true');
 		rulerTool.initialize();
