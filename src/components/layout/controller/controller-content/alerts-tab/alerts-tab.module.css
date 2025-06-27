@@ -1,0 +1,7 @@
+.alerts-tab {
+	display: none;
+	flex-direction: column;
+	flex: 1;
+
+	background-color: brown;
+}

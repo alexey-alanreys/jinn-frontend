@@ -17,9 +17,9 @@ export class ReportContent extends BaseComponent {
 	}
 
 	showOnly(tabName) {
-		for (const [name, tab] of Object.entries(this.tabs)) {
+		Object.entries(this.tabs).forEach(([name, tab]) => {
 			name === tabName ? tab.show() : tab.hide();
-		}
+		});
 	}
 
 	#initComponents() {

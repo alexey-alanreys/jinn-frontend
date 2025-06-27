@@ -1,9 +1,9 @@
-.report-content {
+.controller-content {
 	display: flex;
-	flex: 1;
-	min-height: 0;
+	flex: 0 0 300px;
 	background-color: #fff;
 	overflow: auto;
+	border-right: 1px solid #e0e3eb;
 
 	> ::-webkit-scrollbar {
 		width: 6px;

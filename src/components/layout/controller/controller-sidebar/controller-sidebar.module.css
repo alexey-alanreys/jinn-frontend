@@ -1,0 +1,9 @@
+.controller-sidebar {
+	display: flex;
+	flex: 0 0 46px;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	padding-top: 6px;
+	background-color: #fff;
+}

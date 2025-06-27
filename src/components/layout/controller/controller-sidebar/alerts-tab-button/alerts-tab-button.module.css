@@ -1,0 +1,13 @@
+.alerts-tab-button {
+	width: 38px;
+	height: 38px;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&[data-active='true'] {
+		color: #2962ff;
+		background-color: rgb(41 98 255 / 10%);
+	}
+}
