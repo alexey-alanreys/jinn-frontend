@@ -14,6 +14,10 @@ export class ToggleSortingButton extends BaseComponent {
 		this.onClick = onClick;
 	}
 
+	get isActive() {
+		return this.#$element.is('data-active');
+	}
+
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
@@ -22,11 +26,7 @@ export class ToggleSortingButton extends BaseComponent {
 	}
 
 	toggleActiveState() {
-		this.#$element.data('active', String(!this.isActive()));
-	}
-
-	isActive() {
-		return this.#$element.is('data-active');
+		this.#$element.data('active', String(!this.isActive));
 	}
 
 	#initDOM() {

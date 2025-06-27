@@ -17,14 +17,6 @@ export class Report extends BaseComponent {
 		this.onMousedown = onMousedown;
 	}
 
-	render() {
-		this.#initComponents();
-		this.#initDOM();
-		this.#setupInitialState();
-
-		return this.element;
-	}
-
 	get height() {
 		return parseInt(this.#$element.css('height'));
 	}
@@ -39,6 +31,14 @@ export class Report extends BaseComponent {
 		return (
 			parseInt(reportHandle.css('min-height')) + this.reportHeader.minHeight
 		);
+	}
+
+	render() {
+		this.#initComponents();
+		this.#initDOM();
+		this.#setupInitialState();
+
+		return this.element;
 	}
 
 	#initComponents() {

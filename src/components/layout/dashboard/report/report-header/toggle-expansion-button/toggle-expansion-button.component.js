@@ -16,6 +16,10 @@ export class ToggleExpansionButton extends BaseComponent {
 		this.onClick = onClick;
 	}
 
+	get isActive() {
+		return this.#$element.is('data-active');
+	}
+
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
@@ -24,15 +28,11 @@ export class ToggleExpansionButton extends BaseComponent {
 	}
 
 	toggleActiveState() {
-		const newState = String(!this.isActive());
+		const newState = String(!this.isActive);
 
 		this.#$element
 			.data('active', newState)
 			.attr('title', TITLES.expansion[newState]);
-	}
-
-	isActive() {
-		return this.#$element.is('data-active');
 	}
 
 	#initDOM() {

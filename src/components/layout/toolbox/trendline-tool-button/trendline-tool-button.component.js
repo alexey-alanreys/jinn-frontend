@@ -32,12 +32,16 @@ export class TrendlineToolButton extends BaseComponent {
 	}
 
 	deactivate() {
-		if (!this.#isActive()) return;
+		if (!this.#isActive) return;
 
 		this.#$element.data('active', 'false');
 		this.element.blur();
 		this.#selectedPoints = [];
 		this.#unsubscribeFromChart();
+	}
+
+	get #isActive() {
+		return this.#$element.is('data-active');
 	}
 
 	#initDOM() {
@@ -53,16 +57,12 @@ export class TrendlineToolButton extends BaseComponent {
 	}
 
 	#handleClick() {
-		if (this.#isActive()) {
+		if (this.#isActive) {
 			this.deactivate();
 		} else {
 			this.#activate();
 			this.onActivate?.();
 		}
-	}
-
-	#isActive() {
-		return this.#$element.is('data-active');
 	}
 
 	#activate() {

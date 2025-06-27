@@ -16,6 +16,22 @@ export class EquityTooltip extends BaseComponent {
 	#active = false;
 	#dataFields = new Map();
 
+	get width() {
+		return parseInt(this.#$element.css('width'));
+	}
+
+	get height() {
+		return parseInt(this.#$element.css('height'));
+	}
+
+	get offsetX() {
+		return TOOLTIP_OFFSET_X;
+	}
+
+	get isActive() {
+		return this.#active;
+	}
+
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
@@ -34,22 +50,6 @@ export class EquityTooltip extends BaseComponent {
 
 	updatePosition({ left, bottom }) {
 		this.#$element.css('left', `${left}px`).css('bottom', `${bottom}px`);
-	}
-
-	get width() {
-		return parseInt(this.#$element.css('width'));
-	}
-
-	get height() {
-		return parseInt(this.#$element.css('height'));
-	}
-
-	get offsetX() {
-		return TOOLTIP_OFFSET_X;
-	}
-
-	get isActive() {
-		return this.#active;
 	}
 
 	activate() {

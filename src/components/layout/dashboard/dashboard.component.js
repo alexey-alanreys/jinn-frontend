@@ -26,8 +26,8 @@ export class Dashboard extends BaseComponent {
 	}
 
 	handleVisibilityToggle() {
-		if (this.toggleVisibilityButton.isActive()) {
-			if (this.toggleExpansionButton.isActive()) {
+		if (this.toggleVisibilityButton.isActive) {
+			if (this.toggleExpansionButton.isActive) {
 				this.toggleExpansionButton.toggleActiveState();
 			} else {
 				this.#reportHeight = this.report.height;
@@ -40,8 +40,8 @@ export class Dashboard extends BaseComponent {
 	}
 
 	handleExpansionToggle() {
-		if (this.toggleExpansionButton.isActive()) {
-			if (this.toggleVisibilityButton.isActive()) {
+		if (this.toggleExpansionButton.isActive) {
+			if (this.toggleVisibilityButton.isActive) {
 				this.toggleVisibilityButton.toggleActiveState();
 			} else {
 				this.#reportHeight = this.report.height;
@@ -56,8 +56,8 @@ export class Dashboard extends BaseComponent {
 	handleManualResize(startY) {
 		const startHeight = this.report.height;
 
-		let isVisActive = this.toggleVisibilityButton.isActive();
-		let isExpActive = this.toggleExpansionButton.isActive();
+		let isVisActive = this.toggleVisibilityButton.isActive;
+		let isExpActive = this.toggleExpansionButton.isActive;
 
 		const onMouseMove = (event) => {
 			const newHeight = Math.max(

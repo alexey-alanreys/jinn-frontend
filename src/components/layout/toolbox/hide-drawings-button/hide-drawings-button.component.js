@@ -25,10 +25,14 @@ export class HideDrawingsButton extends BaseComponent {
 	}
 
 	deactivate() {
-		if (!this.#isActive()) return;
+		if (!this.#isActive) return;
 
 		this.#$element.data('active', 'false').attr('title', TITLES['false']);
 		this.#showDrawings(stateService.get('drawings'));
+	}
+
+	get #isActive() {
+		return this.#$element.is('data-active');
 	}
 
 	#initDOM() {
@@ -42,16 +46,12 @@ export class HideDrawingsButton extends BaseComponent {
 	}
 
 	#handleClick() {
-		if (this.#isActive()) {
+		if (this.#isActive) {
 			this.deactivate();
 		} else {
 			this.#activate();
 			this.onActivate?.();
 		}
-	}
-
-	#isActive() {
-		return this.#$element.is('data-active');
 	}
 
 	#activate() {
@@ -65,7 +65,7 @@ export class HideDrawingsButton extends BaseComponent {
 	}
 
 	#hideDrawings(drawings) {
-		if (!this.#isActive() || !drawings.length) return;
+		if (!this.#isActive || !drawings.length) return;
 		drawings.forEach((series) => series.applyOptions({ visible: false }));
 	}
 }

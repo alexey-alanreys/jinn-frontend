@@ -45,7 +45,7 @@ export class RulerTool extends BaseComponent {
 	}
 
 	initialize() {
-		if (this.#isActive()) return;
+		if (this.#isActive) return;
 
 		this.#subscribeToChart();
 	}
@@ -54,6 +54,10 @@ export class RulerTool extends BaseComponent {
 		this.#unsubscribeFromChart();
 		this.#$element.data('active', 'false');
 		this.#isMeasuring = false;
+	}
+
+	get #isActive() {
+		return this.#$element.is('data-active');
 	}
 
 	#initDOM() {
@@ -78,12 +82,8 @@ export class RulerTool extends BaseComponent {
 		);
 	}
 
-	#isActive() {
-		return this.#$element.is('data-active');
-	}
-
 	#activate() {
-		if (this.#isActive()) return;
+		if (this.#isActive) return;
 
 		this.#$element.data('active', 'true');
 		this.#isMeasuring = true;
@@ -104,7 +104,7 @@ export class RulerTool extends BaseComponent {
 	}
 
 	#handleChartClick({ logical, point, sourceEvent }) {
-		if (this.#isActive()) {
+		if (this.#isActive) {
 			this.#finishMeasurement();
 			return;
 		}
@@ -116,7 +116,7 @@ export class RulerTool extends BaseComponent {
 	}
 
 	#finishMeasurement() {
-		if (this.#isActive()) {
+		if (this.#isActive) {
 			stateService.set('rulerActive', false);
 		}
 	}

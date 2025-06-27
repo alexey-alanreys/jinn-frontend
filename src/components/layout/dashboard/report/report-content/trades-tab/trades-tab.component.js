@@ -75,7 +75,7 @@ export class TradesTab extends BaseComponent {
 	#ensureCorrectSortOrder() {
 		if (this.#cachedTrades.length < 2) return;
 
-		const shouldReverse = this.toggleSortingButton.isActive()
+		const shouldReverse = this.toggleSortingButton.isActive
 			? this.#cachedTrades[0][0] < this.#cachedTrades[1][0]
 			: this.#cachedTrades[0][0] > this.#cachedTrades[1][0];
 
