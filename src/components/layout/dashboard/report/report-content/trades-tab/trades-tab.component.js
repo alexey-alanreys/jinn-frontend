@@ -15,7 +15,7 @@ export class TradesTab extends BaseComponent {
 	#$element;
 
 	#cachedTrades = [];
-	#itemsMap = new Map();
+	#items = new Map();
 
 	render() {
 		this.#initComponents();
@@ -85,16 +85,16 @@ export class TradesTab extends BaseComponent {
 	}
 
 	#renderTrades() {
-		const tradesItems = this.#$element.find('[data-ref="tradesItems"]');
+		const container = this.#$element.find('[data-ref="tradesItems"]');
 		this.#removeOrphanedItems();
 
 		this.#cachedTrades.forEach((trade, index) => {
-			let item = this.#itemsMap.get(index);
+			let item = this.#items.get(index);
 
 			if (!item) {
 				item = new TradesItem();
-				this.#itemsMap.set(index, item);
-				tradesItems.append(item.render());
+				this.#items.set(index, item);
+				container.append(item.render());
 			}
 
 			item.update(trade);
@@ -108,10 +108,10 @@ export class TradesTab extends BaseComponent {
 	#removeOrphanedItems() {
 		const validKeys = new Set(this.#cachedTrades.map((_, i) => i));
 
-		this.#itemsMap.forEach((item, key) => {
+		this.#items.forEach((item, key) => {
 			if (!validKeys.has(key)) {
 				item.remove();
-				this.#itemsMap.delete(key);
+				this.#items.delete(key);
 			}
 		});
 	}

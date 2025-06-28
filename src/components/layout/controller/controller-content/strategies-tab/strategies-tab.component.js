@@ -13,7 +13,7 @@ import { StrategiesItem } from './strategies-item/strategies-item.component';
 
 export class StrategiesTab extends BaseComponent {
 	#$element;
-	#itemsMap = new Map();
+	#items = new Map();
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -51,12 +51,12 @@ export class StrategiesTab extends BaseComponent {
 
 		Object.entries(contexts).forEach(([id, context]) => {
 			const item = new StrategiesItem();
-			this.#itemsMap.set(id, item);
+			this.#items.set(id, item);
 			container.append(item.render());
 			item.update(id, context);
 		});
 
-		this.#itemsMap.get(contextId)?.activate();
+		this.#items.get(contextId)?.activate();
 	}
 
 	#bindEvents() {
@@ -100,8 +100,8 @@ export class StrategiesTab extends BaseComponent {
 				this.#selectContext(fallbackId);
 			}
 
-			this.#itemsMap.get(id).remove();
-			this.#itemsMap.delete(id);
+			this.#items.get(id).remove();
+			this.#items.delete(id);
 		} catch (error) {
 			console.error('Failed to remove strategy context.', error);
 		}
@@ -114,7 +114,7 @@ export class StrategiesTab extends BaseComponent {
 		const newContext = stateService.get('contexts')[id];
 		stateService.set('context', { id, ...newContext });
 
-		this.#itemsMap.get(currentId)?.deactivate();
-		this.#itemsMap.get(id)?.activate();
+		this.#items.get(currentId)?.deactivate();
+		this.#items.get(id)?.activate();
 	}
 }

@@ -12,7 +12,7 @@ import { MetricsItem } from './metrics-item/metrics-item.component';
 
 export class MetricsTab extends BaseComponent {
 	#$element;
-	#itemsMap = new Map();
+	#items = new Map();
 
 	render() {
 		this.#initDOM();
@@ -24,15 +24,15 @@ export class MetricsTab extends BaseComponent {
 	async update(context) {
 		try {
 			const metrics = await reportService.getMetrics(context.id);
-			const metricsItems = this.#$element.find('[data-ref="metricsItems"]');
+			const container = this.#$element.find('[data-ref="metricsItems"]');
 
 			metrics.forEach((metric, index) => {
-				let item = this.#itemsMap.get(index);
+				let item = this.#items.get(index);
 
 				if (!item) {
 					item = new MetricsItem();
-					this.#itemsMap.set(index, item);
-					metricsItems.append(item.render());
+					this.#items.set(index, item);
+					container.append(item.render());
 				}
 
 				item.update(metric);

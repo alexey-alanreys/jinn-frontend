@@ -3,7 +3,7 @@ import { BaseComponent } from '@/core/component/base.component';
 /**
  * A utility class for converting HTML strings to DOM elements.
  */
-export class RenderService {
+class RenderService {
 	/**
 	 * Converts an HTML string into an HTMLElement, applies scoped styles,
 	 * and replaces custom component tags.
@@ -47,26 +47,26 @@ export class RenderService {
 	 */
 	#replaceComponentTags(parentElement, components) {
 		const instanceMap = new Map();
-		const componentInstances = components.map((el) =>
-			el instanceof BaseComponent ? el : new el(),
+		const allElements = parentElement.querySelectorAll('*');
+		const componentInstances = components.map((component) =>
+			component instanceof BaseComponent ? component : new component(),
 		);
-		const componentElements = parentElement.querySelectorAll('*');
 
-		componentInstances.forEach((el) => {
-			const name = el.constructor.name.toLowerCase();
-			instanceMap.set(name, el);
+		componentInstances.forEach((instance) => {
+			const componentName = instance.constructor.name.toLowerCase();
+			instanceMap.set(componentName, instance);
 		});
 
-		componentElements.forEach((el) => {
-			const componentName = el.tagName
-				.toLowerCase()
+		allElements.forEach((element) => {
+			const tagName = element.tagName.toLowerCase();
+			const componentName = tagName
 				.replace(/^component-/, '')
 				.replace(/-/g, '');
 			const instance = instanceMap.get(componentName);
 
 			if (instance) {
-				const content = instance.render();
-				el.replaceWith(content);
+				const renderedContent = instance.render();
+				element.replaceWith(renderedContent);
 			}
 		});
 	}
@@ -87,12 +87,12 @@ export class RenderService {
 	#applyModuleStyles(element, styles) {
 		if (!element || !styles) return;
 
-		const elements = element.querySelectorAll('[class]');
+		const elementsWithClass = element.querySelectorAll('[class]');
 
-		[element, ...elements].forEach((el) => {
+		[element, ...elementsWithClass].forEach((targetElement) => {
 			for (const [originalClass, scopedClass] of Object.entries(styles)) {
-				if (el.classList.contains(originalClass)) {
-					el.classList.replace(originalClass, scopedClass);
+				if (targetElement.classList.contains(originalClass)) {
+					targetElement.classList.replace(originalClass, scopedClass);
 				}
 			}
 		});
