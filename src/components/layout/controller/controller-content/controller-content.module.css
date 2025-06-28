@@ -1,16 +1,16 @@
 .controller-content {
 	display: flex;
-	flex: 0 0 300px;
+	flex: 0 0 320px;
 	background-color: #fff;
-	overflow: auto;
 	border-right: 1px solid #e0e3eb;
+	overflow: auto;
 
-	> ::-webkit-scrollbar {
-		width: 6px;
+	::-webkit-scrollbar {
+		width: 3px;
 	}
 
-	> ::-webkit-scrollbar-thumb {
+	::-webkit-scrollbar-thumb {
 		background-color: #d3cdcd;
-		border-radius: 3px;
+		border-radius: 2px;
 	}
 }

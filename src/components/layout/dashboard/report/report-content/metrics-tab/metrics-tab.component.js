@@ -38,7 +38,7 @@ export class MetricsTab extends BaseComponent {
 				item.update(metric);
 			});
 		} catch (error) {
-			console.error('Failed to update metrics:', error);
+			console.error('Failed to update metrics.', error);
 		}
 	}
 

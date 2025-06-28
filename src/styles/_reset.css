@@ -137,3 +137,12 @@ select {
 	font-style: inherit;
 	outline: none;
 }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	background-color: transparent;
+	outline: none;
+}

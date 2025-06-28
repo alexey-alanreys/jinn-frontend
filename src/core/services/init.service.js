@@ -24,12 +24,6 @@ class InitService {
 		stateService.set('drawings', []);
 
 		this.cleanupOrphanedDrawings(Object.keys(contexts));
-
-		// setTimeout(() => {
-		// 	const [id, data] = Object.entries(contexts)[1];
-		// 	const context = { id, ...data };
-		// 	stateService.set('context', context);
-		// }, 5000);
 	}
 
 	/**

@@ -2,10 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './metrics-item.module.css';
-import templateHTML from './metrics-item.template.html?raw';
+import styles from './strategies-item.module.css';
+import templateHTML from './strategies-item.template.html?raw';
 
-export class MetricsItem extends BaseComponent {
+export class StrategiesItem extends BaseComponent {
 	#$element;
 	#dataFields = new Map();
 
@@ -16,10 +16,23 @@ export class MetricsItem extends BaseComponent {
 		return this.element;
 	}
 
-	update(metric) {
-		this.#dataFields.forEach(({ element, group, index }) => {
-			element.text(metric[group][index]);
+	update(id, context) {
+		this.#dataFields.forEach(({ element }, key) => {
+			this.#$element.data('cid', id);
+			element.text(context[key]);
 		});
+	}
+
+	activate() {
+		this.#$element.data('active', 'true');
+	}
+
+	deactivate() {
+		this.#$element.data('active', 'false');
+	}
+
+	remove() {
+		this.element.remove();
 	}
 
 	#initDOM() {
@@ -30,13 +43,7 @@ export class MetricsItem extends BaseComponent {
 	#setupInitialState() {
 		this.#$element.findAll('[data-field]').forEach((el) => {
 			const key = el.data('field');
-			const [group, index] = key.split('.');
-
-			this.#dataFields.set(key, {
-				element: el,
-				group,
-				index: Number(index),
-			});
+			this.#dataFields.set(key, { element: el });
 		});
 	}
 }

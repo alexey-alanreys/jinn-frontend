@@ -58,7 +58,15 @@
 					"min-height",
 					"max-height",
 					"padding",
-					"margin"
+					"padding-top",
+					"padding-right",
+					"padding-bottom",
+					"padding-left",
+					"margin",
+					"margin-top",
+					"margin-right",
+					"margin-bottom",
+					"margin-left"
 				]
 			},
 			{
@@ -79,19 +87,73 @@
 				"properties": [
 					"background",
 					"background-color",
+					"background-image",
+					"background-position",
+					"background-repeat",
+					"background-size",
 					"border",
+					"border-top",
+					"border-right",
+					"border-bottom",
+					"border-left",
+					"border-color",
+					"border-width",
+					"border-style",
 					"border-radius",
+					"border-top-left-radius",
+					"border-top-right-radius",
+					"border-bottom-left-radius",
+					"border-bottom-right-radius",
 					"box-shadow",
-					"opacity"
+					"opacity",
+					"outline",
+					"outline-color",
+					"outline-style",
+					"outline-width",
+					"visibility"
 				]
 			},
 			{
 				"groupName": "Animations and Transformations",
-				"properties": ["transition", "animation", "transform"]
+				"properties": [
+					"transition",
+					"transition-property",
+					"transition-duration",
+					"transition-timing-function",
+					"transition-delay",
+					"animation",
+					"animation-name",
+					"animation-duration",
+					"animation-timing-function",
+					"animation-delay",
+					"animation-iteration-count",
+					"animation-direction",
+					"animation-fill-mode",
+					"animation-play-state",
+					"transform",
+					"transform-origin",
+					"transform-style",
+					"perspective",
+					"perspective-origin",
+					"backface-visibility",
+					"will-change"
+				]
 			},
 			{
 				"groupName": "Miscellaneous",
-				"properties": ["cursor", "overflow", "pointer-events"]
+				"properties": [
+					"cursor",
+					"overflow",
+					"overflow-x",
+					"overflow-y",
+					"pointer-events",
+					"resize",
+					"user-select",
+					"appearance",
+					"clip",
+					"clip-path",
+					"caret-color"
+				]
 			}
 		],
 		"order/properties-alphabetical-order": null,

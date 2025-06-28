@@ -1,7 +1,19 @@
 .context-tab {
 	display: none;
-	flex-direction: column;
 	flex: 1;
+	flex-direction: column;
 
-	background-color: chocolate;
+	> .header {
+		padding: 8px 16px;
+		font-size: 1.8rem;
+		font-weight: 600;
+		border-bottom: 1px solid #e0e3eb;
+	}
+
+	> .context-items {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		overflow-y: auto;
+	}
 }

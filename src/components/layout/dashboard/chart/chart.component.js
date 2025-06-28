@@ -122,7 +122,7 @@ export class Chart extends BaseComponent {
 				this.#loadMarkers(),
 			]);
 		} catch (error) {
-			console.error('Error loading chart data:', error);
+			console.error('Error loading chart data.', error);
 		}
 	}
 

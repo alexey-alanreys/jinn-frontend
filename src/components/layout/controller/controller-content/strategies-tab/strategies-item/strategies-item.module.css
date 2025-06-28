@@ -1,0 +1,60 @@
+.strategies-item {
+	display: flex;
+	flex: 0 0 60px;
+	align-items: center;
+	gap: 6px;
+	max-width: 320px;
+	padding: 6px 16px;
+	border-bottom: 1px solid #edf0f7;
+	transition: background-color 0.2s ease;
+
+	&[data-active='true'] {
+		color: #2962ff;
+	}
+
+	> .content {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-width: 0;
+		line-height: 22px;
+		text-align: start;
+		color: inherit;
+		white-space: nowrap;
+
+		> .name {
+			font-size: 1.6rem;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		> .meta {
+			font-size: 1.4rem;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+
+	> .remove-button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 24px;
+		height: 24px;
+		border-radius: 6px;
+		opacity: 0;
+		transition: all 0.2s ease;
+
+		&:hover {
+			background-color: #e0e0e0;
+		}
+	}
+
+	&:hover {
+		background-color: #f5f5f5;
+
+		> .remove-button {
+			opacity: 1;
+		}
+	}
+}

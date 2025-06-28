@@ -4,9 +4,9 @@
 	align-items: center;
 	min-height: 39px;
 	background-color: #fff;
+	border-bottom: 1px solid #e0e3eb;
 	border-radius: 6px 6px 0 0;
 	box-shadow: #ebebeb 0 0 4px 3px;
-	border-bottom: 1px solid #e0e3eb;
 
 	> .report-tab-buttons,
 	> .report-size-buttons {

@@ -27,10 +27,7 @@ class Query {
 			if (!this.element) {
 				throw new Error(`No element found for the selector: "${selector}"`);
 			}
-		} else if (
-			selector instanceof HTMLElement ||
-			selector instanceof Document
-		) {
+		} else if (selector instanceof Element || selector instanceof Document) {
 			this.element = selector;
 		} else {
 			throw new Error(
@@ -72,6 +69,18 @@ class Query {
 	findAll(selector) {
 		const elements = this.element.querySelectorAll(selector);
 		return Array.from(elements).map((el) => new Query(el));
+	}
+
+	/**
+	 * Finds the closest ancestor (or self) matching the selector.
+	 *
+	 * @param {string} selector A CSS selector to match.
+	 * @returns {Query|null} A new Query instance wrapping the found element,
+	 *          or null if no match found.
+	 */
+	closest(selector) {
+		const found = this.element.closest(selector);
+		return found ? new Query(found) : null;
 	}
 
 	/* INSERT */

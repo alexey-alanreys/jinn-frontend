@@ -38,7 +38,7 @@ export class OverviewTab extends BaseComponent {
 			});
 			this.equityCurve.update(overview.equity);
 		} catch (error) {
-			console.error('Failed to update overview:', error);
+			console.error('Failed to update overview.', error);
 		}
 	}
 

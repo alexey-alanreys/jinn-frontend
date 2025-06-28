@@ -33,7 +33,7 @@ export class TradesTab extends BaseComponent {
 			this.#ensureCorrectSortOrder();
 			this.#renderTrades();
 		} catch (error) {
-			console.error('Failed to update trades:', error);
+			console.error('Failed to update trades.', error);
 		}
 	}
 

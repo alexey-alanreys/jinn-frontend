@@ -3,11 +3,11 @@
 	flex-direction: column;
 	justify-content: start;
 	align-items: center;
-	gap: 4px;
 	min-width: 46px;
-	margin-right: 4px;
 	padding-top: 6px;
+	margin-right: 4px;
 	background-color: #fff;
+	gap: 4px;
 }
 
 .toolbox hr {

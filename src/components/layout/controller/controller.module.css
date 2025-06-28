@@ -1,7 +1,6 @@
 .controller {
 	display: flex;
 	flex: 0 0 auto;
-	display: flex;
-	background-color: #fff;
 	margin-left: 4px;
+	background-color: #fff;
 }

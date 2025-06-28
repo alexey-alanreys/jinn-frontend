@@ -1,9 +1,9 @@
 .overview-tab {
-	contain: strict;
 	display: flex;
-	overflow-y: auto;
-	flex-direction: column;
 	flex: 1;
+	flex-direction: column;
+	contain: strict;
+	overflow-y: auto;
 
 	> .metrics {
 		display: flex;
