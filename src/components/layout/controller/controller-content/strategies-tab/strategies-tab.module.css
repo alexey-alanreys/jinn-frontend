@@ -2,8 +2,10 @@
 	display: flex;
 	flex: 1;
 	flex-direction: column;
+	line-height: 22px;
 
-	> .header {
+	> .tab-header {
+		height: 40px;
 		padding: 8px 16px;
 		font-size: 1.8rem;
 		font-weight: 600;
@@ -12,7 +14,6 @@
 
 	> .strategies-items {
 		display: flex;
-		flex: 1;
 		flex-direction: column;
 		overflow-y: auto;
 	}

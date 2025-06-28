@@ -1,0 +1,49 @@
+.params-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-width: 0;
+	max-width: 320px;
+	padding: 8px 16px;
+	gap: 10px;
+	white-space: nowrap;
+
+	> label {
+		font-size: 1.4rem;
+		cursor: pointer;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	> input[type='text'] {
+		width: 80px;
+		height: 30px;
+		padding: 4px 6px;
+		font-size: 1.4rem;
+		color: inherit;
+		border: 1px solid #d1d4dc;
+		border-radius: 4px;
+
+		&:focus {
+			padding-left: 5px;
+			border: 2px solid #2a9df4;
+			outline: none;
+		}
+	}
+
+	> input[type='checkbox'] {
+		width: 25px;
+		height: 25px;
+		padding: 0;
+		border: 1px solid #d1d4dc;
+		border-radius: 4px;
+		cursor: pointer;
+		appearance: none;
+		accent-color: #2a9df4;
+
+		&:checked {
+			background-color: #2a9df4;
+			border-color: #2a9df4;
+		}
+	}
+}

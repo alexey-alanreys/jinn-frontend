@@ -1,12 +1,12 @@
 .strategies-item {
 	display: flex;
-	flex: 0 0 60px;
 	align-items: center;
-	gap: 6px;
 	max-width: 320px;
+	height: 60px;
 	padding: 6px 16px;
 	border-bottom: 1px solid #edf0f7;
 	transition: background-color 0.2s ease;
+	gap: 6px;
 
 	&[data-active='true'] {
 		color: #2962ff;
@@ -17,7 +17,6 @@
 		flex: 1;
 		flex-direction: column;
 		min-width: 0;
-		line-height: 22px;
 		text-align: start;
 		color: inherit;
 		white-space: nowrap;

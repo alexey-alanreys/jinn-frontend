@@ -5,7 +5,7 @@ import styles from './controller-sidebar.module.css';
 import templateHTML from './controller-sidebar.template.html?raw';
 
 import { AlertsTabButton } from './alerts-tab-button/alerts-tab-button.component';
-import { ContextTabButton } from './context-tab-button/context-tab-button.component';
+import { ParamsTabButton } from './params-tab-button/params-tab-button.component';
 import { StrategiesTabButton } from './strategies-tab-button/strategies-tab-button.component';
 
 export class ControllerSidebar extends BaseComponent {
@@ -28,7 +28,7 @@ export class ControllerSidebar extends BaseComponent {
 	#initComponents() {
 		this.buttons = {
 			strategies: new StrategiesTabButton(),
-			context: new ContextTabButton(),
+			params: new ParamsTabButton(),
 			alerts: new AlertsTabButton(),
 		};
 	}
@@ -36,7 +36,7 @@ export class ControllerSidebar extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.buttons.strategies, this.buttons.context, this.buttons.alerts],
+			[this.buttons.strategies, this.buttons.params, this.buttons.alerts],
 			styles,
 		);
 	}

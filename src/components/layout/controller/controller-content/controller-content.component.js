@@ -6,7 +6,7 @@ import styles from './controller-content.module.css';
 import templateHTML from './controller-content.template.html?raw';
 
 import { AlertsTab } from './alerts-tab/alerts-tab.component';
-import { ContextTab } from './context-tab/context-tab.component';
+import { ParamsTab } from './params-tab/params-tab.component';
 import { StrategiesTab } from './strategies-tab/strategies-tab.component';
 
 export class ControllerContent extends BaseComponent {
@@ -38,7 +38,7 @@ export class ControllerContent extends BaseComponent {
 	#initComponents() {
 		this.tabs = {
 			strategies: new StrategiesTab(),
-			context: new ContextTab(),
+			params: new ParamsTab(),
 			alerts: new AlertsTab(),
 		};
 	}
@@ -46,7 +46,7 @@ export class ControllerContent extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.tabs.strategies, this.tabs.context, this.tabs.alerts],
+			[this.tabs.strategies, this.tabs.params, this.tabs.alerts],
 			styles,
 		);
 		this.#$element = $Q(this.element);

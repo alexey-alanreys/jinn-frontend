@@ -65,10 +65,10 @@ export class StrategiesTab extends BaseComponent {
 
 	#handleClick(event) {
 		const $target = $Q(event.target);
-		const $item = $target.closest('[data-cid]');
+		const $item = $target.closest('[data-context-id]');
 		if (!$item) return;
 
-		const id = $item.data('cid');
+		const id = $item.data('context-id');
 
 		if ($target.closest('button')) {
 			this.#handleDelete(id);

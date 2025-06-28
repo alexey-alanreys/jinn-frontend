@@ -2,10 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './context-tab-button.module.css';
-import templateHTML from './context-tab-button.template.html?raw';
+import styles from './params-tab-button.module.css';
+import templateHTML from './params-tab-button.template.html?raw';
 
-export class ContextTabButton extends BaseComponent {
+export class ParamsTabButton extends BaseComponent {
 	#$element;
 
 	render() {
