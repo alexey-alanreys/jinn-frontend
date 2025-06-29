@@ -76,10 +76,7 @@ export class RulerTool extends BaseComponent {
 			this.#dataFields.set(key, { element: el });
 		});
 
-		stateService.subscribe(
-			'candlestickSeries',
-			this.#finishMeasurement.bind(this),
-		);
+		stateService.subscribe('context', this.#finishMeasurement.bind(this));
 	}
 
 	#activate() {

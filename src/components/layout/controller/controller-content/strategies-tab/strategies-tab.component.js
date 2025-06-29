@@ -86,10 +86,7 @@ export class StrategiesTab extends BaseComponent {
 		if ($target.closest('button')) {
 			this.#handleDelete(contextId);
 		} else {
-			if (this.#contextId === contextId) return;
-
-			const newContext = stateService.get('contexts')[contextId];
-			stateService.set('context', { id: contextId, ...newContext });
+			this.#setContext(contextId);
 		}
 	}
 
@@ -113,8 +110,7 @@ export class StrategiesTab extends BaseComponent {
 
 			if (contextId === currentContextId) {
 				const newContextId = Object.keys(remaining)[0];
-				const newContext = stateService.get('contexts')[newContextId];
-				stateService.set('context', { id: newContextId, ...newContext });
+				this.#setContext(newContextId);
 			}
 
 			this.#items.get(contextId).remove();
@@ -122,5 +118,12 @@ export class StrategiesTab extends BaseComponent {
 		} catch (error) {
 			console.error('Failed to remove strategy context.', error);
 		}
+	}
+
+	#setContext(contextId) {
+		if (this.#contextId === contextId) return;
+
+		const newContext = stateService.get('contexts')[contextId];
+		stateService.set('context', { id: contextId, ...newContext });
 	}
 }
