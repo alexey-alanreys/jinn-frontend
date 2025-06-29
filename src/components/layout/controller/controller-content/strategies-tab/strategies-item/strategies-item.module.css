@@ -21,20 +21,20 @@
 		color: inherit;
 		white-space: nowrap;
 
-		> .name {
+		> .strategy-name {
 			font-size: 1.6rem;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 
-		> .meta {
+		> .meta-info {
 			font-size: 1.4rem;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 	}
 
-	> .remove-button {
+	> button {
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -52,7 +52,7 @@
 	&:hover {
 		background-color: #f5f5f5;
 
-		> .remove-button {
+		> button {
 			opacity: 1;
 		}
 	}

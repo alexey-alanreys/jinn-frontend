@@ -12,13 +12,13 @@
 		min-height: min-content;
 		font-size: 1.4rem;
 
-		> .table-header {
+		> .header {
 			position: sticky;
 			z-index: 3;
 			top: 0;
 			background-color: #fff;
 
-			> .table-row {
+			> .row {
 				display: grid;
 				grid-template-columns: 10% 18% 18% 10% 10% 10% 10% 14%;
 				height: 35px;

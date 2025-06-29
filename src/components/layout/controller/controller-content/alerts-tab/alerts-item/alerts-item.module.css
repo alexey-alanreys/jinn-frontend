@@ -34,7 +34,7 @@
 			}
 		}
 
-		> .button {
+		> button {
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -52,7 +52,7 @@
 		&:hover {
 			background-color: #f5f5f5;
 
-			> .button {
+			> button {
 				opacity: 1;
 			}
 		}

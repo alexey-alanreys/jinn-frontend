@@ -10,7 +10,7 @@
 	max-height: 100%;
 	font-size: 1.4rem;
 
-	> .report-handle {
+	> .handle {
 		z-index: 20;
 		min-height: 4px;
 		cursor: ns-resize;
