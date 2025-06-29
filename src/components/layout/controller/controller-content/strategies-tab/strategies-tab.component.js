@@ -13,6 +13,8 @@ import { StrategiesItem } from './strategies-item/strategies-item.component';
 
 export class StrategiesTab extends BaseComponent {
 	#$element;
+
+	#contextId = null;
 	#items = new Map();
 
 	get isActive() {
@@ -24,6 +26,14 @@ export class StrategiesTab extends BaseComponent {
 		this.#setupInitialState();
 
 		return this.element;
+	}
+
+	update(context) {
+		if (this.#contextId === context.id) return;
+
+		this.#items.get(this.#contextId).deactivate();
+		this.#items.get(context.id).activate();
+		this.#contextId = context.id;
 	}
 
 	hide() {
@@ -40,6 +50,8 @@ export class StrategiesTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
+		this.#contextId = stateService.get('context').id;
+
 		this.#renderInitialItems();
 		this.#bindEvents();
 	}
@@ -47,12 +59,12 @@ export class StrategiesTab extends BaseComponent {
 	#renderInitialItems() {
 		const contexts = stateService.get('contexts');
 		const contextId = stateService.get('context').id;
-		const container = this.#$element.find('[data-ref="strategiesItems"]');
+		const $items = this.#$element.find('[data-ref="strategiesItems"]');
 
 		Object.entries(contexts).forEach(([id, context]) => {
 			const item = new StrategiesItem();
 			this.#items.set(id, item);
-			container.append(item.render());
+			$items.append(item.render());
 			item.update(id, context);
 		});
 
@@ -61,6 +73,7 @@ export class StrategiesTab extends BaseComponent {
 
 	#bindEvents() {
 		this.#$element.click(this.#handleClick.bind(this));
+		stateService.subscribe('context', this.update.bind(this));
 	}
 
 	#handleClick(event) {
@@ -68,16 +81,19 @@ export class StrategiesTab extends BaseComponent {
 		const $item = $target.closest('[data-context-id]');
 		if (!$item) return;
 
-		const id = $item.data('context-id');
+		const contextId = $item.data('context-id');
 
 		if ($target.closest('button')) {
-			this.#handleDelete(id);
+			this.#handleDelete(contextId);
 		} else {
-			this.#selectContext(id);
+			if (this.#contextId === contextId) return;
+
+			const newContext = stateService.get('contexts')[contextId];
+			stateService.set('context', { id: contextId, ...newContext });
 		}
 	}
 
-	async #handleDelete(id) {
+	async #handleDelete(contextId) {
 		try {
 			const contexts = stateService.get('contexts');
 
@@ -89,32 +105,22 @@ export class StrategiesTab extends BaseComponent {
 				return;
 			}
 
-			await contextsService.delete(id);
+			await contextsService.delete(contextId);
 
-			const currentId = stateService.get('context').id;
-			const { [id]: _, ...remaining } = contexts;
+			const currentContextId = stateService.get('context').id;
+			const { [contextId]: _, ...remaining } = contexts;
 			stateService.set('contexts', remaining);
 
-			if (id === currentId) {
-				const fallbackId = Object.keys(remaining)[0];
-				this.#selectContext(fallbackId);
+			if (contextId === currentContextId) {
+				const newContextId = Object.keys(remaining)[0];
+				const newContext = stateService.get('contexts')[newContextId];
+				stateService.set('context', { id: newContextId, ...newContext });
 			}
 
-			this.#items.get(id).remove();
-			this.#items.delete(id);
+			this.#items.get(contextId).remove();
+			this.#items.delete(contextId);
 		} catch (error) {
 			console.error('Failed to remove strategy context.', error);
 		}
-	}
-
-	#selectContext(id) {
-		const currentId = stateService.get('context').id;
-		if (id === currentId) return;
-
-		const newContext = stateService.get('contexts')[id];
-		stateService.set('context', { id, ...newContext });
-
-		this.#items.get(currentId)?.deactivate();
-		this.#items.get(id)?.activate();
 	}
 }

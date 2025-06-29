@@ -4,6 +4,8 @@ import { storageService } from '@/core/services/storage.service';
 import { contextsService } from '@/api/services/contexts.service';
 
 /**
+ * @module initService
+ * @description
  * Service for initial application data loading.
  * Provides essential data for other components to work with backend.
  */

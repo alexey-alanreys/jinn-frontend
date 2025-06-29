@@ -16,9 +16,9 @@ export class StrategiesItem extends BaseComponent {
 		return this.element;
 	}
 
-	update(id, context) {
+	update(contextId, context) {
 		this.#dataFields.forEach(({ element }, key) => {
-			this.#$element.data('context-id', id);
+			this.#$element.data('context-id', contextId);
 			element.text(context[key]);
 		});
 	}

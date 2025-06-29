@@ -85,7 +85,7 @@ export class TradesTab extends BaseComponent {
 	}
 
 	#renderTrades() {
-		const container = this.#$element.find('[data-ref="tradesItems"]');
+		const $items = this.#$element.find('[data-ref="tradesItems"]');
 		this.#removeOrphanedItems();
 
 		this.#cachedTrades.forEach((trade, index) => {
@@ -94,7 +94,7 @@ export class TradesTab extends BaseComponent {
 			if (!item) {
 				item = new TradesItem();
 				this.#items.set(index, item);
-				container.append(item.render());
+				$items.append(item.render());
 			}
 
 			item.update(trade);

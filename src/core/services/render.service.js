@@ -1,6 +1,8 @@
 import { BaseComponent } from '@/core/component/base.component';
 
 /**
+ * @module renderService
+ * @description
  * A utility class for converting HTML strings to DOM elements.
  */
 class RenderService {

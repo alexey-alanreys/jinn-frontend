@@ -35,25 +35,25 @@ export class ParamsTab extends BaseComponent {
 		this.#clear();
 
 		const params = context.strategyParams;
-		const container = this.#$element.find('[data-ref="paramsItems"]');
+		const $items = this.#$element.find('[data-ref="paramsItems"]');
 
-		Object.entries(params).forEach(([name, value]) => {
+		Object.entries(params).forEach(([title, value]) => {
 			if (Array.isArray(value)) {
 				value.forEach((entry, index) => {
 					const item = new ParamsItem();
-					const title = `${name} ${index + 1}`;
-					const id = `param-${name}-${index}`;
+					const label = `${title} ${index + 1}`;
+					const id = `param-${title}-${index}`;
 
-					container.append(item.render());
-					item.update(id, title, entry, name);
-					this.#registerItem(item, id, name);
+					$items.append(item.render());
+					item.update({ id, title: label, value: entry, group: title });
+					this.#registerItem(item, id, title);
 				});
 			} else {
 				const item = new ParamsItem();
-				const id = `param-${name}`;
+				const id = `param-${title}`;
 
-				container.append(item.render());
-				item.update(id, name, value);
+				$items.append(item.render());
+				item.update({ id, title, value });
 				this.#registerItem(item, id);
 			}
 		});
@@ -73,8 +73,8 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		stateService.subscribe('context', this.update.bind(this));
 		this.#$element.on('change', this.#handleInput.bind(this));
+		stateService.subscribe('context', this.update.bind(this));
 		this.update(stateService.get('context'));
 	}
 

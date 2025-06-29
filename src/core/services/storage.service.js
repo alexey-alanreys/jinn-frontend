@@ -1,4 +1,6 @@
 /**
+ * @module storageService
+ * @description
  * Service that provides an interface for working with localStorage
  * in a more convenient and structured way.
  */

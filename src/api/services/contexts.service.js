@@ -1,6 +1,8 @@
 import { BaseService } from '@/api/core/base.service';
 
 /**
+ * @module contextsService
+ * @description
  * Service for interacting with strategy contexts API endpoints.
  */
 class ContextsService extends BaseService {

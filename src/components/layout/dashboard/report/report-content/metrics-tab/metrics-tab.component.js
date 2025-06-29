@@ -24,7 +24,7 @@ export class MetricsTab extends BaseComponent {
 	async update(context) {
 		try {
 			const metrics = await reportService.getMetrics(context.id);
-			const container = this.#$element.find('[data-ref="metricsItems"]');
+			const $items = this.#$element.find('[data-ref="metricsItems"]');
 
 			metrics.forEach((metric, index) => {
 				let item = this.#items.get(index);
@@ -32,7 +32,7 @@ export class MetricsTab extends BaseComponent {
 				if (!item) {
 					item = new MetricsItem();
 					this.#items.set(index, item);
-					container.append(item.render());
+					$items.append(item.render());
 				}
 
 				item.update(metric);

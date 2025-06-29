@@ -19,7 +19,7 @@ export class IndicatorsInfoPanel extends BaseComponent {
 	update(indicators, withRender = false) {
 		if (withRender) {
 			this.#dataFields.clear();
-			this.#renderIndicatorFields();
+			this.#renderFields();
 		}
 
 		this.#dataFields.forEach(({ element }, key) => {
@@ -46,19 +46,19 @@ export class IndicatorsInfoPanel extends BaseComponent {
 		});
 	}
 
-	#renderIndicatorFields() {
+	#renderFields() {
 		const { indicatorOptions } = stateService.get('context');
-		const html = this.#generateIndicatorsHTML(indicatorOptions);
+
+		const html = this.#generateHTML(indicatorOptions);
 		this.#$element.html(html);
 
-		const dataFields = this.#$element.findAll('[data-field]');
-		dataFields.forEach((el) => {
+		this.#$element.findAll('[data-field]').forEach((el) => {
 			const key = el.data('field');
 			this.#dataFields.set(key, { element: el });
 		});
 	}
 
-	#generateIndicatorsHTML(indicatorOptions) {
+	#generateHTML(indicatorOptions) {
 		return Object.keys(indicatorOptions)
 			.map((key) => {
 				return `

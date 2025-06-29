@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import styles from '@/components/notification/notification.module.css';
 
 /**
+ * @module notificationService
+ * @description
  * Service for displaying temporary notifications (success or error).
  */
 class NotificationService {
@@ -17,23 +19,23 @@ class NotificationService {
 	#showNext() {
 		if (this.#queue.length === 0 || this.#isShowing) return;
 
-		const notification = $Q('[data-ref="notification"]');
+		const $notification = $Q('[data-ref="notification"]');
 		const { type, message } = this.#queue.shift();
 		const className = styles[type];
 
 		const animationDuration =
-			parseFloat(notification.css('animation-duration')) * 1000;
+			parseFloat($notification.css('animation-duration')) * 1000;
 		const delayToRemoveClass = animationDuration + 100;
 		const delayToShowNext = animationDuration + 500;
 
-		notification.find('[data-field="content"]').text(message);
-		notification.addClass(styles['visible']);
-		notification.addClass(className);
+		$notification.find('[data-field="content"]').text(message);
+		$notification.addClass(styles['visible']);
+		$notification.addClass(className);
 		this.#isShowing = true;
 
 		setTimeout(() => {
-			notification.removeClass(styles['visible']);
-			notification.removeClass(className);
+			$notification.removeClass(styles['visible']);
+			$notification.removeClass(className);
 			this.#isShowing = false;
 		}, delayToRemoveClass);
 

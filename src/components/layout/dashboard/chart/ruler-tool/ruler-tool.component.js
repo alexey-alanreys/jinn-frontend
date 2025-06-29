@@ -71,8 +71,7 @@ export class RulerTool extends BaseComponent {
 	#setupInitialState() {
 		this.#chartClickHandler = this.#handleChartClick.bind(this);
 
-		const dataFields = this.#$element.findAll('[data-field]');
-		dataFields.forEach((el) => {
+		this.#$element.findAll('[data-field]').forEach((el) => {
 			const key = el.data('field');
 			this.#dataFields.set(key, { element: el });
 		});

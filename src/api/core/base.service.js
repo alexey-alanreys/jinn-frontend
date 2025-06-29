@@ -2,6 +2,8 @@ import { request } from '@/core/libs/request.lib';
 import { notificationService } from '@/core/services/notification.service';
 
 /**
+ * @module baseService
+ * @description
  * Base API service with common functionality for all API services.
  */
 export class BaseService {

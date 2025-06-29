@@ -26,11 +26,12 @@ export class Report extends BaseComponent {
 	}
 
 	get minHeight() {
-		const reportHandle = this.#$element.find('[data-ref="handle"]');
+		const handleMinHeight = this.#$element
+			.find('[data-ref="handle"]')
+			.css('min-height');
+		const headerMinHeight = this.reportHeader.minHeight;
 
-		return (
-			parseInt(reportHandle.css('min-height')) + this.reportHeader.minHeight
-		);
+		return parseInt(handleMinHeight) + headerMinHeight;
 	}
 
 	render() {

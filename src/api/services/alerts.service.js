@@ -1,6 +1,8 @@
 import { BaseService } from '@/api/core/base.service';
 
 /**
+ * @module alertsService
+ * @description
  * Service for interacting with strategy alerts API endpoints.
  */
 class AlertsService extends BaseService {

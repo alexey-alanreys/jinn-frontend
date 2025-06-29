@@ -34,20 +34,20 @@ export class ChartInfoPanel extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		const metaFields = this.#$element
+		const $metaFields = this.#$element
 			.find('[data-ref="meta"]')
 			.findAll('[data-field]');
 
-		const candlestickFields = this.#$element
+		const $candlestickFields = this.#$element
 			.find('[data-ref="candlestick"]')
 			.findAll('[data-field]');
 
-		metaFields.forEach((el) => {
+		$metaFields.forEach((el) => {
 			const key = el.data('field');
 			this.#metaFields.set(key, { element: el });
 		});
 
-		candlestickFields.forEach((el) => {
+		$candlestickFields.forEach((el) => {
 			const key = el.data('field');
 			this.#candleFields.set(key, { element: el });
 		});

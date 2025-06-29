@@ -1,6 +1,8 @@
 import { BaseService } from '@/api/core/base.service';
 
 /**
+ * @module reportService
+ * @description
  * Service for interacting with report-related API endpoints.
  */
 class ReportService extends BaseService {

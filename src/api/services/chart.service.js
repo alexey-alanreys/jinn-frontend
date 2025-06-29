@@ -1,6 +1,8 @@
 import { BaseService } from '@/api/core/base.service';
 
 /**
+ * @module chartService
+ * @description
  * Service for interacting with chart-related API endpoints.
  */
 class ChartService extends BaseService {

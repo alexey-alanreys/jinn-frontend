@@ -1,4 +1,6 @@
 /**
+ * @module stateService
+ * @description
  * Key-value store with subscription support.
  */
 class StateService {
