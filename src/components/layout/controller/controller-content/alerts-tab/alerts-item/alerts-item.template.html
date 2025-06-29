@@ -1,0 +1,65 @@
+<div
+	class="alerts-item"
+	data-active="false"
+	data-context-id=""
+	data-alert-id=""
+>
+	<div class="header">
+		<div class="meta-info">
+			<span class="strategy-name" data-field="strategy"></span>
+			<span class="date-time" data-field="time"></span>
+		</div>
+		<button class="button" data-ref="openStrategy" title="Открыть стратегию">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 28 28"
+				width="28"
+				height="28"
+				fill="none"
+			>
+				<path
+					fill="currentColor"
+					fill-rule="evenodd"
+					clip-rule="evenodd"
+					d="M14 9.5a.5.5 0 0 0 1 0V7.02A6.5 6.5 0 0 1 20.98 13H18.5a.5.5 0 0 0 0 1h2.48A6.5 6.5 0 0 1 15 19.98V17.5a.5.5 0 0 0-1 0v2.48A6.5 6.5 0 0 1 8.02 14h2.48a.5.5 0 0 0 0-1H8.02A6.5 6.5 0 0 1 14 7.02V9.5zm1-3.48V4.5a.5.5 0 0 0-1 0v1.52A7.5 7.5 0 0 0 7.02 13H5.5a.5.5 0 0 0 0 1h1.52A7.5 7.5 0 0 0 14 20.98v1.52a.5.5 0 0 0 1 0v-1.52A7.5 7.5 0 0 0 21.98 14h1.52a.5.5 0 0 0 0-1h-1.52A7.5 7.5 0 0 0 15 6.02z"
+				></path>
+			</svg>
+		</button>
+		<button class="button" data-ref="removeAlert" title="Удалить оповещение">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 18 18"
+				width="18"
+				height="18"
+			>
+				<path
+					fill="currentColor"
+					d="M12 4h3v1h-1.04l-.88 9.64a1.5 1.5 0 0 1-1.5 1.36H6.42a1.5 1.5 0 0 1-1.5-1.36L4.05 5H3V4h3v-.5C6 2.67 6.67 2 7.5 2h3c.83 0 1.5.67 1.5 1.5V4ZM7.5 3a.5.5 0 0 0-.5.5V4h4v-.5a.5.5 0 0 0-.5-.5h-3ZM5.05 5l.87 9.55a.5.5 0 0 0 .5.45h5.17a.5.5 0 0 0 .5-.45L12.94 5h-7.9Z"
+				></path>
+			</svg>
+		</button>
+	</div>
+	<div class="details">
+		<div class="field-row">
+			<span>Биржа</span><span data-field="exchange"></span>
+		</div>
+		<div class="field-row">
+			<span>Тип</span><span data-field="type"></span>
+		</div>
+		<div class="field-row">
+			<span>Статус</span><span data-field="status"></span>
+		</div>
+		<div class="field-row">
+			<span>Направление</span><span data-field="side"></span>
+		</div>
+		<div class="field-row">
+			<span>Символ</span><span data-field="symbol"></span>
+		</div>
+		<div class="field-row">
+			<span>Количество</span><span data-field="qty"></span>
+		</div>
+		<div class="field-row">
+			<span>Цена</span><span data-field="price"></span>
+		</div>
+	</div>
+</div>

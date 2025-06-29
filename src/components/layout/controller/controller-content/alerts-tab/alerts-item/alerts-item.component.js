@@ -2,10 +2,12 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './strategies-item.module.css';
-import templateHTML from './strategies-item.template.html?raw';
+import { ALERT_COLORS } from '@/constants/alerts.constants';
 
-export class StrategiesItem extends BaseComponent {
+import styles from './alerts-item.module.css';
+import templateHTML from './alerts-item.template.html?raw';
+
+export class AlertsItem extends BaseComponent {
 	#$element;
 	#dataFields = new Map();
 
@@ -20,19 +22,22 @@ export class StrategiesItem extends BaseComponent {
 		this.element.remove();
 	}
 
-	update(contextId, context) {
+	update(alertId, alert) {
 		this.#dataFields.forEach(({ element }, key) => {
-			this.#$element.data('context-id', contextId);
-			element.text(context[key]);
+			this.#$element.data('context-id', alert['context-id']);
+			this.#$element.data('alert-id', alertId);
+
+			const value = alert[key];
+			element.text(value);
+
+			if (ALERT_COLORS[key]) {
+				const colorClass = styles[ALERT_COLORS[key][value]];
+
+				if (colorClass) {
+					element.addClass(colorClass);
+				}
+			}
 		});
-	}
-
-	activate() {
-		this.#$element.data('active', 'true');
-	}
-
-	deactivate() {
-		this.#$element.data('active', 'false');
 	}
 
 	#initDOM() {

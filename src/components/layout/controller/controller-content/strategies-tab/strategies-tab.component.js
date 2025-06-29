@@ -115,6 +115,8 @@ export class StrategiesTab extends BaseComponent {
 
 			this.#items.get(contextId).remove();
 			this.#items.delete(contextId);
+
+			notificationService.show('success', 'Стратегия успешно удалена');
 		} catch (error) {
 			console.error('Failed to remove strategy context.', error);
 		}
