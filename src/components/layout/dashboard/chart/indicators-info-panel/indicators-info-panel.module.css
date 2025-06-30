@@ -4,7 +4,7 @@
 	top: 40px;
 	left: 12px;
 	display: flex;
-	font-size: 1.4rem;
 	gap: 6px;
+	font-size: 1.4rem;
 	pointer-events: none;
 }

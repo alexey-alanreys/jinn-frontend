@@ -1,12 +1,12 @@
 .strategies-item {
 	display: flex;
 	align-items: center;
+	gap: 6px;
 	max-width: 320px;
 	height: 60px;
 	padding: 6px 16px;
 	border-bottom: 1px solid #edf0f7;
 	transition: background-color 0.2s ease;
-	gap: 6px;
 
 	&[data-active='true'] {
 		color: #2962ff;

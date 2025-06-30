@@ -35,14 +35,18 @@ export class EquityCurve extends BaseComponent {
 	}
 
 	update(equity) {
-		if (equity.length !== 0) {
-			this.#show();
+		if (!equity.length) return;
 
-			this.#series.setData(equity);
-			this.#chartApi.timeScale().fitContent();
-		} else {
-			this.#hide();
-		}
+		this.#series.setData(equity);
+		this.#chartApi.timeScale().fitContent();
+	}
+
+	hide() {
+		this.#$element.css('display', 'none');
+	}
+
+	show() {
+		this.#$element.css('display', 'block');
 	}
 
 	#initComponents() {
@@ -136,13 +140,5 @@ export class EquityCurve extends BaseComponent {
 				pointMarkersVisible: markersShouldBeVisible,
 			});
 		}
-	}
-
-	#hide() {
-		this.#$element.css('display', 'none');
-	}
-
-	#show() {
-		this.#$element.css('display', 'block');
 	}
 }

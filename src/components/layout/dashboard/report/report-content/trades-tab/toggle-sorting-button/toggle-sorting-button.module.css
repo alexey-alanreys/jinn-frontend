@@ -1,7 +1,7 @@
 .toggle-sorting-button {
 	display: flex;
-	gap: 3px;
 	flex: 1;
+	gap: 3px;
 	color: inherit;
 
 	&:hover {

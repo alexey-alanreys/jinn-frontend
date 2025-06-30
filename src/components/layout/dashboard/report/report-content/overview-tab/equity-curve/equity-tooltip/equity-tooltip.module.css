@@ -5,13 +5,13 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	gap: 8px;
 	padding: 6px 18px;
 	font-size: 1.2rem;
 	color: #b8b8b8;
 	background: #3d3d3d;
 	border-radius: 4px;
 	pointer-events: none;
-	gap: 8px;
 
 	&[data-active='false'] {
 		display: none;

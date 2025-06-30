@@ -1,0 +1,29 @@
+.overview-empty {
+	display: none;
+	flex: 1;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+	text-align: center;
+
+	> .icon {
+		width: 150px;
+		height: auto;
+
+		> svg {
+			width: 100%;
+			max-width: 100%;
+			height: auto;
+			shape-rendering: geometricprecision;
+		}
+	}
+
+	> p {
+		max-width: 360px;
+		font-size: 1.8rem;
+		font-weight: 600;
+		line-height: 1.4;
+		color: #4b5563;
+	}
+}
