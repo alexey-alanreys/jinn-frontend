@@ -73,9 +73,13 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
+		this.#attachListeners();
+		this.update(stateService.get('context'));
+	}
+
+	#attachListeners() {
 		this.#$element.on('change', this.#handleInput.bind(this));
 		stateService.subscribe('context', this.update.bind(this));
-		this.update(stateService.get('context'));
 	}
 
 	#registerItem(item, id, group = null) {

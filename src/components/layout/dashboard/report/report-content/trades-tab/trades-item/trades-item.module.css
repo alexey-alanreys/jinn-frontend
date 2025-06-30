@@ -3,7 +3,7 @@
 	grid-template-columns: 10% 18% 18% 10% 10% 10% 10% 14%;
 	height: 100px;
 	padding: 8px 0;
-	border-bottom: 1px solid #dcd1d1;
+	border-bottom: 1px solid #f2f2f2;
 	transition: background-color 0.2s ease;
 
 	&:hover {
@@ -21,7 +21,7 @@
 			align-items: center;
 
 			&.border-bottom {
-				border-bottom: 1px solid #e9e6e6;
+				border-bottom: 1px solid #ebebeb;
 			}
 		}
 

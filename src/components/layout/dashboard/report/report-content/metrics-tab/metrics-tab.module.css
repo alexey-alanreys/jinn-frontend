@@ -21,7 +21,7 @@
 			> .row {
 				display: grid;
 				grid-template-columns: 30% 17.5% 17.5% 17.5% 17.5%;
-				height: 35px;
+				height: 50px;
 
 				> .cell {
 					display: flex;
@@ -36,6 +36,10 @@
 					}
 				}
 			}
+		}
+
+		> .items {
+			border-top: 1px solid #ebebeb;
 		}
 	}
 }

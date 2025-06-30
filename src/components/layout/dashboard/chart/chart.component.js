@@ -98,9 +98,17 @@ export class Chart extends BaseComponent {
 	#setupInitialState() {
 		this.#chartApi = createChart(this.element, chartOptions);
 
+		this.#attachListeners();
+		this.#registerState();
+
+		this.update(stateService.get('context'));
+	}
+
+	#attachListeners() {
 		this.#chartApi.subscribeCrosshairMove(
 			this.#handleCrosshairMove.bind(this),
 		);
+
 		this.#chartApi
 			.timeScale()
 			.subscribeVisibleLogicalRangeChange(
@@ -108,10 +116,11 @@ export class Chart extends BaseComponent {
 			);
 
 		stateService.subscribe('context', this.update.bind(this));
+	}
+
+	#registerState() {
 		stateService.set('rulerTool', this.rulerTool);
 		stateService.set('chartApi', this.#chartApi);
-
-		this.update(stateService.get('context'));
 	}
 
 	async #loadData() {

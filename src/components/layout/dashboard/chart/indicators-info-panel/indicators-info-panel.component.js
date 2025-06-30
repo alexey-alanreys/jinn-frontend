@@ -30,7 +30,7 @@ export class IndicatorsInfoPanel extends BaseComponent {
 
 			if (color === 'transparent') {
 				value = '∅';
-				color = 'rgb(41, 33, 33)';
+				color = 'inherit';
 			}
 
 			const currentText = element.text();

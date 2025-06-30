@@ -53,7 +53,7 @@ export class StrategiesTab extends BaseComponent {
 		this.#contextId = stateService.get('context').id;
 
 		this.#renderInitialItems();
-		this.#bindEvents();
+		this.#attachListeners();
 	}
 
 	#renderInitialItems() {
@@ -71,7 +71,7 @@ export class StrategiesTab extends BaseComponent {
 		this.#items.get(contextId)?.activate();
 	}
 
-	#bindEvents() {
+	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
 		stateService.subscribe('context', this.update.bind(this));
 	}

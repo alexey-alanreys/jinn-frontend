@@ -76,7 +76,7 @@ export class RulerTool extends BaseComponent {
 			this.#dataFields.set(key, { element: el });
 		});
 
-		stateService.subscribe('context', this.#finishMeasurement.bind(this));
+		stateService.subscribe('context', this.#finish.bind(this));
 	}
 
 	#activate() {
@@ -102,23 +102,23 @@ export class RulerTool extends BaseComponent {
 
 	#handleChartClick({ logical, point, sourceEvent }) {
 		if (this.#isActive) {
-			this.#finishMeasurement();
+			this.#finish();
 			return;
 		}
 
 		const series = stateService.get('candlestickSeries');
 		if (!series) return;
 
-		this.#prepareMeasurement({ logical, point, sourceEvent, series });
+		this.#prepare({ logical, point, sourceEvent, series });
 	}
 
-	#finishMeasurement() {
+	#finish() {
 		if (this.#isActive) {
 			stateService.set('rulerActive', false);
 		}
 	}
 
-	#prepareMeasurement({ logical, point, sourceEvent, series }) {
+	#prepare({ logical, point, sourceEvent, series }) {
 		const { minMove, precision } = stateService.get('context');
 		this.#minMove = minMove;
 		this.#precision = precision;
