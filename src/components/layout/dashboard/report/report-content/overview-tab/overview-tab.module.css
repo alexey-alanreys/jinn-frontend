@@ -27,11 +27,11 @@
 				font-size: 1.6rem;
 
 				> .red {
-					color: #d6333f;
+					color: var(--color-status-loss);
 				}
 
 				> .green {
-					color: #06755f;
+					color: var(--color-status-profit);
 				}
 			}
 		}

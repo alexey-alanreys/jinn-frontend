@@ -12,7 +12,7 @@
 	}
 
 	&[data-active='true'] {
-		background-color: rgb(41 98 255 / 10%);
+		background-color: var(--color-bg-button-active);
 
 		> .icon-visible {
 			display: none;

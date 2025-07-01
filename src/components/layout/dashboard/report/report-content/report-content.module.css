@@ -2,7 +2,7 @@
 	display: flex;
 	flex: 1;
 	min-height: 0;
-	background-color: #fff;
+	background-color: var(--color-bg-primary);
 	overflow: auto;
 
 	> ::-webkit-scrollbar {
@@ -10,7 +10,7 @@
 	}
 
 	> ::-webkit-scrollbar-thumb {
-		background-color: #d3cdcd;
+		background-color: var(--color-border-tertiary);
 		border-radius: 3px;
 	}
 }

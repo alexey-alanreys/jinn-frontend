@@ -21,12 +21,18 @@
 		padding: 4px 6px;
 		font-size: 1.4rem;
 		color: inherit;
-		border: 1px solid #d1d4dc;
+		border: 1px solid var(--color-border-tertiary);
 		border-radius: 4px;
+
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
 
 		&:focus {
 			padding-left: 5px;
-			border: 2px solid #2a9df4;
+			border: 2px solid var(--color-accent-secondary);
 			outline: none;
 		}
 	}
@@ -35,15 +41,15 @@
 		width: 25px;
 		height: 25px;
 		padding: 0;
-		border: 1px solid #d1d4dc;
+		border: 1px solid var(--color-border-tertiary);
 		border-radius: 4px;
 		cursor: pointer;
 		appearance: none;
-		accent-color: #2a9df4;
+		accent-color: var(--color-accent-secondary);
 
 		&:checked {
-			background-color: #2a9df4;
-			border-color: #2a9df4;
+			background-color: var(--color-accent-secondary);
+			border-color: var(--color-accent-secondary);
 		}
 	}
 }

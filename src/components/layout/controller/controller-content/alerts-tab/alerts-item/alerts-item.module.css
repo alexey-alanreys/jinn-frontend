@@ -9,7 +9,7 @@
 		max-width: 320px;
 		height: 60px;
 		padding: 6px 16px;
-		border-bottom: 1px solid #edf0f7;
+		border-bottom: 1px solid var(--color-border-primary);
 		transition: background-color 0.2s ease;
 
 		> .meta-info {
@@ -45,12 +45,12 @@
 			transition: all 0.2s ease;
 
 			&:hover {
-				background-color: #e0e0e0;
+				background-color: var(--color-bg-hover-secondary);
 			}
 		}
 
 		&:hover {
-			background-color: #f5f5f5;
+			background-color: var(--color-bg-hover-primary);
 
 			> button {
 				opacity: 1;
@@ -61,7 +61,7 @@
 	> .details {
 		display: flex;
 		flex-direction: column;
-		border-bottom: 1px solid #edf0f7;
+		border-bottom: 1px solid var(--color-border-primary);
 
 		> .field-row {
 			display: flex;
@@ -72,15 +72,15 @@
 			font-size: 1.4rem;
 
 			> .red {
-				color: #d6333f;
+				color: var(--color-status-red);
 			}
 
 			> .green {
-				color: #06755f;
+				color: var(--color-status-green);
 			}
 
 			> .gray {
-				color: #6a6d78;
+				color: var(--color-text-secondary);
 			}
 		}
 	}

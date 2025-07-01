@@ -48,4 +48,6 @@ class AppInitializer {
 	}
 }
 
-AppInitializer.start();
+requestAnimationFrame(() => {
+	AppInitializer.start();
+});

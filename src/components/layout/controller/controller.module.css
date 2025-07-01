@@ -2,5 +2,5 @@
 	display: flex;
 	flex: 0 0 auto;
 	margin-left: 4px;
-	background-color: #fff;
+	background-color: var(--color-bg-primary);
 }

@@ -12,11 +12,32 @@ import { contextsService } from '@/api/services/contexts.service';
 class InitService {
 	/**
 	 * Performs application initialization:
-	 * 1. Loads available contexts from backend
-	 * 2. Initializes application state with fresh data
-	 * 3. Performs storage maintenance (cleanup of orphaned data)
+	 * 1. Initializes application theme;
+	 * 2. Loads available contexts from backend;
+	 * 3. Initializes application state with fresh data;
+	 * 4. Performs storage maintenance (cleanup of orphaned data).
 	 */
 	async initialize() {
+		this.#initializeTheme();
+		const contextIds = await this.#initializeState();
+		this.#cleanupOrphanedDrawings(contextIds);
+	}
+
+	/**
+	 * Initializes application theme from storage or uses default.
+	 */
+	#initializeTheme() {
+		const savedTheme = storageService.getItem('theme') || 'light';
+		document.documentElement.setAttribute('data-theme', savedTheme);
+		stateService.set('theme', savedTheme);
+	}
+
+	/**
+	 * Loads contexts and initializes application state.
+	 *
+	 * @returns {Promise<string[]>} Array of context IDs.
+	 */
+	async #initializeState() {
 		const contexts = await contextsService.getAll();
 		const [id, data] = Object.entries(contexts)[0];
 		const context = { id, ...data };
@@ -25,15 +46,16 @@ class InitService {
 		stateService.set('context', context);
 		stateService.set('drawings', []);
 
-		this.cleanupOrphanedDrawings(Object.keys(contexts));
+		return Object.keys(contexts);
 	}
 
 	/**
 	 * Removes drawings data for non-existing contexts.
 	 *
 	 * @param {string[]} contextIds
+	 * @param {string} [type='trendlines']
 	 */
-	cleanupOrphanedDrawings(contextIds, type = 'trendlines') {
+	#cleanupOrphanedDrawings(contextIds, type = 'trendlines') {
 		const storedData = storageService.getItem('drawings') || { [type]: {} };
 		const typeData = storedData[type] || {};
 

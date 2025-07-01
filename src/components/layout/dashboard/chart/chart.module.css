@@ -2,7 +2,8 @@
 	position: absolute;
 	inset: 0 0 40%;
 	min-height: 345px;
-	background: #fff;
+	background-color: var(--color-bg-primary);
 	border-radius: 0 0 6px 6px;
 	cursor: crosshair;
+	padding-bottom: 5px;
 }

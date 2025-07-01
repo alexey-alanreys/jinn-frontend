@@ -5,11 +5,11 @@
 	max-width: 320px;
 	height: 60px;
 	padding: 6px 16px;
-	border-bottom: 1px solid #edf0f7;
+	border-bottom: 1px solid var(--color-border-primary);
 	transition: background-color 0.2s ease;
 
 	&[data-active='true'] {
-		color: #2962ff;
+		color: var(--color-accent-primary);
 	}
 
 	> .content {
@@ -45,12 +45,12 @@
 		transition: all 0.2s ease;
 
 		&:hover {
-			background-color: #e0e0e0;
+			background-color: var(--color-bg-hover-secondary);
 		}
 	}
 
 	&:hover {
-		background-color: #f5f5f5;
+		background-color: var(--color-bg-hover-primary);
 
 		> button {
 			opacity: 1;

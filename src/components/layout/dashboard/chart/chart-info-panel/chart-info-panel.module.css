@@ -18,11 +18,11 @@
 		font-size: 1.4rem;
 
 		.red {
-			color: #f23645;
+			color: var(--color-chart-down);
 		}
 
 		.green {
-			color: #008984;
+			color: var(--color-chart-up);
 		}
 	}
 }

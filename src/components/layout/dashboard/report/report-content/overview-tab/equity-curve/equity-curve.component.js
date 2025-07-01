@@ -3,13 +3,14 @@ import { AreaSeries, createChart } from 'lightweight-charts';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
-
-import { chartOptions } from '@/config/equity.config';
+import { stateService } from '@/core/services/state.service';
 
 import {
-	MARKER_RANGE_THRESHOLD,
-	SERIES_OPTIONS,
-} from '@/constants/equity-curve.constants';
+	getAreaOptions,
+	getEquityCurveOptions,
+} from '@/config/equity-curve.config';
+
+import { MARKER_RANGE_THRESHOLD } from '@/constants/equity-curve.constants';
 import { TOOLTIP_MIN_LEFT } from '@/constants/equity-tooltip.constants';
 
 import styles from './equity-curve.module.css';
@@ -63,18 +64,49 @@ export class EquityCurve extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#chartApi = createChart(this.element, chartOptions);
-		this.#series = this.#chartApi.addSeries(AreaSeries, SERIES_OPTIONS);
+		this.#initChart();
+		this.#attachListeners();
+		this.#cacheContainerRect();
+	}
 
+	#initChart() {
+		this.#chartApi = createChart(this.element);
+		this.#series = this.#chartApi.addSeries(AreaSeries);
+
+		this.#applyChartOptions();
+		this.#applyAreaOptions();
+	}
+
+	#applyOptions() {
+		this.#applyChartOptions();
+		this.#applyAreaOptions();
+	}
+
+	#applyChartOptions() {
+		const equityCurveOptions = getEquityCurveOptions();
+		this.#chartApi.applyOptions(equityCurveOptions);
+	}
+
+	#applyAreaOptions() {
+		const areaOptions = getAreaOptions();
+		this.#series.applyOptions(areaOptions);
+	}
+
+	#attachListeners() {
 		this.#chartApi.subscribeCrosshairMove(
 			this.#handleCrosshairMove.bind(this),
 		);
+
 		this.#chartApi
 			.timeScale()
 			.subscribeVisibleLogicalRangeChange(
 				this.#handleVisibleLogicalRangeChange.bind(this),
 			);
 
+		stateService.subscribe('theme', this.#applyOptions.bind(this));
+	}
+
+	#cacheContainerRect() {
 		requestAnimationFrame(() => {
 			const rect = this.element.getBoundingClientRect();
 

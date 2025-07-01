@@ -1,8 +1,8 @@
 .controller-content {
 	display: flex;
 	flex: 0 0 320px;
-	background-color: #fff;
-	border-right: 1px solid #e0e3eb;
+	background-color: var(--color-bg-primary);
+	border-right: 1px solid var(--color-border-secondary);
 	overflow: auto;
 
 	::-webkit-scrollbar {
@@ -10,7 +10,7 @@
 	}
 
 	::-webkit-scrollbar-thumb {
-		background-color: #d3cdcd;
+		background-color: var(--color-border-tertiary);
 		border-radius: 2px;
 	}
 }

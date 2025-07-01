@@ -24,6 +24,6 @@
 		font-size: 1.8rem;
 		font-weight: 600;
 		line-height: 1.4;
-		color: #4b5563;
+		color: var(--color-text-tertiary);
 	}
 }

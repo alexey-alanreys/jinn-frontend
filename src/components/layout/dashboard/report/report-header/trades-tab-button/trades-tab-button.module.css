@@ -5,6 +5,6 @@
 	border-radius: 6px;
 
 	&[data-active='true'] {
-		color: #2962ff;
+		color: var(--color-accent-primary);
 	}
 }

@@ -11,13 +11,13 @@ import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
-import { chartOptions } from '@/config/chart.config';
-
 import {
-	CANDLESTICK_STYLE_OPTIONS,
-	DATA_BATCH_SIZE,
-	LINE_STYLE_OPTIONS,
-} from '@/constants/chart.constants';
+	getCandlestickOptions,
+	getChartOptions,
+	getLineOptions,
+} from '@/config/chart.config';
+
+import { DATA_BATCH_SIZE } from '@/constants/chart.constants';
 import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import { chartService } from '@/api/services/chart.service';
@@ -67,7 +67,7 @@ export class Chart extends BaseComponent {
 
 			this.#removeSeries();
 			this.#createSeries();
-			this.#addTrendlines();
+			this.#loadDrawings();
 		}
 
 		this.#updateSeries();
@@ -96,12 +96,15 @@ export class Chart extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#chartApi = createChart(this.element, chartOptions);
-
+		this.#initChart();
 		this.#attachListeners();
 		this.#registerState();
+		this.#applyContext();
+	}
 
-		this.update(stateService.get('context'));
+	#initChart() {
+		this.#chartApi = createChart(this.element);
+		this.#applyChartOptions();
 	}
 
 	#attachListeners() {
@@ -116,11 +119,17 @@ export class Chart extends BaseComponent {
 			);
 
 		stateService.subscribe('context', this.update.bind(this));
+		stateService.subscribe('theme', this.#applyOptions.bind(this));
 	}
 
 	#registerState() {
 		stateService.set('rulerTool', this.rulerTool);
 		stateService.set('chartApi', this.#chartApi);
+	}
+
+	#applyContext() {
+		const context = stateService.get('context');
+		this.update(context);
 	}
 
 	async #loadData() {
@@ -174,34 +183,60 @@ export class Chart extends BaseComponent {
 	#createSeries() {
 		this.#createCandlestickSeries();
 		this.#createIndicatorSeries();
+
+		this.#applyCandlestickOptions();
+		this.#applyIndicatorOptions();
 	}
 
 	#createCandlestickSeries() {
-		const { precision, minMove } = stateService.get('context');
-
-		this.#series.candlestick = this.#chartApi.addSeries(CandlestickSeries, {
-			...CANDLESTICK_STYLE_OPTIONS,
-			priceFormat: {
-				type: 'price',
-				precision,
-				minMove,
-			},
-		});
-
+		this.#series.candlestick = this.#chartApi.addSeries(CandlestickSeries);
 		stateService.set('candlestickSeries', this.#series.candlestick);
 	}
 
 	#createIndicatorSeries() {
 		const { indicatorOptions } = stateService.get('context');
 
-		Object.entries(indicatorOptions).forEach(([key, options]) => {
+		Object.keys(indicatorOptions).forEach((key) => {
 			const series = this.#chartApi.addSeries(LineSeries);
-			series.applyOptions({ ...LINE_STYLE_OPTIONS, ...options });
 			this.#series.indicators.set(key, series);
 		});
 	}
 
-	#addTrendlines() {
+	#applyOptions() {
+		this.#applyChartOptions();
+		this.#applyCandlestickOptions();
+		this.#applyIndicatorOptions();
+	}
+
+	#applyChartOptions() {
+		const chartOptions = getChartOptions();
+		this.#chartApi.applyOptions(chartOptions);
+	}
+
+	#applyCandlestickOptions() {
+		const { precision, minMove } = stateService.get('context');
+		const сandlestickOptions = getCandlestickOptions();
+
+		this.#series.candlestick.applyOptions({
+			...сandlestickOptions,
+			priceFormat: {
+				type: 'price',
+				precision,
+				minMove,
+			},
+		});
+	}
+
+	#applyIndicatorOptions() {
+		const { indicatorOptions } = stateService.get('context');
+		const lineOptions = getLineOptions();
+
+		this.#series.indicators.forEach((series, key) => {
+			series.applyOptions({ ...lineOptions, ...indicatorOptions[key] });
+		});
+	}
+
+	#loadDrawings() {
 		const drawings = storageService.getItem('drawings');
 		if (!drawings?.trendlines) return;
 

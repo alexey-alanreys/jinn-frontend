@@ -7,6 +7,7 @@ import templateHTML from './controller-sidebar.template.html?raw';
 import { AlertsTabButton } from './alerts-tab-button/alerts-tab-button.component';
 import { ParamsTabButton } from './params-tab-button/params-tab-button.component';
 import { StrategiesTabButton } from './strategies-tab-button/strategies-tab-button.component';
+import { ThemeButton } from './theme-button/theme-button.component';
 
 export class ControllerSidebar extends BaseComponent {
 	render() {
@@ -31,12 +32,18 @@ export class ControllerSidebar extends BaseComponent {
 			params: new ParamsTabButton(),
 			alerts: new AlertsTabButton(),
 		};
+		this.themeButton = new ThemeButton();
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.buttons.strategies, this.buttons.params, this.buttons.alerts],
+			[
+				this.buttons.strategies,
+				this.buttons.params,
+				this.buttons.alerts,
+				this.themeButton,
+			],
 			styles,
 		);
 	}

@@ -1,11 +1,12 @@
 @import url('./_reset.css');
+@import url('./_variables.css');
 
 body {
 	width: 100vw;
 	height: 100vh;
 	font-family: system-ui, sans-serif;
-	color: #292121;
-	background-color: #ebebeb;
+	color: var(--color-text-primary);
+	background-color: var(--color-bg-secondary);
 	overflow-x: hidden;
 
 	&.resizing * {
@@ -17,7 +18,17 @@ button {
 	transition: background-color 0.2s ease;
 	cursor: pointer;
 
+	svg {
+		color: var(--color-svg);
+	}
+
+	&[data-active='true'] {
+		svg {
+			color: var(--color-accent-primary);
+		}
+	}
+
 	&:hover {
-		background-color: #f5f5f5;
+		background-color: var(--color-bg-hover-primary);
 	}
 }

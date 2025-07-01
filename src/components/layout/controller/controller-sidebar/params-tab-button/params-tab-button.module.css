@@ -7,7 +7,7 @@
 	border-radius: 6px;
 
 	&[data-active='true'] {
-		color: #2962ff;
-		background-color: rgb(41 98 255 / 10%);
+		color: var(--color-accent-primary);
+		background-color: var(--color-bg-button-active);
 	}
 }
