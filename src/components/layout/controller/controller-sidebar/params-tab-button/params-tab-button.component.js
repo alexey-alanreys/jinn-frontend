@@ -8,6 +8,10 @@ import templateHTML from './params-tab-button.template.html?raw';
 export class ParamsTabButton extends BaseComponent {
 	#$element;
 
+	get isActive() {
+		return this.#$element.is('data-active');
+	}
+
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);

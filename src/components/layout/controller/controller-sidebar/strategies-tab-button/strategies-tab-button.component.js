@@ -8,6 +8,10 @@ import templateHTML from './strategies-tab-button.template.html?raw';
 export class StrategiesTabButton extends BaseComponent {
 	#$element;
 
+	get isActive() {
+		return this.#$element.is('data-active');
+	}
+
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);

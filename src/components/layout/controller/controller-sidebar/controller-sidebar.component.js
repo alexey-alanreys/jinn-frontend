@@ -20,7 +20,12 @@ export class ControllerSidebar extends BaseComponent {
 	connectButtons(onTabChange) {
 		Object.entries(this.buttons).forEach(([name, button]) => {
 			button.setOnClick(() => {
-				this.#setActiveOnly(name);
+				if (button.isActive) {
+					button.deactivate();
+				} else {
+					this.#setActiveOnly(name);
+				}
+
 				onTabChange?.(name);
 			});
 		});

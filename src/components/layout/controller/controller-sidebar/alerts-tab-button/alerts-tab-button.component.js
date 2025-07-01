@@ -8,6 +8,10 @@ import templateHTML from './alerts-tab-button.template.html?raw';
 export class AlertsTabButton extends BaseComponent {
 	#$element;
 
+	get isActive() {
+		return this.#$element.is('data-active');
+	}
+
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);

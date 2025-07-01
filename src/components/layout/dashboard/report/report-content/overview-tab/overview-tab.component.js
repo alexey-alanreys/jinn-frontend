@@ -28,25 +28,7 @@ export class OverviewTab extends BaseComponent {
 			const metrics = await reportService.getOverviewMetrics(context.id);
 			const equity = await reportService.getOverviewEquity(context.id);
 
-			if (!equity.length) {
-				if (!this.overviewEmpty.isActive) {
-					this.overviewMetrics.hide();
-					this.equityCurve.hide();
-
-					this.overviewEmpty.show();
-				}
-				return;
-			}
-
-			if (!this.overviewEmpty.isActive) {
-				this.overviewMetrics.show();
-				this.equityCurve.show();
-			} else {
-				this.overviewEmpty.hide();
-
-				this.overviewMetrics.show();
-				this.equityCurve.show();
-			}
+			this.#toggleView(!!equity.length);
 
 			this.overviewMetrics.update(metrics);
 			this.equityCurve.update(equity);
@@ -81,5 +63,17 @@ export class OverviewTab extends BaseComponent {
 	#setupInitialState() {
 		stateService.subscribe('context', this.update.bind(this));
 		this.update(stateService.get('context'));
+	}
+
+	#toggleView(showMainView) {
+		if (showMainView) {
+			this.overviewEmpty.hide();
+			this.overviewMetrics.show();
+			this.equityCurve.show();
+		} else {
+			this.overviewMetrics.hide();
+			this.equityCurve.hide();
+			this.overviewEmpty.show();
+		}
 	}
 }
