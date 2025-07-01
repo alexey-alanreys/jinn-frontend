@@ -7,19 +7,36 @@ import { BaseService } from '@/api/core/base.service';
  */
 class ReportService extends BaseService {
 	/**
-	 * Fetches report overview data.
+	 * Fetches overview metrics data.
 	 *
 	 * @param {string} contextId Strategy context identifier.
-	 * @returns {Promise<Object>} Resolves with report overview.
+	 * @returns {Promise<Object>} Resolves with overview metrics data.
 	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	async getOverview(contextId) {
+	async getOverviewMetrics(contextId) {
 		this._validateRequired({ contextId }, 'contextId is required');
 
 		return this._executeRequest({
-			path: `/report/overview/${contextId}`,
+			path: `/report/overview/${contextId}/metrics`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить обзор отчёта',
+			errorMessage: 'Не удалось загрузить метрики отчёта',
+		});
+	}
+
+	/**
+	 * Fetches overview equity data.
+	 *
+	 * @param {string} contextId Strategy context identifier.
+	 * @returns {Promise<Object>} Resolves with overview equity data.
+	 * @throws {Error} If validation fails or request errors occur.
+	 */
+	async getOverviewEquity(contextId) {
+		this._validateRequired({ contextId }, 'contextId is required');
+
+		return this._executeRequest({
+			path: `/report/overview/${contextId}/equity`,
+			method: 'GET',
+			errorMessage: 'Не удалось загрузить equity отчёта',
 		});
 	}
 

@@ -15,14 +15,14 @@
 
 	--shadow-notification: 0 4px 20px rgb(0 0 0 / 15%);
 
-	--color-svg: currentColor;
+	--color-svg: currentcolor;
 }
 
 :root[data-theme='light'] {
 	--color-accent-primary: #2962ff;
 	--color-accent-secondary: #2a9df4;
 
-	--color-bg-primary: #ffffff;
+	--color-bg-primary: #fff;
 	--color-bg-secondary: #ebebeb;
 	--color-bg-hover-primary: #f3f3f3;
 	--color-bg-hover-secondary: #e6e6e6;
@@ -50,9 +50,9 @@
 	--color-equity-curve-area-top: #78ceff;
 	--color-equity-curve-area-bottom: #ebf5fb;
 	--color-equity-curve-line: #00a9ff;
-	--color-equity-curve-marker: #ffffff;
+	--color-equity-curve-marker: #fff;
 
-	--color-scroll-to-realtime-button: #ffffff;
+	--color-scroll-to-realtime-button: #fff;
 	--shadow-scroll-to-realtime-button: 0 2px 6px rgb(0 0 0 / 20%);
 
 	--shadow-report-header: #ebebeb 0 0 4px 3px;
@@ -76,7 +76,7 @@
 	--color-bg-primary: #1e1e1e;
 	--color-bg-secondary: #2e2e2e;
 	--color-bg-hover-primary: #2f2f2f;
-	--color-bg-hover-secondary: #555555;
+	--color-bg-hover-secondary: #555;
 	--color-bg-button-active: rgb(68 138 255 / 20%);
 
 	--color-border-primary: #3a3a3a;
@@ -87,11 +87,11 @@
 	--color-text-secondary: #8c8c8c;
 	--color-text-tertiary: #8b8b8b;
 	--color-text-light: #e0e0e0;
-	--color-text-gray: #999999;
-	--color-text-white: #eeeeee;
+	--color-text-gray: #999;
+	--color-text-white: #eee;
 
 	--color-chart-grid: #2b2b2b;
-	--color-chart-crosshair-line: #aaaaaa;
+	--color-chart-crosshair-line: #aaa;
 	--color-chart-crosshair-label: #474747;
 	--color-chart-up: #00ba9c;
 	--color-chart-down: #f7525f;
@@ -115,7 +115,7 @@
 	--gradient-divider: linear-gradient(
 		to right,
 		transparent,
-		#555555,
+		#555,
 		transparent
 	);
 }
