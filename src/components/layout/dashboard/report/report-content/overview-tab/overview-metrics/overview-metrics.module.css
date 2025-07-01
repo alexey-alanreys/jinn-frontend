@@ -1,0 +1,31 @@
+.overview-metrics {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-height: 70px;
+	padding: 0 16px;
+
+	> .cell {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+
+		> .title {
+			font-weight: 600;
+		}
+
+		> .values {
+			display: flex;
+			gap: 6px;
+			font-size: 1.6rem;
+
+			> .red {
+				color: var(--color-status-loss);
+			}
+
+			> .green {
+				color: var(--color-status-profit);
+			}
+		}
+	}
+}

@@ -10,14 +10,10 @@ import templateHTML from './overview-tab.template.html?raw';
 
 import { EquityCurve } from './equity-curve/equity-curve.component';
 import { OverviewEmpty } from './overview-empty/overview-empty.component';
+import { OverviewMetrics } from './overview-metrics/overview-metrics.component';
 
 export class OverviewTab extends BaseComponent {
-	static #PROFIT_FIELDS = [0, 1, 5, 6];
-
 	#$element;
-	#$metrics;
-
-	#dataFields = new Map();
 
 	render() {
 		this.#initComponents();
@@ -29,37 +25,31 @@ export class OverviewTab extends BaseComponent {
 
 	async update(context) {
 		try {
-			const overview = await reportService.getOverview(context.id);
-			const hasData = overview.equity.length > 0;
+			const metrics = await reportService.getOverviewMetrics(context.id);
+			const equity = await reportService.getOverviewEquity(context.id);
 
-			if (!hasData) {
+			if (!equity.length) {
 				if (!this.overviewEmpty.isActive) {
-					this.#$metrics.css('display', 'none');
+					this.overviewMetrics.hide();
 					this.equityCurve.hide();
+
 					this.overviewEmpty.show();
 				}
 				return;
 			}
 
 			if (!this.overviewEmpty.isActive) {
-				this.#$metrics.css('display', 'flex');
+				this.overviewMetrics.show();
 				this.equityCurve.show();
 			} else {
 				this.overviewEmpty.hide();
-				this.#$metrics.css('display', 'flex');
+
+				this.overviewMetrics.show();
 				this.equityCurve.show();
 			}
 
-			this.#dataFields.forEach(({ element, isProfitField }, index) => {
-				const value = overview.metrics[index];
-				element.text(value);
-
-				if (isProfitField) {
-					this.#applyColorClass(element, value);
-				}
-			});
-
-			this.equityCurve.update(overview.equity);
+			this.overviewMetrics.update(metrics);
+			this.equityCurve.update(equity);
 		} catch (error) {
 			console.error('Failed to update overview.', error);
 		}
@@ -74,6 +64,7 @@ export class OverviewTab extends BaseComponent {
 	}
 
 	#initComponents() {
+		this.overviewMetrics = new OverviewMetrics();
 		this.equityCurve = new EquityCurve();
 		this.overviewEmpty = new OverviewEmpty();
 	}
@@ -81,34 +72,14 @@ export class OverviewTab extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.equityCurve, this.overviewEmpty],
+			[this.overviewMetrics, this.equityCurve, this.overviewEmpty],
 			styles,
 		);
-
 		this.#$element = $Q(this.element);
-		this.#$metrics = this.#$element.find('[data-ref="metrics"]');
 	}
 
 	#setupInitialState() {
-		this.#$element.findAll('[data-field]').forEach((el) => {
-			const index = Number(el.data('field'));
-			const isProfitField = this.#isProfitField(index);
-			this.#dataFields.set(index, { element: el, isProfitField });
-		});
-
 		stateService.subscribe('context', this.update.bind(this));
 		this.update(stateService.get('context'));
-	}
-
-	#isProfitField(index) {
-		return OverviewTab.#PROFIT_FIELDS.includes(index);
-	}
-
-	#applyColorClass(element, value) {
-		if (value.startsWith('-')) {
-			element.removeClass(styles.green).addClass(styles.red);
-		} else {
-			element.removeClass(styles.red).addClass(styles.green);
-		}
 	}
 }
