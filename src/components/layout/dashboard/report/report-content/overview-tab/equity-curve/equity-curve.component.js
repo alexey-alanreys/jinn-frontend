@@ -10,7 +10,10 @@ import {
 	getEquityCurveOptions,
 } from '@/config/equity-curve.config';
 
-import { MARKER_RANGE_THRESHOLD } from '@/constants/equity-curve.constants';
+import {
+	CONTAINER_OFFSETS,
+	MARKER_RANGE_THRESHOLD,
+} from '@/constants/equity-curve.constants';
 import { TOOLTIP_MIN_LEFT } from '@/constants/equity-tooltip.constants';
 
 import styles from './equity-curve.module.css';
@@ -22,8 +25,6 @@ export class EquityCurve extends BaseComponent {
 	#$element;
 	#chartApi;
 	#series;
-	#containerLeftOffset;
-	#containerBottomOffset;
 
 	#markersVisible = false;
 
@@ -66,7 +67,6 @@ export class EquityCurve extends BaseComponent {
 	#setupInitialState() {
 		this.#initChart();
 		this.#attachListeners();
-		this.#cacheContainerRect();
 	}
 
 	#initChart() {
@@ -106,15 +106,6 @@ export class EquityCurve extends BaseComponent {
 		stateService.subscribe('theme', this.#applyOptions.bind(this));
 	}
 
-	#cacheContainerRect() {
-		requestAnimationFrame(() => {
-			const rect = this.element.getBoundingClientRect();
-
-			this.#containerLeftOffset = rect.left;
-			this.#containerBottomOffset = rect.bottom;
-		});
-	}
-
 	#handleCrosshairMove(param) {
 		const { point, time, sourceEvent } = param;
 
@@ -151,13 +142,12 @@ export class EquityCurve extends BaseComponent {
 		const { clientX, clientY } = sourceEvent;
 		const { width, height, offsetX } = this.equityTooltip;
 
-		let left = clientX - this.#containerLeftOffset - width - offsetX;
+		const bottom = CONTAINER_OFFSETS.bottom - clientY - height / 2;
+		let left = clientX - CONTAINER_OFFSETS.left - width - offsetX;
 
 		if (left < TOOLTIP_MIN_LEFT) {
-			left = clientX - this.#containerLeftOffset + offsetX;
+			left = clientX - CONTAINER_OFFSETS.left + offsetX;
 		}
-
-		const bottom = this.#containerBottomOffset - clientY - height / 2;
 
 		this.equityTooltip.updatePosition({ left, bottom });
 	}

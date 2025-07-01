@@ -1,8 +1,8 @@
 .overview-metrics {
-	display: flex;
+	display: none;
+	flex: 0 0 70px;
 	justify-content: space-between;
 	align-items: center;
-	min-height: 70px;
 	padding: 0 16px;
 
 	> .cell {

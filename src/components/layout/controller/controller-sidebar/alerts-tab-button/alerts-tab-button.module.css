@@ -8,5 +8,9 @@
 
 	&[data-active='true'] {
 		background-color: var(--color-bg-button-active);
+
+		svg {
+			color: var(--color-accent-primary);
+		}
 	}
 }

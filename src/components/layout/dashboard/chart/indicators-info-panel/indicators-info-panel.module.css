@@ -3,7 +3,7 @@
 	z-index: 3;
 	top: 40px;
 	left: 12px;
-	display: flex;
+	display: none;
 	gap: 6px;
 	font-size: 1.4rem;
 	pointer-events: none;

@@ -3,17 +3,20 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { Spinner } from '@/components/ui/spinner/spinner.component';
+
 import { reportService } from '@/api/services/report.service';
 
 import styles from './overview-tab.module.css';
 import templateHTML from './overview-tab.template.html?raw';
 
 import { EquityCurve } from './equity-curve/equity-curve.component';
-import { OverviewEmpty } from './overview-empty/overview-empty.component';
+import { NoData } from './no-data/no-data.component';
 import { OverviewMetrics } from './overview-metrics/overview-metrics.component';
 
 export class OverviewTab extends BaseComponent {
 	#$element;
+	#firstLoadDone = false;
 
 	render() {
 		this.#initComponents();
@@ -28,10 +31,15 @@ export class OverviewTab extends BaseComponent {
 			const metrics = await reportService.getOverviewMetrics(context.id);
 			const equity = await reportService.getOverviewEquity(context.id);
 
-			this.#toggleView(!!equity.length);
-
 			this.overviewMetrics.update(metrics);
 			this.equityCurve.update(equity);
+
+			if (!this.#firstLoadDone) {
+				this.#firstLoadDone = true;
+				this.spinner.hide();
+			}
+
+			this.#toggleView(!!equity.length);
 		} catch (error) {
 			console.error('Failed to update overview.', error);
 		}
@@ -48,13 +56,14 @@ export class OverviewTab extends BaseComponent {
 	#initComponents() {
 		this.overviewMetrics = new OverviewMetrics();
 		this.equityCurve = new EquityCurve();
-		this.overviewEmpty = new OverviewEmpty();
+		this.noData = new NoData();
+		this.spinner = new Spinner();
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.overviewMetrics, this.equityCurve, this.overviewEmpty],
+			[this.overviewMetrics, this.equityCurve, this.noData, this.spinner],
 			styles,
 		);
 		this.#$element = $Q(this.element);
@@ -67,13 +76,13 @@ export class OverviewTab extends BaseComponent {
 
 	#toggleView(showMainView) {
 		if (showMainView) {
-			this.overviewEmpty.hide();
+			this.noData.hide();
 			this.overviewMetrics.show();
 			this.equityCurve.show();
 		} else {
 			this.overviewMetrics.hide();
 			this.equityCurve.hide();
-			this.overviewEmpty.show();
+			this.noData.show();
 		}
 	}
 }

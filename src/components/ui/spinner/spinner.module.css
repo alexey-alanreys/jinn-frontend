@@ -1,0 +1,29 @@
+.spinner {
+	width: 120px;
+	height: 120px;
+	margin: auto;
+	color: var(--color-status-info);
+
+	> svg {
+		animation: rotate 1.5s linear infinite;
+		transform-origin: 50% 50%;
+
+		> .background {
+			stroke: var(--color-bg-secondary);
+			stroke-dasharray: 125.6;
+			stroke-dashoffset: 0;
+		}
+
+		> .path {
+			stroke-dasharray: 62.8 125.6;
+			stroke-dashoffset: 0;
+			stroke-linecap: round;
+		}
+	}
+}
+
+@keyframes rotate {
+	100% {
+		transform: rotate(360deg);
+	}
+}

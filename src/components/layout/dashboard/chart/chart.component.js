@@ -11,6 +11,8 @@ import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
+import { Spinner } from '@/components/ui/spinner/spinner.component';
+
 import {
 	getCandlestickOptions,
 	getChartOptions,
@@ -34,6 +36,7 @@ export class Chart extends BaseComponent {
 	#$element;
 	#chartApi;
 
+	#firstLoadDone = false;
 	#contextId = null;
 	#data = {
 		candlesticks: null,
@@ -72,23 +75,30 @@ export class Chart extends BaseComponent {
 
 		this.#updateSeries();
 		this.#resetInfoPanels();
+
+		if (!this.#firstLoadDone) {
+			this.#firstLoadDone = true;
+			this.#showMainView();
+		}
 	}
 
 	#initComponents() {
-		this.rulerTool = new RulerTool();
 		this.chartInfoPanel = new ChartInfoPanel();
 		this.indicatorsInfoPanel = new IndicatorsInfoPanel();
 		this.scrollToRealtimeButton = new ScrollToRealtimeButton();
+		this.rulerTool = new RulerTool();
+		this.spinner = new Spinner();
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
 			[
-				this.rulerTool,
 				this.chartInfoPanel,
 				this.indicatorsInfoPanel,
 				this.scrollToRealtimeButton,
+				this.rulerTool,
+				this.spinner,
 			],
 			styles,
 		);
@@ -103,7 +113,11 @@ export class Chart extends BaseComponent {
 	}
 
 	#initChart() {
-		this.#chartApi = createChart(this.element);
+		const chartCanvas = this.#$element.find(
+			'[data-ref="chartCanvas"]',
+		).element;
+
+		this.#chartApi = createChart(chartCanvas);
 		this.#applyChartOptions();
 	}
 
@@ -341,5 +355,15 @@ export class Chart extends BaseComponent {
 			this.#visibleRange += DATA_BATCH_SIZE;
 			this.#updateSeries();
 		}
+	}
+
+	#showMainView() {
+		const $chartCanvas = this.#$element.find('[data-ref="chartCanvas"]');
+
+		this.spinner.hide();
+		this.chartInfoPanel.show();
+		this.indicatorsInfoPanel.show();
+		this.scrollToRealtimeButton.show();
+		$chartCanvas.css('display', 'block');
 	}
 }

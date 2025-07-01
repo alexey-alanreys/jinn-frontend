@@ -28,6 +28,14 @@ export class ChartInfoPanel extends BaseComponent {
 		this.#updateCandlestick(candlestick);
 	}
 
+	hide() {
+		this.#$element.css('display', 'none');
+	}
+
+	show() {
+		this.#$element.css('display', 'flex');
+	}
+
 	#initDOM() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);

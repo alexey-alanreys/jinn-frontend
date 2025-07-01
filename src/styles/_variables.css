@@ -7,60 +7,47 @@
 	--color-status-loss: #e6404c;
 	--color-status-green: #2e7d32;
 	--color-status-red: #c62828;
-
 	--color-ruler-tool-up: #2962ff;
 	--color-ruler-tool-down: #f7525f;
 	--color-ruler-tool-up-bg: rgb(41 98 255 / 30%);
 	--color-ruler-tool-down-bg: rgb(255 41 41 / 30%);
-
 	--shadow-notification: 0 4px 20px rgb(0 0 0 / 15%);
-
 	--color-svg: currentcolor;
 }
 
 :root[data-theme='light'] {
 	--color-accent-primary: #2962ff;
 	--color-accent-secondary: #2a9df4;
-
 	--color-bg-primary: #fff;
 	--color-bg-secondary: #ebebeb;
 	--color-bg-hover-primary: #f3f3f3;
 	--color-bg-hover-secondary: #e6e6e6;
 	--color-bg-button-active: rgb(41 98 255 / 10%);
-
 	--color-border-primary: #ececec;
 	--color-border-secondary: #e0e3eb;
 	--color-border-tertiary: #dbdbdb;
-
 	--color-text-primary: #292121;
 	--color-text-secondary: #6a6d78;
 	--color-text-tertiary: #4b5563;
 	--color-text-light: #f5f5f5;
 	--color-text-gray: #b8b8b8;
 	--color-text-white: #f5f5f5;
-
 	--color-chart-grid: #edf0ee;
 	--color-chart-crosshair-line: #a5a5a5;
 	--color-chart-crosshair-label: #2e2e2e;
 	--color-chart-up: #008984;
 	--color-chart-down: #f23645;
 	--color-chart-line: #3b6cb7;
-
 	--color-equity-curve-crosshair: #e8e8e8;
 	--color-equity-curve-area-top: #78ceff;
 	--color-equity-curve-area-bottom: #ebf5fb;
 	--color-equity-curve-line: #00a9ff;
 	--color-equity-curve-marker: #fff;
-
 	--color-scroll-to-realtime-button: #fff;
-	--shadow-scroll-to-realtime-button: 0 2px 6px rgb(0 0 0 / 20%);
-
-	--shadow-report-header: #ebebeb 0 0 4px 3px;
-
 	--color-equity-tooltip: #424242;
-
 	--color-svg: #0f0f0f;
-
+	--shadow-scroll-to-realtime-button: 0 2px 6px rgb(0 0 0 / 20%);
+	--shadow-report-header: #ebebeb 0 0 4px 3px;
 	--gradient-divider: linear-gradient(
 		to right,
 		transparent,
@@ -72,46 +59,36 @@
 :root[data-theme='dark'] {
 	--color-accent-primary: #5a97fd;
 	--color-accent-secondary: #1e88e5;
-
 	--color-bg-primary: #1e1e1e;
 	--color-bg-secondary: #2e2e2e;
 	--color-bg-hover-primary: #2f2f2f;
 	--color-bg-hover-secondary: #555;
 	--color-bg-button-active: rgb(68 138 255 / 20%);
-
 	--color-border-primary: #3a3a3a;
 	--color-border-secondary: #505050;
 	--color-border-tertiary: #575757;
-
 	--color-text-primary: #dbdbdb;
 	--color-text-secondary: #8c8c8c;
 	--color-text-tertiary: #8b8b8b;
 	--color-text-light: #e0e0e0;
 	--color-text-gray: #999;
 	--color-text-white: #eee;
-
 	--color-chart-grid: #2b2b2b;
 	--color-chart-crosshair-line: #aaa;
 	--color-chart-crosshair-label: #474747;
 	--color-chart-up: #00ba9c;
 	--color-chart-down: #f7525f;
 	--color-chart-line: #4a90e2;
-
 	--color-equity-curve-crosshair: #303030;
 	--color-equity-curve-area-top: #1a6ea1;
 	--color-equity-curve-area-bottom: #14232d;
 	--color-equity-curve-line: #32b8ff;
 	--color-equity-curve-marker: #b0d0e0;
-
 	--color-scroll-to-realtime-button: #424242;
-	--shadow-scroll-to-realtime-button: 0 2px 6px rgb(0 0 0 / 40%);
-
-	--shadow-report-header: #2e2e2e 0 0 4px 3px;
-
 	--color-equity-tooltip: #313030;
-
 	--color-svg: #dbdbdb;
-
+	--shadow-scroll-to-realtime-button: 0 2px 6px rgb(0 0 0 / 40%);
+	--shadow-report-header: #2e2e2e 0 0 4px 3px;
 	--gradient-divider: linear-gradient(
 		to right,
 		transparent,

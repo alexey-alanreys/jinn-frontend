@@ -3,6 +3,7 @@
 	z-index: 3;
 	right: 100px;
 	bottom: 60px;
+	display: none;
 	width: 24px;
 	height: 24px;
 	background-color: var(--color-scroll-to-realtime-button);

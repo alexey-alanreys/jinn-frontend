@@ -15,17 +15,10 @@ body {
 }
 
 button {
-	transition: background-color 0.2s ease;
 	cursor: pointer;
 
 	svg {
 		color: var(--color-svg);
-	}
-
-	&[data-active='true'] {
-		svg {
-			color: var(--color-accent-primary);
-		}
 	}
 
 	&:hover {

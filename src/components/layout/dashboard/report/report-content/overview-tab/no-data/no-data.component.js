@@ -2,10 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './overview-empty.module.css';
-import templateHTML from './overview-empty.template.html?raw';
+import styles from './no-data.module.css';
+import templateHTML from './no-data.template.html?raw';
 
-export class OverviewEmpty extends BaseComponent {
+export class NoData extends BaseComponent {
 	#$element;
 
 	get isActive() {

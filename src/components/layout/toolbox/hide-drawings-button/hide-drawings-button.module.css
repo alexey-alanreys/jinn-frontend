@@ -21,5 +21,9 @@
 		> .icon-hidden {
 			display: block;
 		}
+
+		svg {
+			color: var(--color-accent-primary);
+		}
 	}
 }
