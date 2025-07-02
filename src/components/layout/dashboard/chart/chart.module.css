@@ -12,12 +12,12 @@
 
 	> .spinner-wrapper {
 		position: absolute;
+		z-index: 10;
 		inset: 0;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		background-color: var(--color-bg-primary);
-		z-index: 10;
 		pointer-events: none;
 	}
 
