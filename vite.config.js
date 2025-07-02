@@ -28,6 +28,7 @@ export default ({ mode }) => {
 		plugins: [
 			string({
 				include: ['**/*.html'],
+				exclude: ['index.html'],
 			}),
 		],
 	});
