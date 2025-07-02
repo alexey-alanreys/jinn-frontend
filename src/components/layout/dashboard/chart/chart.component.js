@@ -19,7 +19,10 @@ import {
 	getLineOptions,
 } from '@/config/chart.config';
 
-import { DATA_BATCH_SIZE } from '@/constants/chart.constants';
+import {
+	DATA_BATCH_SIZE,
+	VISIBLE_RANGE_PADDING,
+} from '@/constants/chart.constants';
 import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import { chartService } from '@/api/services/chart.service';
@@ -134,6 +137,10 @@ export class Chart extends BaseComponent {
 
 		stateService.subscribe('context', this.update.bind(this));
 		stateService.subscribe('theme', this.#applyOptions.bind(this));
+		stateService.subscribe(
+			'selectedTradeTime',
+			this.#handleSelectedTradeTime.bind(this),
+		);
 	}
 
 	#registerState() {
@@ -355,6 +362,40 @@ export class Chart extends BaseComponent {
 			this.#visibleRange += DATA_BATCH_SIZE;
 			this.#updateSeries();
 		}
+	}
+
+	#handleSelectedTradeTime(time) {
+		if (!time) return;
+
+		const candles = this.#data.candlesticks;
+		let targetIndex = null;
+
+		for (let i = 0; i < candles.length - 1; i++) {
+			const current = candles[i].time;
+			const next = candles[i + 1].time;
+
+			if (time >= current && time < next) {
+				targetIndex = i;
+				break;
+			}
+		}
+		if (targetIndex === null) return;
+
+		const neededFrom = candles.length - targetIndex;
+
+		if (neededFrom > this.#visibleRange) {
+			this.#visibleRange = neededFrom + DATA_BATCH_SIZE;
+			this.#updateSeries();
+		}
+
+		const logicalIndex = this.#chartApi
+			.timeScale()
+			.timeToIndex(candles[targetIndex].time);
+
+		this.#chartApi.timeScale().setVisibleLogicalRange({
+			from: logicalIndex - VISIBLE_RANGE_PADDING,
+			to: logicalIndex + VISIBLE_RANGE_PADDING,
+		});
 	}
 
 	#showMainView() {

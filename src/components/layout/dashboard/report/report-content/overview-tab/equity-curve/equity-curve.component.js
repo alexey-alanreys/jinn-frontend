@@ -93,6 +93,8 @@ export class EquityCurve extends BaseComponent {
 	}
 
 	#attachListeners() {
+		this.#chartApi.subscribeClick(this.#handleClick.bind(this));
+
 		this.#chartApi.subscribeCrosshairMove(
 			this.#handleCrosshairMove.bind(this),
 		);
@@ -104,6 +106,10 @@ export class EquityCurve extends BaseComponent {
 			);
 
 		stateService.subscribe('theme', this.#applyOptions.bind(this));
+	}
+
+	#handleClick({ time }) {
+		stateService.set('selectedTradeTime', time);
 	}
 
 	#handleCrosshairMove(param) {
