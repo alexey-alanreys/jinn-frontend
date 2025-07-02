@@ -1,4 +1,5 @@
 import { BaseComponent } from '@/core/component/base.component';
+import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
@@ -16,6 +17,7 @@ import { OverviewMetrics } from './overview-metrics/overview-metrics.component';
 export class OverviewTab extends BaseComponent {
 	static componentName = 'OverviewTab';
 
+	#$element;
 	#firstLoadDone = false;
 
 	render() {
@@ -24,6 +26,14 @@ export class OverviewTab extends BaseComponent {
 		this.#setupInitialState();
 
 		return this.element;
+	}
+
+	hide() {
+		this.#$element.css('display', 'none');
+	}
+
+	show() {
+		this.#$element.css('display', 'flex');
 	}
 
 	async update(context) {
@@ -62,6 +72,7 @@ export class OverviewTab extends BaseComponent {
 			[this.spinner, this.emptyState, this.overviewMetrics, this.equityCurve],
 			styles,
 		);
+		this.#$element = $Q(this.element);
 	}
 
 	#setupInitialState() {
