@@ -38,7 +38,7 @@ export const getChartOptions = () => {
 		},
 		timeScale: {
 			rightOffset: 5,
-			barSpacing: 8,
+			barSpacing: 5,
 			minBarSpacing: 2,
 			borderVisible: false,
 			rightBarStaysOnScroll: true,

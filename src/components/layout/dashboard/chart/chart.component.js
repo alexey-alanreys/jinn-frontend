@@ -80,28 +80,28 @@ export class Chart extends BaseComponent {
 		this.#resetInfoPanels();
 
 		if (!this.#firstLoadDone) {
+			this.#$element.find('[data-ref="spinner"]').css('display', 'none');
 			this.#firstLoadDone = true;
-			this.#showMainView();
 		}
 	}
 
 	#initComponents() {
+		this.spinner = new Spinner();
+		this.rulerTool = new RulerTool();
 		this.chartInfoPanel = new ChartInfoPanel();
 		this.indicatorsInfoPanel = new IndicatorsInfoPanel();
 		this.scrollToRealtimeButton = new ScrollToRealtimeButton();
-		this.rulerTool = new RulerTool();
-		this.spinner = new Spinner();
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
 			[
+				this.spinner,
+				this.rulerTool,
 				this.chartInfoPanel,
 				this.indicatorsInfoPanel,
 				this.scrollToRealtimeButton,
-				this.rulerTool,
-				this.spinner,
 			],
 			styles,
 		);
@@ -119,9 +119,9 @@ export class Chart extends BaseComponent {
 		const chartCanvas = this.#$element.find(
 			'[data-ref="chartCanvas"]',
 		).element;
+		const chartOptions = getChartOptions();
 
-		this.#chartApi = createChart(chartCanvas);
-		this.#applyChartOptions();
+		this.#chartApi = createChart(chartCanvas, chartOptions);
 	}
 
 	#attachListeners() {
@@ -396,15 +396,5 @@ export class Chart extends BaseComponent {
 			from: logicalIndex - VISIBLE_RANGE_PADDING,
 			to: logicalIndex + VISIBLE_RANGE_PADDING,
 		});
-	}
-
-	#showMainView() {
-		const $chartCanvas = this.#$element.find('[data-ref="chartCanvas"]');
-
-		this.spinner.hide();
-		this.chartInfoPanel.show();
-		this.indicatorsInfoPanel.show();
-		this.scrollToRealtimeButton.show();
-		$chartCanvas.css('display', 'block');
 	}
 }

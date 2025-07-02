@@ -1,5 +1,5 @@
 .overview-metrics {
-	display: none;
+	display: flex;
 	flex: 0 0 70px;
 	justify-content: space-between;
 	align-items: center;

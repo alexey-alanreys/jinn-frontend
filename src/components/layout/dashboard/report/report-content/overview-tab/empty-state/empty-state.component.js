@@ -2,10 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './no-data.module.css';
-import templateHTML from './no-data.template.html?raw';
+import styles from './empty-state.module.css';
+import templateHTML from './empty-state.template.html?raw';
 
-export class NoData extends BaseComponent {
+export class EmptyState extends BaseComponent {
 	#$element;
 
 	get isActive() {

@@ -10,8 +10,8 @@ import { reportService } from '@/api/services/report.service';
 import styles from './overview-tab.module.css';
 import templateHTML from './overview-tab.template.html?raw';
 
+import { EmptyState } from './empty-state/empty-state.component';
 import { EquityCurve } from './equity-curve/equity-curve.component';
-import { NoData } from './no-data/no-data.component';
 import { OverviewMetrics } from './overview-metrics/overview-metrics.component';
 
 export class OverviewTab extends BaseComponent {
@@ -35,8 +35,8 @@ export class OverviewTab extends BaseComponent {
 			this.equityCurve.update(equity);
 
 			if (!this.#firstLoadDone) {
+				this.#$element.find('[data-ref="spinner"]').css('display', 'none');
 				this.#firstLoadDone = true;
-				this.spinner.hide();
 			}
 
 			this.#toggleView(!!equity.length);
@@ -54,16 +54,16 @@ export class OverviewTab extends BaseComponent {
 	}
 
 	#initComponents() {
+		this.spinner = new Spinner();
+		this.emptyState = new EmptyState();
 		this.overviewMetrics = new OverviewMetrics();
 		this.equityCurve = new EquityCurve();
-		this.noData = new NoData();
-		this.spinner = new Spinner();
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.overviewMetrics, this.equityCurve, this.noData, this.spinner],
+			[this.spinner, this.emptyState, this.overviewMetrics, this.equityCurve],
 			styles,
 		);
 		this.#$element = $Q(this.element);
@@ -76,13 +76,13 @@ export class OverviewTab extends BaseComponent {
 
 	#toggleView(showMainView) {
 		if (showMainView) {
-			this.noData.hide();
+			this.emptyState.hide();
 			this.overviewMetrics.show();
 			this.equityCurve.show();
 		} else {
 			this.overviewMetrics.hide();
 			this.equityCurve.hide();
-			this.noData.show();
+			this.emptyState.show();
 		}
 	}
 }

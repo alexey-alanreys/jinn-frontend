@@ -1,9 +1,21 @@
 .overview-tab {
+	position: relative;
 	display: flex;
 	flex: 1;
 	flex-direction: column;
 	justify-content: center;
 	align-items: stretch;
 	contain: strict;
-	overflow-y: auto;
+	overflow: hidden;
+
+	> .spinner-wrapper {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: var(--color-bg-primary);
+		z-index: 10;
+		pointer-events: none;
+	}
 }

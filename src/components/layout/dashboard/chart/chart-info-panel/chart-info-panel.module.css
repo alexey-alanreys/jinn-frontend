@@ -3,10 +3,10 @@
 	z-index: 3;
 	top: 12px;
 	left: 12px;
-	display: none;
 	align-items: end;
 	gap: 15px;
 	pointer-events: none;
+	display: flex;
 
 	> .meta {
 		font-size: 1.6rem;
