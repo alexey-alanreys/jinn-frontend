@@ -7,15 +7,4 @@
 	align-items: stretch;
 	contain: strict;
 	overflow: hidden;
-
-	> .spinner-wrapper {
-		position: absolute;
-		z-index: 10;
-		inset: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: var(--color-bg-primary);
-		pointer-events: none;
-	}
 }

@@ -1,11 +1,15 @@
 .empty-state {
-	display: none;
+	position: absolute;
+	z-index: 5;
+	inset: 0;
+	display: flex;
 	flex: 1;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	gap: 16px;
 	text-align: center;
+	background-color: var(--color-bg-primary);
 
 	> .icon {
 		width: 150px;

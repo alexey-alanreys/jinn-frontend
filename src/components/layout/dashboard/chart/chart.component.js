@@ -80,8 +80,8 @@ export class Chart extends BaseComponent {
 		this.#resetInfoPanels();
 
 		if (!this.#firstLoadDone) {
-			this.#$element.find('[data-ref="spinner"]').css('display', 'none');
 			this.#firstLoadDone = true;
+			this.spinner.hide();
 		}
 	}
 

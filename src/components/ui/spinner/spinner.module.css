@@ -1,10 +1,17 @@
 .spinner {
-	width: 120px;
-	height: 120px;
-	margin: auto;
-	color: var(--color-status-info);
+	position: absolute;
+	z-index: 10;
+	inset: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-bg-primary);
+	pointer-events: none;
 
 	> svg {
+		width: 120px;
+		height: 120px;
+		color: var(--color-status-info);
 		animation: rotate 1.5s linear infinite;
 		transform-origin: 50% 50%;
 

@@ -6,6 +6,7 @@ export default ({ mode }) => {
 	const env = loadEnv(mode, process.cwd());
 
 	return defineConfig({
+		base: '/static/',
 		define: {
 			'import.meta.env.VITE_SERVER_URL': JSON.stringify(env.VITE_SERVER_URL),
 			'import.meta.env.VITE_SERVER_MODE': JSON.stringify(env.VITE_SERVER_MODE),
@@ -20,6 +21,11 @@ export default ({ mode }) => {
 		build: {
 			outDir: path.resolve(__dirname, 'dist'),
 			emptyOutDir: true,
+			minify: 'terser',
+			terserOptions: {
+				keep_classnames: true,
+				keep_fnames: true,
+			},
 		},
 		server: {
 			port: 5173,

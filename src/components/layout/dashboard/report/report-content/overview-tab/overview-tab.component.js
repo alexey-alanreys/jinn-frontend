@@ -34,23 +34,19 @@ export class OverviewTab extends BaseComponent {
 			this.overviewMetrics.update(metrics);
 			this.equityCurve.update(equity);
 
-			if (!this.#firstLoadDone) {
-				this.#$element.find('[data-ref="spinner"]').css('display', 'none');
-				this.#firstLoadDone = true;
+			if (!!equity.length) {
+				this.emptyState.hide();
+			} else {
+				this.emptyState.show();
 			}
 
-			this.#toggleView(!!equity.length);
+			if (!this.#firstLoadDone) {
+				this.#firstLoadDone = true;
+				this.spinner.hide();
+			}
 		} catch (error) {
 			console.error('Failed to update overview.', error);
 		}
-	}
-
-	hide() {
-		this.#$element.css('display', 'none');
-	}
-
-	show() {
-		this.#$element.css('display', 'flex');
 	}
 
 	#initComponents() {
@@ -72,17 +68,5 @@ export class OverviewTab extends BaseComponent {
 	#setupInitialState() {
 		stateService.subscribe('context', this.update.bind(this));
 		this.update(stateService.get('context'));
-	}
-
-	#toggleView(showMainView) {
-		if (showMainView) {
-			this.emptyState.hide();
-			this.overviewMetrics.show();
-			this.equityCurve.show();
-		} else {
-			this.overviewMetrics.hide();
-			this.equityCurve.hide();
-			this.emptyState.show();
-		}
 	}
 }

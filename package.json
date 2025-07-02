@@ -16,6 +16,7 @@
 		"stylelint": "^16.21.0",
 		"stylelint-config-standard": "^38.0.0",
 		"stylelint-order": "^7.0.0",
+		"terser": "^5.43.1",
 		"vite": "^6.3.5",
 		"vite-plugin-string": "^1.2.3"
 	},

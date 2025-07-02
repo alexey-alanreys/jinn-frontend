@@ -18,8 +18,4 @@ export class Spinner extends BaseComponent {
 	hide() {
 		this.#$element.css('display', 'none');
 	}
-
-	show() {
-		this.#$element.css('display', 'block');
-	}
 }
