@@ -62,7 +62,7 @@ export class ChartInfoPanel extends BaseComponent {
 	}
 
 	#updateCandlestick(candlestick) {
-		const isBullish = candlestick.close > candlestick.open;
+		const isBullish = candlestick.close >= candlestick.open;
 		const classToAdd = isBullish ? styles.green : styles.red;
 		const classToRemove = isBullish ? styles.red : styles.green;
 

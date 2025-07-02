@@ -37,8 +37,8 @@ export const getChartOptions = () => {
 			horzLines: { color: getCssVariable('--color-chart-grid') || '#edf0ee' },
 		},
 		timeScale: {
-			rightOffset: 5,
-			barSpacing: 5,
+			rightOffset: 4,
+			barSpacing: 6,
 			minBarSpacing: 2,
 			borderVisible: false,
 			rightBarStaysOnScroll: true,

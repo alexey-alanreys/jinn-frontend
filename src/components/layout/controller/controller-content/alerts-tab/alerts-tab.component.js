@@ -137,7 +137,7 @@ export class AlertsTab extends BaseComponent {
 	#createAlertItem(id, alert, $container) {
 		const item = new AlertsItem();
 		this.#items.set(id, item);
-		$container.append(item.render());
+		$container.prepend(item.render());
 		item.update(id, alert);
 	}
 }

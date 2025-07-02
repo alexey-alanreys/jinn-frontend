@@ -105,6 +105,32 @@ class Query {
 	}
 
 	/**
+	 * Prepends a new child element to the current element.
+	 *
+	 * @param {HTMLElement} childElement The child element to prepend.
+	 * @returns {Query} The current Query instance for method chaining.
+	 * @throws {Error} If the provided childElement
+	 *         is not an instance of HTMLElement.
+	 */
+	prepend(childElement) {
+		if (!(childElement instanceof HTMLElement)) {
+			throw new Error(
+				'The provided childElement must be an instance of HTMLElement.',
+			);
+		}
+
+		const first = this.element.firstChild;
+
+		if (first) {
+			this.element.insertBefore(childElement, first);
+		} else {
+			this.element.appendChild(childElement);
+		}
+
+		return this;
+	}
+
+	/**
 	 * Inserts a new element immediately before the current element in the DOM.
 	 *
 	 * @param {HTMLElement} newElement The new element to insert.
