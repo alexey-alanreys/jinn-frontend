@@ -11,6 +11,8 @@ import templateHTML from './metrics-tab.template.html?raw';
 import { MetricsItem } from './metrics-item/metrics-item.component';
 
 export class MetricsTab extends BaseComponent {
+	static componentName = 'MetricsTab';
+
 	#$element;
 	#items = new Map();
 

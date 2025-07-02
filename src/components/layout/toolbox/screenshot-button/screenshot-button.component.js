@@ -7,6 +7,8 @@ import styles from './screenshot-button.module.css';
 import templateHTML from './screenshot-button.template.html?raw';
 
 export class ScreenshotButton extends BaseComponent {
+	static componentName = 'ScreenshotButton';
+
 	#$element;
 
 	render() {

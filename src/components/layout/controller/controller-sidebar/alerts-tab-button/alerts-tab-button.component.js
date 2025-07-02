@@ -6,6 +6,8 @@ import styles from './alerts-tab-button.module.css';
 import templateHTML from './alerts-tab-button.template.html?raw';
 
 export class AlertsTabButton extends BaseComponent {
+	static componentName = 'AlertsTabButton';
+
 	#$element;
 
 	get isActive() {

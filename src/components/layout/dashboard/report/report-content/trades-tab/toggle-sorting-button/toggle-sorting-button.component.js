@@ -6,6 +6,8 @@ import styles from './toggle-sorting-button.module.css';
 import templateHTML from './toggle-sorting-button.template.html?raw';
 
 export class ToggleSortingButton extends BaseComponent {
+	static componentName = 'ToggleSortingButton';
+
 	#$element;
 
 	constructor({ onClick }) {

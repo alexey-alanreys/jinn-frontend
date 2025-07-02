@@ -13,6 +13,8 @@ import styles from './trendline-tool-button.module.css';
 import templateHTML from './trendline-tool-button.template.html?raw';
 
 export class TrendlineToolButton extends BaseComponent {
+	static componentName = 'TrendlineToolButton';
+
 	#$element;
 	#chartClickHandler;
 

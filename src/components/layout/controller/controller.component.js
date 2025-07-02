@@ -8,6 +8,8 @@ import { ControllerContent } from './controller-content/controller-content.compo
 import { ControllerSidebar } from './controller-sidebar/controller-sidebar.component';
 
 export class Controller extends BaseComponent {
+	static componentName = 'Controller';
+
 	render() {
 		this.#initComponents();
 		this.#initDOM();

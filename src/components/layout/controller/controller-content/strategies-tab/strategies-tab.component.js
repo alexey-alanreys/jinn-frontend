@@ -12,6 +12,8 @@ import templateHTML from './strategies-tab.template.html?raw';
 import { StrategiesItem } from './strategies-item/strategies-item.component';
 
 export class StrategiesTab extends BaseComponent {
+	static componentName = 'StrategiesTab';
+
 	#$element;
 
 	#contextId = null;

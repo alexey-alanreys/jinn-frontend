@@ -10,6 +10,8 @@ import { StrategiesTabButton } from './strategies-tab-button/strategies-tab-butt
 import { ThemeButton } from './theme-button/theme-button.component';
 
 export class ControllerSidebar extends BaseComponent {
+	static componentName = 'ControllerSidebar';
+
 	render() {
 		this.#initComponents();
 		this.#initDOM();

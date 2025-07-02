@@ -11,6 +11,8 @@ import styles from './equity-tooltip.module.css';
 import templateHTML from './equity-tooltip.template.html?raw';
 
 export class EquityTooltip extends BaseComponent {
+	static componentName = 'EquityTooltip';
+
 	#$element;
 
 	#active = false;

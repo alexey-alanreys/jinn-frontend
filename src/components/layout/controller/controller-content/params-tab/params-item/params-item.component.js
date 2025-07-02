@@ -8,6 +8,8 @@ import styles from './params-item.module.css';
 import templateHTML from './params-item.template.html?raw';
 
 export class ParamsItem extends BaseComponent {
+	static componentName = 'ParamsItem';
+
 	#$element;
 	#$input;
 

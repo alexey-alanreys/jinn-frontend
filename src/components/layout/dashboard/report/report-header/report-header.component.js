@@ -10,6 +10,8 @@ import { OverviewTabButton } from './overview-tab-button/overview-tab-button.com
 import { TradesTabButton } from './trades-tab-button/trades-tab-button.component';
 
 export class ReportHeader extends BaseComponent {
+	static componentName = 'ReportHeader';
+
 	#$element;
 
 	constructor({ toggleVisibilityButton, toggleExpansionButton }) {

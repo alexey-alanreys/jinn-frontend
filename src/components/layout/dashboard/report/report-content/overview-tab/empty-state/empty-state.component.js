@@ -6,6 +6,8 @@ import styles from './empty-state.module.css';
 import templateHTML from './empty-state.template.html?raw';
 
 export class EmptyState extends BaseComponent {
+	static componentName = 'EmptyState';
+
 	#$element;
 
 	get isActive() {

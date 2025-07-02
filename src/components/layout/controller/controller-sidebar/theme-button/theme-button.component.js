@@ -8,6 +8,8 @@ import styles from './theme-button.module.css';
 import templateHTML from './theme-button.template.html?raw';
 
 export class ThemeButton extends BaseComponent {
+	static componentName = 'ThemeButton';
+
 	#$element;
 	#$document;
 

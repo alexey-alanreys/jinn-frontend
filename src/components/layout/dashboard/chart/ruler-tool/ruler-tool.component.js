@@ -7,6 +7,8 @@ import styles from './ruler-tool.module.css';
 import templateHTML from './ruler-tool.template.html?raw';
 
 export class RulerTool extends BaseComponent {
+	static componentName = 'RulerTool';
+
 	#$element;
 	#$lineX;
 	#$lineY;

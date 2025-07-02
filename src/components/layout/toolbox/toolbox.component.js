@@ -12,6 +12,8 @@ import { ScreenshotButton } from './screenshot-button/screenshot-button.componen
 import { TrendlineToolButton } from './trendline-tool-button/trendline-tool-button.component';
 
 export class Toolbox extends BaseComponent {
+	static componentName = 'Toolbox';
+
 	render() {
 		this.#initComponents();
 		this.#initDOM();

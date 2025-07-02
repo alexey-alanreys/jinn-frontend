@@ -8,6 +8,8 @@ import styles from './toggle-visibility-button.module.css';
 import templateHTML from './toggle-visibility-button.template.html?raw';
 
 export class ToggleVisibilityButton extends BaseComponent {
+	static componentName = 'ToggleVisibilityButton';
+
 	#$element;
 
 	constructor({ onClick }) {

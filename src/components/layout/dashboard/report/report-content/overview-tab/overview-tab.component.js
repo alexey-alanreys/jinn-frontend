@@ -1,5 +1,4 @@
 import { BaseComponent } from '@/core/component/base.component';
-import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
@@ -15,7 +14,8 @@ import { EquityCurve } from './equity-curve/equity-curve.component';
 import { OverviewMetrics } from './overview-metrics/overview-metrics.component';
 
 export class OverviewTab extends BaseComponent {
-	#$element;
+	static componentName = 'OverviewTab';
+
 	#firstLoadDone = false;
 
 	render() {
@@ -62,7 +62,6 @@ export class OverviewTab extends BaseComponent {
 			[this.spinner, this.emptyState, this.overviewMetrics, this.equityCurve],
 			styles,
 		);
-		this.#$element = $Q(this.element);
 	}
 
 	#setupInitialState() {

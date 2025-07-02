@@ -12,6 +12,8 @@ import { ToggleVisibilityButton } from './report/report-header/toggle-visibility
 import { Report } from './report/report.component';
 
 export class Dashboard extends BaseComponent {
+	static componentName = 'Dashboard';
+
 	#$element;
 	#reportHeight;
 	#reportMaxHeight;

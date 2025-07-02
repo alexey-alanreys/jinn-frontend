@@ -6,6 +6,8 @@ import styles from './spinner.module.css';
 import templateHTML from './spinner.template.html?raw';
 
 export class Spinner extends BaseComponent {
+	static componentName = 'Spinner';
+
 	#$element;
 
 	render() {

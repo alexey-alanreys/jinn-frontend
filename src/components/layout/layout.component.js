@@ -9,6 +9,8 @@ import { Dashboard } from './dashboard/dashboard.component';
 import { Toolbox } from './toolbox/toolbox.component';
 
 export class Layout extends BaseComponent {
+	static componentName = 'Layout';
+
 	render() {
 		this.element = renderService.htmlToElement(
 			templateHTML,

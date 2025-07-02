@@ -6,6 +6,8 @@ import styles from './metrics-item.module.css';
 import templateHTML from './metrics-item.template.html?raw';
 
 export class MetricsItem extends BaseComponent {
+	static componentName = 'MetricsItem';
+
 	#$element;
 	#dataFields = new Map();
 

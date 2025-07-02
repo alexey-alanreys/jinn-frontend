@@ -8,6 +8,8 @@ import templateHTML from './report.template.html?raw';
 import { ReportContent } from './report-content/report-content.component';
 
 export class Report extends BaseComponent {
+	static componentName = 'Report';
+
 	#$element;
 
 	constructor({ reportHeader, onMousedown }) {

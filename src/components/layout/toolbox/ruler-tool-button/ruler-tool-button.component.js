@@ -7,6 +7,8 @@ import styles from './ruler-tool-button.module.css';
 import templateHTML from './ruler-tool-button.template.html?raw';
 
 export class RulerToolButton extends BaseComponent {
+	static componentName = 'RulerToolButton';
+
 	#$element;
 
 	constructor({ onActivate }) {

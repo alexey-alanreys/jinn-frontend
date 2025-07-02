@@ -6,6 +6,8 @@ import styles from './overview-tab-button.module.css';
 import templateHTML from './overview-tab-button.template.html?raw';
 
 export class OverviewTabButton extends BaseComponent {
+	static componentName = 'OverviewTabButton';
+
 	#$element;
 
 	render() {

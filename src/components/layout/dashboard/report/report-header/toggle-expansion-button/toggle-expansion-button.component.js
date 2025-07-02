@@ -8,6 +8,8 @@ import styles from './toggle-expansion-button.module.css';
 import templateHTML from './toggle-expansion-button.template.html?raw';
 
 export class ToggleExpansionButton extends BaseComponent {
+	static componentName = 'ToggleExpansionButton';
+
 	#$element;
 
 	constructor({ onClick }) {
