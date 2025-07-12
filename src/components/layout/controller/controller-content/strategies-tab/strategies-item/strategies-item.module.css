@@ -6,6 +6,7 @@
 	height: 60px;
 	padding: 6px 16px;
 	border-bottom: 1px solid var(--color-border-primary);
+	cursor: pointer;
 
 	&[data-active='true'] {
 		color: var(--color-accent-primary);
