@@ -16,8 +16,8 @@ export class Dashboard extends BaseComponent {
 
 	#$element;
 	#reportHeight;
-	#reportMaxHeight;
 	#reportMinHeight;
+	#reportMaxHeight;
 
 	render() {
 		this.#initComponents();
@@ -32,7 +32,7 @@ export class Dashboard extends BaseComponent {
 			if (this.toggleExpansionButton.isActive) {
 				this.toggleExpansionButton.toggleActiveState();
 			} else {
-				this.#reportHeight = this.report.height;
+				this.#updateReportMetrics();
 			}
 
 			this.#resizePanels(this.#reportMinHeight);
@@ -46,7 +46,7 @@ export class Dashboard extends BaseComponent {
 			if (this.toggleVisibilityButton.isActive) {
 				this.toggleVisibilityButton.toggleActiveState();
 			} else {
-				this.#reportHeight = this.report.height;
+				this.#updateReportMetrics();
 			}
 
 			this.#resizePanels(this.#reportMaxHeight);
@@ -56,6 +56,8 @@ export class Dashboard extends BaseComponent {
 	}
 
 	handleManualResize(startY) {
+		this.#updateReportMetrics();
+
 		const startHeight = this.report.height;
 
 		let isVisActive = this.toggleVisibilityButton.isActive;
@@ -133,11 +135,13 @@ export class Dashboard extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		requestAnimationFrame(() => {
-			this.#reportHeight = this.report.height;
-			this.#reportMaxHeight = parseInt(this.#$element.css('height'));
-			this.#reportMinHeight = this.report.minHeight;
-		});
+		requestAnimationFrame(() => this.#updateReportMetrics());
+	}
+
+	#updateReportMetrics() {
+		this.#reportHeight = this.report.height;
+		this.#reportMinHeight = this.report.minHeight;
+		this.#reportMaxHeight = parseInt(this.#$element.css('height'));
 	}
 
 	#resizePanels(height) {
