@@ -10,10 +10,7 @@ import {
 	getEquityCurveOptions,
 } from '@/config/equity-curve.config';
 
-import {
-	CONTAINER_OFFSETS,
-	MARKER_RANGE_THRESHOLD,
-} from '@/constants/equity-curve.constants';
+import { MARKER_RANGE_THRESHOLD } from '@/constants/equity-curve.constants';
 import { TOOLTIP_MIN_LEFT } from '@/constants/equity-tooltip.constants';
 
 import styles from './equity-curve.module.css';
@@ -28,6 +25,7 @@ export class EquityCurve extends BaseComponent {
 	#chartApi;
 	#series;
 
+	#viewportMetrics = {};
 	#markersVisible = false;
 
 	render() {
@@ -123,6 +121,7 @@ export class EquityCurve extends BaseComponent {
 		}
 
 		if (!this.equityTooltip.isActive) {
+			this.#viewportMetrics = this.#getViewportMetrics();
 			this.equityTooltip.activate();
 		}
 
@@ -150,11 +149,11 @@ export class EquityCurve extends BaseComponent {
 		const { clientX, clientY } = sourceEvent;
 		const { width, height, offsetX } = this.equityTooltip;
 
-		const bottom = CONTAINER_OFFSETS.bottom - clientY - height / 2;
-		let left = clientX - CONTAINER_OFFSETS.left - width - offsetX;
+		const bottom = this.#viewportMetrics.height - clientY - height / 2;
+		let left = clientX - this.#viewportMetrics.left - width - offsetX;
 
 		if (left < TOOLTIP_MIN_LEFT) {
-			left = clientX - CONTAINER_OFFSETS.left + offsetX;
+			left = clientX - this.#viewportMetrics.left + offsetX;
 		}
 
 		this.equityTooltip.updatePosition({ left, bottom });
@@ -170,5 +169,12 @@ export class EquityCurve extends BaseComponent {
 				pointMarkersVisible: markersShouldBeVisible,
 			});
 		}
+	}
+
+	#getViewportMetrics() {
+		return {
+			left: this.element.getBoundingClientRect().left,
+			height: window.innerHeight,
+		};
 	}
 }

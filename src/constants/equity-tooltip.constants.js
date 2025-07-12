@@ -11,4 +11,4 @@ export const DATE_FMT = {
 
 export const TOOLTIP_MIN_LEFT = 50;
 
-export const TOOLTIP_OFFSET_X = 15;
+export const TOOLTIP_OFFSET_X = 20;

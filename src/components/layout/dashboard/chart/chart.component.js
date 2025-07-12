@@ -41,8 +41,8 @@ export class Chart extends BaseComponent {
 	#$element;
 	#chartApi;
 
-	#firstLoadDone = false;
 	#contextId = null;
+	#firstLoadDone = false;
 	#data = {
 		candlesticks: null,
 		indicators: null,
