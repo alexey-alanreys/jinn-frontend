@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { getChartOptions } from '@/config/chart.config';
+
 import styles from './scroll-to-realtime-button.module.css';
 import templateHTML from './scroll-to-realtime-button.template.html?raw';
 
@@ -31,6 +33,7 @@ export class ScrollToRealtimeButton extends BaseComponent {
 		const chartApi = stateService.get('chartApi');
 		if (!chartApi) return;
 
-		chartApi.timeScale().scrollToRealTime();
+		const scrollPosition = getChartOptions().timeScale.rightOffset;
+		chartApi.timeScale().scrollToPosition(scrollPosition, false);
 	}
 }
