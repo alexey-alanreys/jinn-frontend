@@ -6,7 +6,7 @@ import styles from './strategies-tab-button.module.css';
 import templateHTML from './strategies-tab-button.template.html?raw';
 
 export class StrategiesTabButton extends BaseComponent {
-	static componentName = 'StrategiesTabButton';
+	static COMPONENT_NAME = 'StrategiesTabButton';
 
 	#$element;
 

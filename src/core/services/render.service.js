@@ -55,7 +55,7 @@ class RenderService {
 		);
 
 		componentInstances.forEach((instance) => {
-			const componentName = instance.constructor.componentName.toLowerCase();
+			const componentName = instance.constructor.COMPONENT_NAME.toLowerCase();
 			instanceMap.set(componentName, instance);
 		});
 

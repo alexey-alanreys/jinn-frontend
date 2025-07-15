@@ -6,7 +6,7 @@ import styles from './empty-state.module.css';
 import templateHTML from './empty-state.template.html?raw';
 
 export class EmptyState extends BaseComponent {
-	static componentName = 'EmptyState';
+	static COMPONENT_NAME = 'EmptyState';
 
 	#$element;
 

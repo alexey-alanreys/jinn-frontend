@@ -6,7 +6,7 @@ import styles from './params-tab-button.module.css';
 import templateHTML from './params-tab-button.template.html?raw';
 
 export class ParamsTabButton extends BaseComponent {
-	static componentName = 'ParamsTabButton';
+	static COMPONENT_NAME = 'ParamsTabButton';
 
 	#$element;
 

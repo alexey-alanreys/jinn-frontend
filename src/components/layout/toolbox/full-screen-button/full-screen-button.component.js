@@ -6,7 +6,7 @@ import styles from './full-screen-button.module.css';
 import templateHTML from './full-screen-button.template.html?raw';
 
 export class FullScreenButton extends BaseComponent {
-	static componentName = 'FullScreenButton';
+	static COMPONENT_NAME = 'FullScreenButton';
 
 	#$element;
 

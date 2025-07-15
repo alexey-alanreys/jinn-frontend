@@ -8,7 +8,7 @@ import styles from './alerts-item.module.css';
 import templateHTML from './alerts-item.template.html?raw';
 
 export class AlertsItem extends BaseComponent {
-	static componentName = 'AlertsItem';
+	static COMPONENT_NAME = 'AlertsItem';
 
 	#$element;
 	#dataFields = new Map();

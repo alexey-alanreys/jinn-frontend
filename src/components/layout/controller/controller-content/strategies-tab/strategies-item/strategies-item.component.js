@@ -6,7 +6,7 @@ import styles from './strategies-item.module.css';
 import templateHTML from './strategies-item.template.html?raw';
 
 export class StrategiesItem extends BaseComponent {
-	static componentName = 'StrategiesItem';
+	static COMPONENT_NAME = 'StrategiesItem';
 
 	#$element;
 	#dataFields = new Map();

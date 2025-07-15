@@ -7,7 +7,7 @@ import styles from './chart-info-panel.module.css';
 import templateHTML from './chart-info-panel.template.html?raw';
 
 export class ChartInfoPanel extends BaseComponent {
-	static componentName = 'ChartInfoPanel';
+	static COMPONENT_NAME = 'ChartInfoPanel';
 
 	#$element;
 

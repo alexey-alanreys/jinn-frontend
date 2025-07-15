@@ -19,7 +19,7 @@ import templateHTML from './equity-curve.template.html?raw';
 import { EquityTooltip } from './equity-tooltip/equity-tooltip.component';
 
 export class EquityCurve extends BaseComponent {
-	static componentName = 'EquityCurve';
+	static COMPONENT_NAME = 'EquityCurve';
 
 	#$element;
 	#chartApi;

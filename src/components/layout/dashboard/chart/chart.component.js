@@ -37,7 +37,7 @@ import { RulerTool } from './ruler-tool/ruler-tool.component';
 import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-realtime-button.component';
 
 export class Chart extends BaseComponent {
-	static componentName = 'Chart';
+	static COMPONENT_NAME = 'Chart';
 	static indicatorTypes = {
 		line: LineSeries,
 		histogram: HistogramSeries,

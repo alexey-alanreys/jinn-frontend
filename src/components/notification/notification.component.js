@@ -5,7 +5,7 @@ import styles from './notification.module.css';
 import template from './notification.template.html?raw';
 
 export class Notification extends BaseComponent {
-	static componentName = 'Notification';
+	static COMPONENT_NAME = 'Notification';
 
 	render() {
 		this.element = renderService.htmlToElement(template, [], styles);

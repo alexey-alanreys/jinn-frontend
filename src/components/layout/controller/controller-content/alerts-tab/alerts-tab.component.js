@@ -19,7 +19,7 @@ import templateHTML from './alerts-tab.template.html?raw';
 import { AlertsItem } from './alerts-item/alerts-item.component';
 
 export class AlertsTab extends BaseComponent {
-	static componentName = 'AlertsTab';
+	static COMPONENT_NAME = 'AlertsTab';
 
 	#$element;
 

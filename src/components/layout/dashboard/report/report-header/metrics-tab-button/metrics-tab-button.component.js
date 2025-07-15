@@ -6,7 +6,7 @@ import styles from './metrics-tab-button.module.css';
 import templateHTML from './metrics-tab-button.template.html?raw';
 
 export class MetricsTabButton extends BaseComponent {
-	static componentName = 'MetricsTabButton';
+	static COMPONENT_NAME = 'MetricsTabButton';
 
 	#$element;
 

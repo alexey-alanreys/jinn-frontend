@@ -11,7 +11,7 @@ import templateHTML from './params-tab.template.html?raw';
 import { ParamsItem } from './params-item/params-item.component';
 
 export class ParamsTab extends BaseComponent {
-	static componentName = 'ParamsTab';
+	static COMPONENT_NAME = 'ParamsTab';
 
 	#$element;
 

@@ -9,7 +9,7 @@ import { OverviewTab } from './overview-tab/overview-tab.component';
 import { TradesTab } from './trades-tab/trades-tab.component';
 
 export class ReportContent extends BaseComponent {
-	static componentName = 'ReportContent';
+	static COMPONENT_NAME = 'ReportContent';
 
 	render() {
 		this.#initComponents();

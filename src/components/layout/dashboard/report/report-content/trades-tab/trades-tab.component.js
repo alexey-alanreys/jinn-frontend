@@ -12,7 +12,7 @@ import { ToggleSortingButton } from './toggle-sorting-button/toggle-sorting-butt
 import { TradesItem } from './trades-item/trades-item.component';
 
 export class TradesTab extends BaseComponent {
-	static componentName = 'TradesTab';
+	static COMPONENT_NAME = 'TradesTab';
 
 	#$element;
 

@@ -10,7 +10,7 @@ import { ParamsTab } from './params-tab/params-tab.component';
 import { StrategiesTab } from './strategies-tab/strategies-tab.component';
 
 export class ControllerContent extends BaseComponent {
-	static componentName = 'ControllerContent';
+	static COMPONENT_NAME = 'ControllerContent';
 
 	#$element;
 

@@ -9,7 +9,7 @@ import styles from './hide-drawings-button.module.css';
 import templateHTML from './hide-drawings-button.template.html?raw';
 
 export class HideDrawingsButton extends BaseComponent {
-	static componentName = 'HideDrawingsButton';
+	static COMPONENT_NAME = 'HideDrawingsButton';
 
 	#$element;
 

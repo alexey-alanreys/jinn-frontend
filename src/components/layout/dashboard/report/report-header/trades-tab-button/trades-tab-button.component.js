@@ -6,7 +6,7 @@ import styles from './trades-tab-button.module.css';
 import templateHTML from './trades-tab-button.template.html?raw';
 
 export class TradesTabButton extends BaseComponent {
-	static componentName = 'TradesTabButton';
+	static COMPONENT_NAME = 'TradesTabButton';
 
 	#$element;
 

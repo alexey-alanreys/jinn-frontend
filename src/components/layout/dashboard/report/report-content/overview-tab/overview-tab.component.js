@@ -15,7 +15,7 @@ import { EquityCurve } from './equity-curve/equity-curve.component';
 import { OverviewMetrics } from './overview-metrics/overview-metrics.component';
 
 export class OverviewTab extends BaseComponent {
-	static componentName = 'OverviewTab';
+	static COMPONENT_NAME = 'OverviewTab';
 
 	#$element;
 	#firstLoadDone = false;

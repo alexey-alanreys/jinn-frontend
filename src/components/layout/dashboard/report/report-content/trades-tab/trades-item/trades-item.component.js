@@ -6,7 +6,7 @@ import styles from './trades-item.module.css';
 import templateHTML from './trades-item.template.html?raw';
 
 export class TradesItem extends BaseComponent {
-	static componentName = 'TradesItem';
+	static COMPONENT_NAME = 'TradesItem';
 	static #PROFIT_FIELDS = [10, 11, 12, 13];
 
 	#$element;

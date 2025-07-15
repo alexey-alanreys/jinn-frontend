@@ -8,7 +8,7 @@ import templateHTML from './report.template.html?raw';
 import { ReportContent } from './report-content/report-content.component';
 
 export class Report extends BaseComponent {
-	static componentName = 'Report';
+	static COMPONENT_NAME = 'Report';
 
 	#$element;
 

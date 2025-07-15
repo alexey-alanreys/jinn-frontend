@@ -6,7 +6,7 @@ import styles from './overview-metrics.module.css';
 import templateHTML from './overview-metrics.template.html?raw';
 
 export class OverviewMetrics extends BaseComponent {
-	static componentName = 'OverviewMetrics';
+	static COMPONENT_NAME = 'OverviewMetrics';
 	static #PROFIT_FIELDS = [0, 1, 5, 6];
 
 	#$element;

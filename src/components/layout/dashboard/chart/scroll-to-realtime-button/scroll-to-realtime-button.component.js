@@ -9,7 +9,7 @@ import styles from './scroll-to-realtime-button.module.css';
 import templateHTML from './scroll-to-realtime-button.template.html?raw';
 
 export class ScrollToRealtimeButton extends BaseComponent {
-	static componentName = 'ScrollToRealtimeButton';
+	static COMPONENT_NAME = 'ScrollToRealtimeButton';
 
 	#$element;
 

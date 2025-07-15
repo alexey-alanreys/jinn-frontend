@@ -8,7 +8,7 @@ import styles from './clear-drawings-button.module.css';
 import templateHTML from './clear-drawings-button.template.html?raw';
 
 export class ClearDrawingsButton extends BaseComponent {
-	static componentName = 'ClearDrawingsButton';
+	static COMPONENT_NAME = 'ClearDrawingsButton';
 
 	#$element;
 

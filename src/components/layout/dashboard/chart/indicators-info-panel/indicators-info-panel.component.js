@@ -6,7 +6,7 @@ import styles from './indicators-info-panel.module.css';
 import templateHTML from './indicators-info-panel.template.html?raw';
 
 export class IndicatorsInfoPanel extends BaseComponent {
-	static componentName = 'IndicatorsInfoPanel';
+	static COMPONENT_NAME = 'IndicatorsInfoPanel';
 
 	#$element;
 	#dataFields = new Map();
