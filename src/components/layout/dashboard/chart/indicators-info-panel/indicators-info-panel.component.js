@@ -1,7 +1,6 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
-import { stateService } from '@/core/services/state.service';
 
 import styles from './indicators-info-panel.module.css';
 import templateHTML from './indicators-info-panel.template.html?raw';
@@ -12,16 +11,33 @@ export class IndicatorsInfoPanel extends BaseComponent {
 	#$element;
 	#dataFields = new Map();
 
-	render() {
+	render(isPrimary) {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);
+
+		if (isPrimary) {
+			this.#$element.addClass(styles['primary']);
+		} else {
+			this.#$element.addClass(styles['secondary']);
+		}
+
 		return this.element;
 	}
 
-	update(indicators, withRender = false) {
+	remove() {
+		this.element.remove();
+	}
+
+	update(indicators, withRender = false, indicatorKeys = null) {
 		if (withRender) {
+			if (!indicatorKeys) {
+				throw new Error(
+					'Indicator keys must be provided when withRender is true',
+				);
+			}
+
 			this.#dataFields.clear();
-			this.#renderFields();
+			this.#renderFields(indicatorKeys);
 		}
 
 		this.#dataFields.forEach(({ element }, key) => {
@@ -48,10 +64,8 @@ export class IndicatorsInfoPanel extends BaseComponent {
 		});
 	}
 
-	#renderFields() {
-		const { indicatorOptions } = stateService.get('context');
-
-		const html = this.#generateHTML(indicatorOptions);
+	#renderFields(indicatorKeys) {
+		const html = this.#generateHTML(indicatorKeys);
 		this.#$element.html(html);
 
 		this.#$element.findAll('[data-field]').forEach((el) => {
@@ -60,8 +74,8 @@ export class IndicatorsInfoPanel extends BaseComponent {
 		});
 	}
 
-	#generateHTML(indicatorOptions) {
-		return Object.keys(indicatorOptions)
+	#generateHTML(indicatorKeys) {
+		return indicatorKeys
 			.map((key) => {
 				return `
 					<div>

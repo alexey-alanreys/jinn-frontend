@@ -71,8 +71,8 @@ export class EquityTooltip extends BaseComponent {
 
 	#setupInitialState() {
 		['deal', 'equity', 'time'].forEach((field) => {
-			const $el = this.#$element.find(`[data-field="${field}"]`);
-			this.#dataFields.set(field, $el);
+			const el = this.#$element.find(`[data-field="${field}"]`);
+			this.#dataFields.set(field, el);
 		});
 	}
 

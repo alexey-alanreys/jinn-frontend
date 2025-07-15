@@ -1,5 +1,6 @@
 import {
 	CandlestickSeries,
+	HistogramSeries,
 	LineSeries,
 	createChart,
 	createSeriesMarkers,
@@ -37,6 +38,10 @@ import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-re
 
 export class Chart extends BaseComponent {
 	static componentName = 'Chart';
+	static indicatorTypes = {
+		line: LineSeries,
+		histogram: HistogramSeries,
+	};
 
 	#$element;
 	#chartApi;
@@ -53,6 +58,7 @@ export class Chart extends BaseComponent {
 		indicators: new Map(),
 		markers: null,
 	};
+	#indicatorPanels = new Map();
 	#visibleRange = DATA_BATCH_SIZE;
 
 	render() {
@@ -73,8 +79,11 @@ export class Chart extends BaseComponent {
 		if (this.#contextId !== context.id) {
 			this.#contextId = context.id;
 
+			this.#removePanels();
 			this.#removeSeries();
+
 			this.#createSeries();
+			this.#createPanels();
 			this.#loadDrawings();
 		}
 
@@ -91,7 +100,6 @@ export class Chart extends BaseComponent {
 		this.spinner = new Spinner();
 		this.rulerTool = new RulerTool();
 		this.chartInfoPanel = new ChartInfoPanel();
-		this.indicatorsInfoPanel = new IndicatorsInfoPanel();
 		this.scrollToRealtimeButton = new ScrollToRealtimeButton();
 	}
 
@@ -102,7 +110,6 @@ export class Chart extends BaseComponent {
 				this.spinner,
 				this.rulerTool,
 				this.chartInfoPanel,
-				this.indicatorsInfoPanel,
 				this.scrollToRealtimeButton,
 			],
 			styles,
@@ -185,21 +192,45 @@ export class Chart extends BaseComponent {
 		);
 	}
 
+	#removePanels() {
+		this.#indicatorPanels.forEach((panel) => {
+			panel.remove();
+		});
+		this.#indicatorPanels.clear();
+	}
+
 	#removeSeries() {
-		const { candlestick, indicators } = this.#series;
+		this.#removeCandlestickSeries();
+		this.#removeIndicatorSeries();
+		this.#clearMarkers();
+		this.#removeDrawings();
+	}
+
+	#removeCandlestickSeries() {
+		const candlestick = this.#series.candlestick;
 
 		if (candlestick) {
 			this.#chartApi.removeSeries(candlestick);
 			this.#series.candlestick = null;
 		}
+	}
 
-		indicators.forEach((series) => this.#chartApi.removeSeries(series));
+	#removeIndicatorSeries() {
+		this.#series.indicators.forEach((series) => {
+			this.#chartApi.removeSeries(series);
+		});
 		this.#series.indicators.clear();
+	}
 
+	#clearMarkers() {
 		this.#series.markers = null;
+	}
 
+	#removeDrawings() {
 		const drawings = stateService.get('drawings');
-		drawings.forEach((series) => this.#chartApi.removeSeries(series));
+		drawings.forEach((series) => {
+			this.#chartApi.removeSeries(series);
+		});
 		stateService.set('drawings', []);
 	}
 
@@ -219,9 +250,61 @@ export class Chart extends BaseComponent {
 	#createIndicatorSeries() {
 		const { indicatorOptions } = stateService.get('context');
 
-		Object.keys(indicatorOptions).forEach((key) => {
-			const series = this.#chartApi.addSeries(LineSeries);
-			this.#series.indicators.set(key, series);
+		Object.entries(indicatorOptions).forEach(([name, options]) => {
+			const typeKey = options.type ?? 'line';
+			const indicatorType =
+				Chart.indicatorTypes[typeKey] ?? Chart.indicatorTypes['line'];
+			const paneIndex = Math.max(0, Math.min(3, options.pane ?? 0));
+
+			const series = this.#chartApi.addSeries(
+				indicatorType,
+				undefined,
+				paneIndex,
+			);
+			this.#series.indicators.set(name, series);
+		});
+	}
+
+	#createPanels() {
+		requestAnimationFrame(() => {
+			const context = stateService.get('context');
+			const indicatorOptions = context.indicatorOptions ?? {};
+
+			this.#initIndicatorPanels(indicatorOptions);
+			const $panes = this.#getPaneContainers();
+
+			this.#renderIndicatorPanels($panes);
+		});
+	}
+
+	#initIndicatorPanels(indicatorOptions) {
+		Object.values(indicatorOptions).forEach((options) => {
+			const paneIndex = options.pane ?? 0;
+
+			if (!this.#indicatorPanels.has(paneIndex)) {
+				const panel = new IndicatorsInfoPanel();
+				this.#indicatorPanels.set(paneIndex, panel);
+			}
+		});
+	}
+
+	#getPaneContainers() {
+		return this.#$element
+			.findAll('table > tr')
+			.slice(0, -1)
+			.filter((el) => el.css('height') !== '1px')
+			.map((el) => el.find('td > div'));
+	}
+
+	#renderIndicatorPanels($panes) {
+		$panes.forEach((container, paneIndex) => {
+			const panel = this.#indicatorPanels.get(paneIndex);
+			if (!panel) return;
+
+			const isPrimaryPane = paneIndex === 0;
+			const panelElement = panel.render(isPrimaryPane);
+
+			container.append(panelElement);
 		});
 	}
 
@@ -318,23 +401,55 @@ export class Chart extends BaseComponent {
 	}
 
 	#resetInfoPanels() {
-		const candlestick = this.#series.candlestick.data().at(-1);
+		this.#resetChartInfoPanel();
 
-		const indicators = Object.fromEntries(
+		requestAnimationFrame(() => {
+			this.#resetIndicatorInfoPanels();
+		});
+	}
+
+	#resetChartInfoPanel() {
+		const candlestick = this.#series.candlestick.data().at(-1);
+		this.chartInfoPanel.update(candlestick, true);
+	}
+
+	#resetIndicatorInfoPanels() {
+		const context = stateService.get('context');
+		const indicatorOptions = context.indicatorOptions ?? {};
+
+		const indicatorValues = Object.fromEntries(
 			Array.from(this.#series.indicators, ([key, series]) => [
 				key,
 				series.data().at(-1),
 			]),
 		);
 
-		this.chartInfoPanel.update(candlestick, true);
-		this.indicatorsInfoPanel.update(indicators, true);
+		this.#indicatorPanels.forEach((panel, paneIndex) => {
+			const indicatorKeys = Object.entries(indicatorOptions)
+				.filter(([_, options]) => {
+					return (options.pane ?? 0) === paneIndex;
+				})
+				.map(([key]) => key);
+
+			panel.update(indicatorValues, true, indicatorKeys);
+		});
 	}
 
 	#handleCrosshairMove({ logical, point, seriesData, sourceEvent, time }) {
 		if (!point || !time) return;
 
 		const candlestick = seriesData.get(this.#series.candlestick);
+
+		this.#updateChartInfoPanel(candlestick);
+		this.#updateIndicatorPanels(seriesData);
+		this.#updateRulerTool({ logical, point, sourceEvent });
+	}
+
+	#updateChartInfoPanel(candlestick) {
+		this.chartInfoPanel.update(candlestick);
+	}
+
+	#updateIndicatorPanels(seriesData) {
 		const indicators = Object.fromEntries(
 			[...this.#series.indicators].map(([key, series]) => [
 				key,
@@ -342,8 +457,12 @@ export class Chart extends BaseComponent {
 			]),
 		);
 
-		this.chartInfoPanel.update(candlestick);
-		this.indicatorsInfoPanel.update(indicators);
+		this.#indicatorPanels.forEach((panel) => {
+			panel.update(indicators);
+		});
+	}
+
+	#updateRulerTool({ logical, point, sourceEvent }) {
 		this.rulerTool.update({
 			logical,
 			point,

@@ -10,6 +10,13 @@ export const getChartOptions = () => {
 			},
 			textColor: getCssVariable('--color-text-primary') || '#292121',
 			fontFamily: 'system-ui, sans-serif',
+			panes: {
+				separatorColor:
+					getCssVariable('--color-border-secondary') || '#e0e3eb',
+				separatorHoverColor:
+					getCssVariable('--color-chart-separator-hover') ||
+					'rgb(224 227 235 / 20%)',
+			},
 			attributionLogo: false,
 		},
 		rightPriceScale: {

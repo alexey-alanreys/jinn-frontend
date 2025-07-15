@@ -1,10 +1,21 @@
 .indicators-info-panel {
 	position: absolute;
 	z-index: 3;
-	top: 40px;
-	left: 12px;
+	left: 6px;
 	display: flex;
 	gap: 6px;
+	padding: 4px 6px;
 	font-size: 1.4rem;
+	background-color: var(--color-chart-bg-info-panels);
+	border-radius: 6px;
+	backdrop-filter: blur(0.5px);
 	pointer-events: none;
+
+	&.primary {
+		top: 40px;
+	}
+
+	&.secondary {
+		top: 10px;
+	}
 }
