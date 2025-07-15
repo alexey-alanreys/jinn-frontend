@@ -11,6 +11,7 @@ export class ParamsItem extends BaseComponent {
 	static componentName = 'ParamsItem';
 
 	#$element;
+	#$label;
 	#$input;
 
 	#initialState = {
@@ -44,8 +45,9 @@ export class ParamsItem extends BaseComponent {
 	}
 
 	render() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
-		this.#$element = $Q(this.element);
+		this.#initDOM();
+		this.#setupInitialState();
+
 		return this.element;
 	}
 
@@ -60,18 +62,17 @@ export class ParamsItem extends BaseComponent {
 			this.#$element.attr('data-group', group);
 		}
 
-		this.#$element.find('label').attr('for', id).text(title);
-		this.#$input = this.#$element.find('input').attr('id', id);
+		this.#$label.attr('for', id).text(title);
+		this.#$input.attr('id', id);
 
 		if (typeof value === 'number') {
-			this.#$input.attr('type', 'number');
+			this.#$input.attr('type', 'number').attr('step', calculateStep(value));
 			this.#$input.element.value = value;
-
-			const step = calculateStep(value);
-			this.#$input.attr('step', step);
+			this.#$element.find('[data-ref="numberStepper"]').css('display', 'flex');
 		} else if (typeof value === 'boolean') {
 			this.#$input.attr('type', 'checkbox');
 			this.#$input.element.checked = !!value;
+			this.#$element.find('[data-ref="numberStepper"]').css('display', 'none');
 		}
 	}
 
@@ -81,5 +82,57 @@ export class ParamsItem extends BaseComponent {
 
 	rollback() {
 		this.update(this.#initialState);
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+
+		this.#$element = $Q(this.element);
+		this.#$label = this.#$element.find('label');
+		this.#$input = this.#$element.find('input');
+
+		return this.element;
+	}
+
+	#setupInitialState() {
+		this.#$element
+			.find('[data-ref="stepperUp"]')
+			.click(this.#handleStepperUp.bind(this));
+		this.#$element
+			.find('[data-ref="stepperDown"]')
+			.click(this.#handleStepperDown.bind(this));
+	}
+
+	#handleStepperUp(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		if (this.#$input.element.type !== 'number') return;
+
+		const currentValue = this.#$input.element.valueAsNumber || 0;
+		const step = parseFloat(this.#$input.attr('step')) || 1;
+		const newValue = currentValue + step;
+
+		this.#$input.element.value = newValue;
+		this.#triggerChange();
+	}
+
+	#handleStepperDown(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		if (this.#$input.element.type !== 'number') return;
+
+		const currentValue = this.#$input.element.valueAsNumber || 0;
+		const step = parseFloat(this.#$input.attr('step')) || 1;
+		const newValue = currentValue - step;
+
+		this.#$input.element.value = newValue;
+		this.#triggerChange();
+	}
+
+	#triggerChange() {
+		const changeEvent = new Event('change', { bubbles: true });
+		this.#$input.element.dispatchEvent(changeEvent);
 	}
 }
