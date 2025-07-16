@@ -51,12 +51,12 @@ export class Chart extends BaseComponent {
 	#data = {
 		candlesticks: null,
 		indicators: null,
-		markers: null,
+		deals: null,
 	};
 	#series = {
 		candlestick: null,
 		indicators: new Map(),
-		markers: null,
+		deals: null,
 	};
 	#indicatorPanels = new Map();
 	#visibleRange = DATA_BATCH_SIZE;
@@ -167,7 +167,7 @@ export class Chart extends BaseComponent {
 			await Promise.all([
 				this.#loadCandlesticks(),
 				this.#loadIndicators(),
-				this.#loadMarkers(),
+				this.#loadDeals(),
 			]);
 		} catch (error) {
 			console.error('Error loading chart data.', error);
@@ -186,8 +186,8 @@ export class Chart extends BaseComponent {
 		);
 	}
 
-	async #loadMarkers() {
-		this.#data.markers = await chartService.getMarkers(
+	async #loadDeals() {
+		this.#data.deals = await chartService.getDeals(
 			stateService.get('context').id,
 		);
 	}
@@ -202,7 +202,7 @@ export class Chart extends BaseComponent {
 	#removeSeries() {
 		this.#removeCandlestickSeries();
 		this.#removeIndicatorSeries();
-		this.#clearMarkers();
+		this.#clearDeals();
 		this.#removeDrawings();
 	}
 
@@ -222,8 +222,8 @@ export class Chart extends BaseComponent {
 		this.#series.indicators.clear();
 	}
 
-	#clearMarkers() {
-		this.#series.markers = null;
+	#clearDeals() {
+		this.#series.deals = null;
 	}
 
 	#removeDrawings() {
@@ -366,7 +366,7 @@ export class Chart extends BaseComponent {
 
 		this.#updateCandlesticks();
 		this.#updateIndicators();
-		this.#updateMarkers();
+		this.#updateDeals();
 	}
 
 	#updateCandlesticks() {
@@ -382,21 +382,21 @@ export class Chart extends BaseComponent {
 		});
 	}
 
-	#updateMarkers() {
-		if (!this.#data.markers) return;
+	#updateDeals() {
+		if (!this.#data.deals) return;
 
 		const startTime = this.#series.candlestick.data()[0].time;
-		const visibleMarkers = this.#data.markers.filter(
-			(marker) => marker.time >= startTime,
+		const visibleDeals = this.#data.deals.filter(
+			(deal) => deal.time >= startTime,
 		);
 
-		if (!this.#series.markers) {
-			this.#series.markers = createSeriesMarkers(
+		if (!this.#series.deals) {
+			this.#series.deals = createSeriesMarkers(
 				this.#series.candlestick,
-				visibleMarkers,
+				visibleDeals,
 			);
 		} else {
-			this.#series.markers.setMarkers(visibleMarkers);
+			this.#series.deals.setMarkers(visibleDeals);
 		}
 	}
 

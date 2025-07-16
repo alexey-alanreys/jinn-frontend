@@ -41,39 +41,20 @@ class ChartService extends BaseService {
 	}
 
 	/**
-	 * Fetches trade markers (entry/exit points) for chart visualization.
+	 * Fetches deals (entry/exit points) for chart visualization.
 	 *
 	 * @param {string} contextId Strategy context identifier.
-	 * @returns {Promise<Array>} Resolves with formatted trade markers.
+	 * @returns {Promise<Array>} Resolves with formatted deals.
 	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	async getMarkers(contextId) {
+	async getDeals(contextId) {
 		this._validateRequired({ contextId }, 'contextId is required');
 
 		return this._executeRequest({
-			path: `/chart/markers/${contextId}`,
+			path: `/chart/deals/${contextId}`,
 			method: 'GET',
 			errorMessage: 'Не удалось загрузить маркеры сделок',
 		});
-	}
-
-	/**
-	 * Fetches all chart data (klines, indicators, markers) in a single request.
-	 *
-	 * @param {string} contextId Strategy context identifier.
-	 * @returns {Promise<Object>} Resolves with all chart data.
-	 * @throws {Error} If validation fails or request errors occur.
-	 */
-	async getAllChartData(contextId) {
-		this._validateRequired({ contextId }, 'contextId is required');
-
-		const [klines, indicators, markers] = await Promise.all([
-			this.getKlines(contextId),
-			this.getIndicators(contextId),
-			this.getMarkers(contextId),
-		]);
-
-		return { klines, indicators, markers };
 	}
 }
 
