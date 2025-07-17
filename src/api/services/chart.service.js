@@ -19,7 +19,7 @@ class ChartService extends BaseService {
 		return this._executeRequest({
 			path: `/chart/klines/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить данные свечей',
+			errorMessage: 'Failed to load candlestick data',
 		});
 	}
 
@@ -36,7 +36,7 @@ class ChartService extends BaseService {
 		return this._executeRequest({
 			path: `/chart/indicators/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить данные индикаторов',
+			errorMessage: 'Failed to load indicator data',
 		});
 	}
 
@@ -53,7 +53,7 @@ class ChartService extends BaseService {
 		return this._executeRequest({
 			path: `/chart/deals/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить маркеры сделок',
+			errorMessage: 'Failed to load deal markers',
 		});
 	}
 }

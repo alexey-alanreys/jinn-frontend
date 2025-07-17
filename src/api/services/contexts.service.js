@@ -17,7 +17,7 @@ class ContextsService extends BaseService {
 		return this._executeRequest({
 			path: '/contexts',
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить список стратегий',
+			errorMessage: 'Failed to load strategy list',
 		});
 	}
 
@@ -34,7 +34,7 @@ class ContextsService extends BaseService {
 		return this._executeRequest({
 			path: `/contexts/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить данные стратегии',
+			errorMessage: 'Failed to load strategy data',
 		});
 	}
 
@@ -57,7 +57,7 @@ class ContextsService extends BaseService {
 			path: `/contexts/${contextId}`,
 			method: 'PATCH',
 			body: { param, value },
-			errorMessage: 'Не удалось изменить параметр стратегии',
+			errorMessage: 'Failed to update strategy parameter',
 		});
 	}
 
@@ -74,7 +74,7 @@ class ContextsService extends BaseService {
 		return this._executeRequest({
 			path: `/contexts/${contextId}`,
 			method: 'DELETE',
-			errorMessage: 'Не удалось удалить стратегию',
+			errorMessage: 'Failed to delete strategy',
 		});
 	}
 
@@ -89,7 +89,7 @@ class ContextsService extends BaseService {
 		return this._executeRequest({
 			path: '/contexts/updates',
 			method: 'GET',
-			errorMessage: 'Не удалось получить список обновлений',
+			errorMessage: 'Failed to fetch updates list',
 		});
 	}
 }

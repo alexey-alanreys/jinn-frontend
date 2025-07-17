@@ -19,7 +19,7 @@ class ReportService extends BaseService {
 		return this._executeRequest({
 			path: `/report/overview/${contextId}/metrics`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить метрики отчёта',
+			errorMessage: 'Failed to load report metrics',
 		});
 	}
 
@@ -36,7 +36,7 @@ class ReportService extends BaseService {
 		return this._executeRequest({
 			path: `/report/overview/${contextId}/equity`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить equity отчёта',
+			errorMessage: 'Failed to load report equity',
 		});
 	}
 
@@ -53,7 +53,7 @@ class ReportService extends BaseService {
 		return this._executeRequest({
 			path: `/report/metrics/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить метрики отчёта',
+			errorMessage: 'Failed to load report metrics',
 		});
 	}
 
@@ -70,7 +70,7 @@ class ReportService extends BaseService {
 		return this._executeRequest({
 			path: `/report/trades/${contextId}`,
 			method: 'GET',
-			errorMessage: 'Не удалось загрузить сделки отчёта',
+			errorMessage: 'Failed to load report trades',
 		});
 	}
 }

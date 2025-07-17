@@ -70,7 +70,7 @@ export class TrendlineToolButton extends BaseComponent {
 	#activate() {
 		this.#$element.data('active', 'true');
 		this.#subscribeToChart();
-		notificationService.show('info', 'Выберите две точки на графике');
+		notificationService.show('info', 'Select two points on the chart');
 	}
 
 	#subscribeToChart() {
@@ -99,7 +99,7 @@ export class TrendlineToolButton extends BaseComponent {
 		if (!x) {
 			notificationService.show(
 				'warning',
-				'Нельзя построить линию за пределами графика',
+				'Cannot draw a line outside the chart area',
 			);
 			this.deactivate();
 			return;
@@ -111,10 +111,7 @@ export class TrendlineToolButton extends BaseComponent {
 		}
 
 		if (x === this.#selectedPoints[0].time) {
-			notificationService.show(
-				'warning',
-				'Нельзя построить вертикальную линию',
-			);
+			notificationService.show('warning', 'Cannot draw a vertical line');
 			this.deactivate();
 			return;
 		}

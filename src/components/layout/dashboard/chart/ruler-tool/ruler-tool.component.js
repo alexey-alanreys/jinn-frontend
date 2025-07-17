@@ -227,6 +227,6 @@ export class RulerTool extends BaseComponent {
 
 	#formatBarDistance(chartX) {
 		const barDistance = chartX - this.#startParams.chartX;
-		return `Бары: ${barDistance.toFixed(0)}`;
+		return `${barDistance.toFixed(0)} bars`;
 	}
 }

@@ -97,10 +97,7 @@ export class StrategiesTab extends BaseComponent {
 			const contexts = stateService.get('contexts');
 
 			if (Object.keys(contexts).length === 1) {
-				notificationService.show(
-					'warning',
-					'Нельзя удалить последнюю стратегию',
-				);
+				notificationService.show('warning', 'Cannot delete the last strategy');
 				return;
 			}
 
@@ -118,7 +115,7 @@ export class StrategiesTab extends BaseComponent {
 			this.#items.get(contextId).remove();
 			this.#items.delete(contextId);
 
-			notificationService.show('success', 'Стратегия успешно удалена');
+			notificationService.show('success', 'Strategy deleted successfully');
 		} catch (error) {
 			console.error('Failed to remove strategy context.', error);
 		}

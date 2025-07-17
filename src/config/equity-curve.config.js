@@ -43,10 +43,7 @@ export const getEquityCurveOptions = () => {
 				const date = new Date(time * 1000);
 
 				const year = String(date.getUTCFullYear());
-				const month = date
-					.toLocaleString('ru-RU', { month: 'short' })
-					.replace('.', '')
-					.slice(0, 3);
+				const month = date.toLocaleString('en-US', { month: 'short' });
 				const day = String(date.getUTCDate());
 
 				if (tickMarkType === 0) {

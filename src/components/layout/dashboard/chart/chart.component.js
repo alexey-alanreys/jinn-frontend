@@ -321,10 +321,10 @@ export class Chart extends BaseComponent {
 
 	#applyCandlestickOptions() {
 		const { precision, minMove } = stateService.get('context');
-		const сandlestickOptions = getCandlestickOptions();
+		const candlestickOptions = getCandlestickOptions();
 
 		this.#series.candlestick.applyOptions({
-			...сandlestickOptions,
+			...candlestickOptions,
 			priceFormat: {
 				type: 'price',
 				precision,

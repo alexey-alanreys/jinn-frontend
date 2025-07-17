@@ -113,7 +113,7 @@ export class AlertsTab extends BaseComponent {
 			this.#items.get(alertId).remove();
 			this.#items.delete(alertId);
 
-			notificationService.show('success', 'Оповещение успешно удалено');
+			notificationService.show('success', 'Alert deleted successfully');
 		} catch (error) {
 			console.error('Failed to remove alert.', error);
 		}

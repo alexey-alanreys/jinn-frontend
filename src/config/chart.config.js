@@ -44,7 +44,7 @@ export const getChartOptions = () => {
 			horzLines: { color: getCssVariable('--color-chart-grid') || '#edf0ee' },
 		},
 		timeScale: {
-			rightOffset: 4,
+			rightOffset: 10,
 			barSpacing: 6,
 			minBarSpacing: 2,
 			borderVisible: false,
@@ -64,10 +64,7 @@ export const getChartOptions = () => {
 				}
 
 				if (day === 1 && hours === 0 && minutes === 0) {
-					return date
-						.toLocaleString('ru-RU', { month: 'short' })
-						.replace('.', '')
-						.slice(0, 3);
+					return date.toLocaleString('en-US', { month: 'short' });
 				}
 
 				if (hours === 0 && minutes === 0) {
@@ -84,16 +81,9 @@ export const getChartOptions = () => {
 			timeFormatter: (time) => {
 				const date = new Date(time * 1000);
 
-				const dayOfWeek = date
-					.toLocaleString('ru-RU', { weekday: 'short' })
-					.toLowerCase();
-				const day = date.getUTCDate();
-				const month = date
-					.toLocaleString('ru-RU', {
-						month: 'short',
-					})
-					.replace('.', '')
-					.slice(0, 3);
+				const dayOfWeek = date.toLocaleString('en-US', { weekday: 'short' });
+				const day = String(date.getUTCDate()).padStart(2, '0');
+				const month = date.toLocaleString('en-US', { month: 'short' });
 				const year = date.toLocaleString('ru-RU', { year: '2-digit' });
 				const hours = String(date.getUTCHours()).padStart(2, '0');
 				const minutes = String(date.getUTCMinutes()).padStart(2, '0');

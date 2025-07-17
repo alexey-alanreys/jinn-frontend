@@ -20,7 +20,7 @@ class AlertsService extends BaseService {
 			path: '/alerts',
 			method: 'GET',
 			queryParams,
-			errorMessage: 'Не удалось загрузить оповещения',
+			errorMessage: 'Failed to load alerts',
 		});
 	}
 
@@ -37,7 +37,7 @@ class AlertsService extends BaseService {
 		return this._executeRequest({
 			path: `/alerts/${alertId}`,
 			method: 'DELETE',
-			errorMessage: 'Не удалось удалить оповещение',
+			errorMessage: 'Failed to delete alert',
 		});
 	}
 
@@ -51,7 +51,7 @@ class AlertsService extends BaseService {
 		return this._executeRequest({
 			path: '/alerts/new',
 			method: 'GET',
-			errorMessage: 'Не удалось получить новые оповещения',
+			errorMessage: 'Failed to fetch new alerts',
 		});
 	}
 }

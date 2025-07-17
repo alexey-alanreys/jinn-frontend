@@ -4,12 +4,12 @@ export const ALERTS_POLLING_INTERVAL = 5000;
 
 export const ALERT_COLORS = {
 	status: {
-		исполнен: 'green',
-		'ожидает исполнения': 'gray',
-		отменён: 'red',
+		executed: 'green',
+		pending: 'gray',
+		cancelled: 'red',
 	},
 	side: {
-		покупка: 'green',
-		продажа: 'red',
+		buy: 'green',
+		sell: 'red',
 	},
 };
