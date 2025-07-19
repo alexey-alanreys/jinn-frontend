@@ -50,24 +50,7 @@ export default [
 			'import/no-unresolved': ['error', { ignore: ['\\?raw$'] }],
 			'import/default': 'error',
 			'import/named': 'off',
-			'import/order': [
-				'warn',
-				{
-					groups: ['builtin', 'external', 'internal'],
-					pathGroups: [
-						{
-							pattern: '@/**',
-							group: 'internal',
-						},
-					],
-					pathGroupsExcludedImportTypes: ['builtin'],
-					'newlines-between': 'always',
-					alphabetize: {
-						order: 'asc',
-						caseInsensitive: true,
-					},
-				},
-			],
+			'import/order': 'off',
 
 			// Code style rules
 			indent: 'off',
