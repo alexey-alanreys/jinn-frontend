@@ -2,11 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { MetricsTabButton } from './metrics-tab-button/metrics-tab-button.component';
-import { OverviewTabButton } from './overview-tab-button/overview-tab-button.component';
+import { ReportTabButton } from '@/components/ui/report-tab-button/report-tab-button.component';
+
 import styles from './report-header.module.css';
 import templateHTML from './report-header.template.html?raw';
-import { TradesTabButton } from './trades-tab-button/trades-tab-button.component';
 
 export class ReportHeader extends BaseComponent {
 	static COMPONENT_NAME = 'ReportHeader';
@@ -42,25 +41,28 @@ export class ReportHeader extends BaseComponent {
 
 	#initComponents() {
 		this.buttons = {
-			overview: new OverviewTabButton(),
-			metrics: new MetricsTabButton(),
-			trades: new TradesTabButton(),
+			overviewMetrics: new ReportTabButton({ title: 'Overview' }),
+			performanceMetrics: new ReportTabButton({ title: 'Performance' }),
+			tradeMetrics: new ReportTabButton({ title: 'Trade Analytics' }),
+			riskMetrics: new ReportTabButton({ title: 'Risk & Ratios' }),
+			trades: new ReportTabButton({ title: 'Trade Log' }),
 		};
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[
-				this.buttons.overview,
-				this.buttons.metrics,
-				this.buttons.trades,
-				this.toggleVisibilityButton,
-				this.toggleExpansionButton,
-			],
+			[this.toggleVisibilityButton, this.toggleExpansionButton],
 			styles,
 		);
 		this.#$element = $Q(this.element);
+
+		const $tabButtons = this.#$element.find('[data-ref="tabButtons"]');
+		Object.values(this.buttons).forEach((button) => {
+			$tabButtons.append(button.render());
+		});
+
+		this.buttons.overviewMetrics.activate();
 	}
 
 	#setActiveOnly(buttonName) {

@@ -1,17 +1,17 @@
-import { reportService } from '@/api/services/report.service';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { MetricsItem } from '@/components/ui/metrics-item/metrics-item.component';
 
-import { MetricsItem } from './metrics-item/metrics-item.component';
-import styles from './metrics-tab.module.css';
-import templateHTML from './metrics-tab.template.html?raw';
+import { reportService } from '@/api/services/report.service';
 
+import styles from './risk-metrics-tab.module.css';
+import templateHTML from './risk-metrics-tab.template.html?raw';
 
-export class MetricsTab extends BaseComponent {
-	static COMPONENT_NAME = 'MetricsTab';
+export class RiskMetricsTab extends BaseComponent {
+	static COMPONENT_NAME = 'RiskMetricsTab';
 
 	#$element;
 	#items = new Map();
@@ -25,7 +25,7 @@ export class MetricsTab extends BaseComponent {
 
 	async update(context) {
 		try {
-			const metrics = await reportService.getPerformanceMetrics(context.id);
+			const metrics = await reportService.getRiskMetrics(context.id);
 			const $items = this.#$element.find('[data-ref="metricsItems"]');
 
 			metrics.forEach((metric, index) => {
