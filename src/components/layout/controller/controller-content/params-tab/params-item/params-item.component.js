@@ -1,7 +1,6 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
-
 import { calculateStep } from '@/utils/number-step.util';
 
 import styles from './params-item.module.css';

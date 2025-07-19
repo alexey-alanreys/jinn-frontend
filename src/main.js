@@ -1,10 +1,10 @@
+import { Layout } from '@/components/layout/layout.component';
+import { Notification } from '@/components/notification/notification.component';
 import { $Q } from '@/core/libs/query.lib';
 import { automationService } from '@/core/services/automation.service';
 import { initService } from '@/core/services/init.service';
 import { notificationService } from '@/core/services/notification.service';
 
-import { Layout } from '@/components/layout/layout.component';
-import { Notification } from '@/components/notification/notification.component';
 
 import '@/styles/global.css';
 

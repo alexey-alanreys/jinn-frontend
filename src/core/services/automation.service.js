@@ -1,6 +1,6 @@
+import { contextsService } from '@/api/services/contexts.service.js';
 import { stateService } from '@/core/services/state.service.js';
 
-import { contextsService } from '@/api/services/contexts.service.js';
 
 /**
  * @module automationService

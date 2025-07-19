@@ -1,14 +1,14 @@
+import { contextsService } from '@/api/services/contexts.service';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { contextsService } from '@/api/services/contexts.service';
 
+import { ParamsItem } from './params-item/params-item.component';
 import styles from './params-tab.module.css';
 import templateHTML from './params-tab.template.html?raw';
 
-import { ParamsItem } from './params-item/params-item.component';
 
 export class ParamsTab extends BaseComponent {
 	static COMPONENT_NAME = 'ParamsTab';

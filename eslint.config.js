@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import pluginImport from 'eslint-plugin-import';
 import globals from 'globals';
 
 export default [
@@ -9,6 +10,7 @@ export default [
 	},
 	{
 		files: ['**/*.js'],
+		plugins: { import: pluginImport },
 		languageOptions: {
 			ecmaVersion: 'latest',
 			sourceType: 'module',
@@ -44,6 +46,29 @@ export default [
 			'no-var': 'error',
 			'prefer-const': 'warn',
 
+			// Import plugin rules
+			'import/no-unresolved': ['error', { ignore: ['\\?raw$'] }],
+			'import/default': 'error',
+			'import/named': 'off',
+			'import/order': [
+				'warn',
+				{
+					groups: ['builtin', 'external', 'internal'],
+					pathGroups: [
+						{
+							pattern: '@/**',
+							group: 'internal',
+						},
+					],
+					pathGroupsExcludedImportTypes: ['builtin'],
+					'newlines-between': 'always',
+					alphabetize: {
+						order: 'asc',
+						caseInsensitive: true,
+					},
+				},
+			],
+
 			// Code style rules
 			indent: 'off',
 			'no-mixed-spaces-and-tabs': 'off',
@@ -60,9 +85,13 @@ export default [
 		},
 		settings: {
 			'import/resolver': {
+				node: {
+					extensions: ['.js', '.mjs', '.jsx', '.ts', '.tsx'],
+					exportConditions: ['production', 'import', 'default'],
+				},
 				alias: {
 					map: [['@', './src']],
-					extensions: ['.js'],
+					extensions: ['.js', '.jsx', '.ts', '.tsx'],
 				},
 			},
 		},

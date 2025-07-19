@@ -1,14 +1,14 @@
+import { reportService } from '@/api/services/report.service';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { reportService } from '@/api/services/report.service';
 
+import { MetricsItem } from './metrics-item/metrics-item.component';
 import styles from './metrics-tab.module.css';
 import templateHTML from './metrics-tab.template.html?raw';
 
-import { MetricsItem } from './metrics-item/metrics-item.component';
 
 export class MetricsTab extends BaseComponent {
 	static COMPONENT_NAME = 'MetricsTab';

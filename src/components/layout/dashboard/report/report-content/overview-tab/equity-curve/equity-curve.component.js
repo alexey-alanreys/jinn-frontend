@@ -1,21 +1,20 @@
 import { AreaSeries, createChart } from 'lightweight-charts';
 
+import {
+	getAreaOptions,
+	getEquityCurveOptions,
+} from '@/config/equity-curve.config';
+import { MARKER_RANGE_THRESHOLD } from '@/constants/equity-curve.constants';
+import { TOOLTIP_MIN_LEFT } from '@/constants/equity-tooltip.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import {
-	getAreaOptions,
-	getEquityCurveOptions,
-} from '@/config/equity-curve.config';
 
-import { MARKER_RANGE_THRESHOLD } from '@/constants/equity-curve.constants';
-import { TOOLTIP_MIN_LEFT } from '@/constants/equity-tooltip.constants';
 
 import styles from './equity-curve.module.css';
 import templateHTML from './equity-curve.template.html?raw';
-
 import { EquityTooltip } from './equity-tooltip/equity-tooltip.component';
 
 export class EquityCurve extends BaseComponent {

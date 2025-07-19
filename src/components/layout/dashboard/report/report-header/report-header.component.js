@@ -2,11 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './report-header.module.css';
-import templateHTML from './report-header.template.html?raw';
-
 import { MetricsTabButton } from './metrics-tab-button/metrics-tab-button.component';
 import { OverviewTabButton } from './overview-tab-button/overview-tab-button.component';
+import styles from './report-header.module.css';
+import templateHTML from './report-header.template.html?raw';
 import { TradesTabButton } from './trades-tab-button/trades-tab-button.component';
 
 export class ReportHeader extends BaseComponent {

@@ -1,15 +1,15 @@
+import { reportService } from '@/api/services/report.service';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { reportService } from '@/api/services/report.service';
-
-import styles from './trades-tab.module.css';
-import templateHTML from './trades-tab.template.html?raw';
 
 import { ToggleSortingButton } from './toggle-sorting-button/toggle-sorting-button.component';
 import { TradesItem } from './trades-item/trades-item.component';
+import styles from './trades-tab.module.css';
+import templateHTML from './trades-tab.template.html?raw';
+
 
 export class TradesTab extends BaseComponent {
 	static COMPONENT_NAME = 'TradesTab';

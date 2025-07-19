@@ -1,10 +1,9 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { renderService } from '@/core/services/render.service';
 
+import { AlertsTabButton } from './alerts-tab-button/alerts-tab-button.component';
 import styles from './controller-sidebar.module.css';
 import templateHTML from './controller-sidebar.template.html?raw';
-
-import { AlertsTabButton } from './alerts-tab-button/alerts-tab-button.component';
 import { ParamsTabButton } from './params-tab-button/params-tab-button.component';
 import { StrategiesTabButton } from './strategies-tab-button/strategies-tab-button.component';
 import { ThemeButton } from './theme-button/theme-button.component';

@@ -1,5 +1,6 @@
 import { LineSeries } from 'lightweight-charts';
 
+import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { notificationService } from '@/core/services/notification.service';
@@ -7,7 +8,6 @@ import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
-import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import styles from './trendline-tool-button.module.css';
 import templateHTML from './trendline-tool-button.template.html?raw';

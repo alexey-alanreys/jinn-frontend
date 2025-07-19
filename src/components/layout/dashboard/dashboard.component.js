@@ -2,10 +2,9 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
+import { Chart } from './chart/chart.component';
 import styles from './dashboard.module.css';
 import templateHTML from './dashboard.template.html?raw';
-
-import { Chart } from './chart/chart.component';
 import { ReportHeader } from './report/report-header/report-header.component';
 import { ToggleExpansionButton } from './report/report-header/toggle-expansion-button/toggle-expansion-button.component';
 import { ToggleVisibilityButton } from './report/report-header/toggle-visibility-button/toggle-visibility-button.component';

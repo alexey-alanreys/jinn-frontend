@@ -1,22 +1,21 @@
+import { alertsService } from '@/api/services/alerts.service';
+import { SERVER_MODE } from '@/config/mode.config';
+import {
+	ALERTS_FETCH_LIMIT,
+	ALERTS_POLLING_INTERVAL,
+} from '@/constants/alerts.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { SERVER_MODE } from '@/config/mode.config';
 
-import {
-	ALERTS_FETCH_LIMIT,
-	ALERTS_POLLING_INTERVAL,
-} from '@/constants/alerts.constants';
 
-import { alertsService } from '@/api/services/alerts.service';
-
+import { AlertsItem } from './alerts-item/alerts-item.component';
 import styles from './alerts-tab.module.css';
 import templateHTML from './alerts-tab.template.html?raw';
 
-import { AlertsItem } from './alerts-item/alerts-item.component';
 
 export class AlertsTab extends BaseComponent {
 	static COMPONENT_NAME = 'AlertsTab';

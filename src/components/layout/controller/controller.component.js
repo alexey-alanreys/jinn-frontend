@@ -1,11 +1,11 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { renderService } from '@/core/services/render.service';
 
+import { ControllerContent } from './controller-content/controller-content.component';
+import { ControllerSidebar } from './controller-sidebar/controller-sidebar.component';
 import styles from './controller.module.css';
 import templateHTML from './controller.template.html?raw';
 
-import { ControllerContent } from './controller-content/controller-content.component';
-import { ControllerSidebar } from './controller-sidebar/controller-sidebar.component';
 
 export class Controller extends BaseComponent {
 	static COMPONENT_NAME = 'Controller';

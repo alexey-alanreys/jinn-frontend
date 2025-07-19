@@ -1,14 +1,14 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './toolbox.module.css';
-import templateHTML from './toolbox.template.html?raw';
 
 import { ClearDrawingsButton } from './clear-drawings-button/clear-drawings-button.component';
 import { FullScreenButton } from './full-screen-button/full-screen-button.component';
 import { HideDrawingsButton } from './hide-drawings-button/hide-drawings-button.component';
 import { RulerToolButton } from './ruler-tool-button/ruler-tool-button.component';
 import { ScreenshotButton } from './screenshot-button/screenshot-button.component';
+import styles from './toolbox.module.css';
+import templateHTML from './toolbox.template.html?raw';
 import { TrendlineToolButton } from './trendline-tool-button/trendline-tool-button.component';
 
 export class Toolbox extends BaseComponent {

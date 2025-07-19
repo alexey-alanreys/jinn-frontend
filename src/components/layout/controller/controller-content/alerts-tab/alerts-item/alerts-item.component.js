@@ -1,8 +1,8 @@
+import { ALERT_COLORS } from '@/constants/alerts.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { ALERT_COLORS } from '@/constants/alerts.constants';
 
 import styles from './alerts-item.module.css';
 import templateHTML from './alerts-item.template.html?raw';

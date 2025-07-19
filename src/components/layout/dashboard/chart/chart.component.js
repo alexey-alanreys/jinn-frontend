@@ -6,32 +6,29 @@ import {
 	createSeriesMarkers,
 } from 'lightweight-charts';
 
+import { chartService } from '@/api/services/chart.service';
+import { Spinner } from '@/components/ui/spinner/spinner.component';
+import {
+	getCandlestickOptions,
+	getChartOptions,
+	getLineOptions,
+} from '@/config/chart.config';
+import {
+	DATA_BATCH_SIZE,
+	VISIBLE_RANGE_PADDING,
+} from '@/constants/chart.constants';
+import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
-import { Spinner } from '@/components/ui/spinner/spinner.component';
 
-import {
-	getCandlestickOptions,
-	getChartOptions,
-	getLineOptions,
-} from '@/config/chart.config';
-
-import {
-	DATA_BATCH_SIZE,
-	VISIBLE_RANGE_PADDING,
-} from '@/constants/chart.constants';
-import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
-
-import { chartService } from '@/api/services/chart.service';
-
-import styles from './chart.module.css';
-import templateHTML from './chart.template.html?raw';
 
 import { ChartInfoPanel } from './chart-info-panel/chart-info-panel.component';
+import styles from './chart.module.css';
+import templateHTML from './chart.template.html?raw';
 import { IndicatorsInfoPanel } from './indicators-info-panel/indicators-info-panel.component';
 import { RulerTool } from './ruler-tool/ruler-tool.component';
 import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-realtime-button.component';

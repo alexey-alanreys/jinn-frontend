@@ -1,7 +1,7 @@
+import { contextsService } from '@/api/services/contexts.service';
 import { stateService } from '@/core/services/state.service.js';
 import { storageService } from '@/core/services/storage.service';
 
-import { contextsService } from '@/api/services/contexts.service';
 
 /**
  * @module initService

@@ -1,4 +1,5 @@
 import path from 'path';
+
 import { defineConfig, loadEnv } from 'vite';
 import string from 'vite-plugin-string';
 
