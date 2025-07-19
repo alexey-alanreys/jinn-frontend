@@ -39,12 +39,11 @@ export class OverviewTab extends BaseComponent {
 	async update(context) {
 		try {
 			const metrics = await reportService.getOverviewMetrics(context.id);
-			const equity = await reportService.getOverviewEquity(context.id);
 
-			this.overviewMetrics.update(metrics);
-			this.equityCurve.update(equity);
+			this.overviewMetrics.update(metrics.primary);
+			this.equityCurve.update(metrics.equity);
 
-			if (!!equity.length) {
+			if (!!metrics.equity.length) {
 				this.emptyState.hide();
 			} else {
 				this.emptyState.show();

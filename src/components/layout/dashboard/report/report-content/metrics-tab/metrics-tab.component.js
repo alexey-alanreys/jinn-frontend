@@ -25,7 +25,7 @@ export class MetricsTab extends BaseComponent {
 
 	async update(context) {
 		try {
-			const metrics = await reportService.getMetrics(context.id);
+			const metrics = await reportService.getPerformanceMetrics(context.id);
 			const $items = this.#$element.find('[data-ref="metricsItems"]');
 
 			metrics.forEach((metric, index) => {

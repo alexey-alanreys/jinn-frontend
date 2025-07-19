@@ -7,58 +7,75 @@ import { BaseService } from '@/api/core/base.service';
  */
 class ReportService extends BaseService {
 	/**
-	 * Fetches overview metrics data.
+	 * Fetches overview metrics.
 	 *
 	 * @param {string} contextId Strategy context identifier.
-	 * @returns {Promise<Object>} Resolves with overview metrics data.
+	 * @returns {Promise<Object>} Resolves with overview metrics.
 	 * @throws {Error} If validation fails or request errors occur.
 	 */
 	async getOverviewMetrics(contextId) {
 		this._validateRequired({ contextId }, 'contextId is required');
 
 		return this._executeRequest({
-			path: `/report/overview/${contextId}/metrics`,
+			path: `/report/metrics/${contextId}/overview`,
 			method: 'GET',
-			errorMessage: 'Failed to load report metrics',
+			errorMessage: 'Failed to load overview metrics',
 		});
 	}
 
 	/**
-	 * Fetches overview equity data.
+	 * Fetches performance metrics.
 	 *
 	 * @param {string} contextId Strategy context identifier.
-	 * @returns {Promise<Object>} Resolves with overview equity data.
+	 * @returns {Promise<Object>} Resolves with performance metrics.
 	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	async getOverviewEquity(contextId) {
+	async getPerformanceMetrics(contextId) {
 		this._validateRequired({ contextId }, 'contextId is required');
 
 		return this._executeRequest({
-			path: `/report/overview/${contextId}/equity`,
+			path: `/report/metrics/${contextId}/performance`,
 			method: 'GET',
-			errorMessage: 'Failed to load report equity',
+			errorMessage: 'Failed to load performance metrics',
 		});
 	}
 
 	/**
-	 * Fetches report metrics data.
+	 * Fetches trade-related metrics.
 	 *
 	 * @param {string} contextId Strategy context identifier.
-	 * @returns {Promise<Object>} Resolves with report metrics.
+	 * @returns {Promise<Object>} Resolves with trade-related metrics.
 	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	async getMetrics(contextId) {
+	async getTradeMetrics(contextId) {
 		this._validateRequired({ contextId }, 'contextId is required');
 
 		return this._executeRequest({
-			path: `/report/metrics/${contextId}`,
+			path: `/report/metrics/${contextId}/trades`,
 			method: 'GET',
-			errorMessage: 'Failed to load report metrics',
+			errorMessage: 'Failed to load trade-related metrics',
 		});
 	}
 
 	/**
-	 * Fetches report trades data.
+	 * Fetches risk-related metrics.
+	 *
+	 * @param {string} contextId Strategy context identifier.
+	 * @returns {Promise<Object>} Resolves with risk-related metrics.
+	 * @throws {Error} If validation fails or request errors occur.
+	 */
+	async getRiskMetrics(contextId) {
+		this._validateRequired({ contextId }, 'contextId is required');
+
+		return this._executeRequest({
+			path: `/report/metrics/${contextId}/risk`,
+			method: 'GET',
+			errorMessage: 'Failed to load risk-related metrics',
+		});
+	}
+
+	/**
+	 * Fetches report trades.
 	 *
 	 * @param {string} contextId Strategy context identifier.
 	 * @returns {Promise<Object>} Resolves with report trades.
