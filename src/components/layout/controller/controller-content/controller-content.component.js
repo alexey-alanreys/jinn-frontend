@@ -2,9 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { AlertsTab } from './alerts-tab/alerts-tab.component';
 import styles from './controller-content.module.css';
 import templateHTML from './controller-content.template.html?raw';
+
+import { AlertsTab } from './alerts-tab/alerts-tab.component';
 import { ParamsTab } from './params-tab/params-tab.component';
 import { StrategiesTab } from './strategies-tab/strategies-tab.component';
 
@@ -47,7 +48,7 @@ export class ControllerContent extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.tabs.strategies, this.tabs.params, this.tabs.alerts],
+			Object.values(this.tabs),
 			styles,
 		);
 		this.#$element = $Q(this.element);

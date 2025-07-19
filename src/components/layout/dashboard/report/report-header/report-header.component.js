@@ -41,9 +41,11 @@ export class ReportHeader extends BaseComponent {
 
 	#initComponents() {
 		this.buttons = {
-			overview: new ReportTabButton({ title: 'Overview' }),
-			performance: new ReportTabButton({ title: 'Performance' }),
-			trades: new ReportTabButton({ title: 'Trade List' }),
+			overviewMetrics: new ReportTabButton({ title: 'Overview' }),
+			performanceMetrics: new ReportTabButton({ title: 'Performance' }),
+			tradeMetrics: new ReportTabButton({ title: 'Trade Analytics' }),
+			riskMetrics: new ReportTabButton({ title: 'Risk & Ratios' }),
+			trades: new ReportTabButton({ title: 'Trade Log' }),
 		};
 	}
 
@@ -60,7 +62,7 @@ export class ReportHeader extends BaseComponent {
 			$tabButtons.append(button.render());
 		});
 
-		this.buttons.overview.activate();
+		this.buttons.overviewMetrics.activate();
 	}
 
 	#setActiveOnly(buttonName) {

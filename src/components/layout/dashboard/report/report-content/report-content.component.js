@@ -6,6 +6,8 @@ import templateHTML from './report-content.template.html?raw';
 
 import { OverviewMetricsTab } from './overview-metrics-tab/overview-metrics-tab.component';
 import { PerformanceMetricsTab } from './performance-metrics-tab/performance-metrics-tab.component';
+import { RiskMetricsTab } from './risk-metrics-tab/risk-metrics-tab.component';
+import { TradeMetricsTab } from './trade-metrics-tab/trade-metrics-tab.component';
 import { TradesTab } from './trades-tab/trades-tab.component';
 
 export class ReportContent extends BaseComponent {
@@ -26,8 +28,10 @@ export class ReportContent extends BaseComponent {
 
 	#initComponents() {
 		this.tabs = {
-			overview: new OverviewMetricsTab(),
-			performance: new PerformanceMetricsTab(),
+			overviewMetrics: new OverviewMetricsTab(),
+			performanceMetrics: new PerformanceMetricsTab(),
+			tradeMetrics: new TradeMetricsTab(),
+			riskMetrics: new RiskMetricsTab(),
 			trades: new TradesTab(),
 		};
 	}
@@ -35,7 +39,7 @@ export class ReportContent extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.tabs.overview, this.tabs.performance, this.tabs.trades],
+			Object.values(this.tabs),
 			styles,
 		);
 	}
