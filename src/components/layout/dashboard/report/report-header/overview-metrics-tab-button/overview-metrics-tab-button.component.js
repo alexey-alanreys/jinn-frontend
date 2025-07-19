@@ -2,11 +2,11 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './metrics-tab-button.module.css';
-import templateHTML from './metrics-tab-button.template.html?raw';
+import styles from './overview-metrics-tab-button.module.css';
+import templateHTML from './overview-metrics-tab-button.template.html?raw';
 
-export class MetricsTabButton extends BaseComponent {
-	static COMPONENT_NAME = 'MetricsTabButton';
+export class OverviewMetricsTabButton extends BaseComponent {
+	static COMPONENT_NAME = 'OverviewMetricsTabButton';
 
 	#$element;
 
