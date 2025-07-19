@@ -43,7 +43,7 @@ export class OverviewTab extends BaseComponent {
 			this.overviewMetrics.update(metrics.primary);
 			this.equityCurve.update(metrics.equity);
 
-			if (!!metrics.equity.length) {
+			if (metrics.equity.length) {
 				this.emptyState.hide();
 			} else {
 				this.emptyState.show();

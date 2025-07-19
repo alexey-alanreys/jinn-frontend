@@ -43,15 +43,7 @@ export class EquityTooltip extends BaseComponent {
 
 	updateContent({ deal, equity, timestamp }) {
 		const date = new Date(timestamp * 1000);
-
-		const dayOfWeek = date.toLocaleString('en-US', { weekday: 'short' });
-		const month = date.toLocaleString('en-US', { month: 'short' });
-		const day = String(date.getUTCDate()).padStart(2, '0');
-		const year = date.getUTCFullYear();
-		const hours = String(date.getUTCHours()).padStart(2, '0');
-		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-
-		const time = `${dayOfWeek}, ${month} ${day}, ${year}, ${hours}:${minutes}`;
+		const time = date.toLocaleString('en-US', DATE_FMT);
 
 		this.#setText('deal', `${deal}`);
 		this.#setText('equity', `${equity} USDT`);

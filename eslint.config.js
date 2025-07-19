@@ -1,10 +1,11 @@
 import js from '@eslint/js';
+import globals from 'globals';
 
 export default [
 	js.configs.recommended,
 
 	{
-		ignores: ['**/dist/*'],
+		ignores: ['**/dist/*', '**/node_modules/*'],
 	},
 	{
 		files: ['**/*.js'],
@@ -12,40 +13,50 @@ export default [
 			ecmaVersion: 'latest',
 			sourceType: 'module',
 			globals: {
-				globals: {
-					CustomEvent: 'readonly',
-					Document: 'readonly',
-					DOMParser: 'readonly',
-					HTMLElement: 'readonly',
-					__dirname: 'readonly',
-					clearTimeout: 'readonly',
-					console: 'readonly',
-					document: 'readonly',
-					fetch: 'readonly',
-					localStorage: 'readonly',
-					module: 'readonly',
-					process: 'readonly',
-					require: 'readonly',
-					requestAnimationFrame: 'readonly',
-					setTimeout: 'readonly',
-					window: 'readonly',
-				},
+				// Browser globals
+				...Object.fromEntries(
+					Object.entries(globals.browser).map(([key]) => [key, 'readonly']),
+				),
+
+				// Project-specific custom globals
+				_: 'readonly',
+
+				// Node.js globals (e.g., for Vite config)
+				__dirname: 'readonly',
+				module: 'readonly',
+				process: 'readonly',
 			},
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: true,
 		},
 		rules: {
-			'no-console': 'off',
-			'require-jsdoc': 'off',
+			// Core linting rules
+			'no-undef': 'error',
+			'no-unused-vars': [
+				'warn',
+				{
+					argsIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					caughtErrorsIgnorePattern: '^_',
+				},
+			],
+			'no-var': 'error',
+			'prefer-const': 'warn',
+
+			// Code style rules
+			indent: 'off',
+			'no-mixed-spaces-and-tabs': 'off',
 			'no-tabs': 'off',
 			'no-trailing-spaces': 'off',
-			indent: 'off',
-			'no-debugger': 'off',
 			'padded-blocks': 'off',
-			'prefer-default-export': 'off',
+
+			// Functionality rules
+			'no-console': 'off',
+			'no-debugger': 'off',
 			'no-prototype-builtins': 'off',
-			'no-mixed-spaces-and-tabs': 'off',
+			'prefer-default-export': 'off',
+			'require-jsdoc': 'off',
 		},
 		settings: {
 			'import/resolver': {
