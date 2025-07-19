@@ -5,9 +5,10 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-		"lint:css": "yarn stylelint \"**/*.css\" --fix",
 		"lint:js": "yarn eslint . --ext .js --fix",
-		"lint": "yarn lint:js && yarn lint:css"
+		"lint:css": "yarn stylelint \"**/*.css\" --fix",
+		"lint:js:ci": "yarn eslint . --ext .js --max-warnings=0",
+		"lint:css:ci": "yarn stylelint \"**/*.css\" --max-warnings=0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.28.0",
