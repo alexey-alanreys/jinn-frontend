@@ -27,7 +27,7 @@ export class ReportContent extends BaseComponent {
 	#initComponents() {
 		this.tabs = {
 			overview: new OverviewMetricsTab(),
-			metrics: new PerformanceMetricsTab(),
+			performance: new PerformanceMetricsTab(),
 			trades: new TradesTab(),
 		};
 	}
@@ -35,7 +35,7 @@ export class ReportContent extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.tabs.overview, this.tabs.metrics, this.tabs.trades],
+			[this.tabs.overview, this.tabs.performance, this.tabs.trades],
 			styles,
 		);
 	}
