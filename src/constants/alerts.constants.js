@@ -4,7 +4,7 @@ export const ALERTS_POLLING_INTERVAL = 5000;
 
 export const ALERT_COLORS = {
 	status: {
-		executed: 'green',
+		filled: 'green',
 		pending: 'gray',
 		cancelled: 'red',
 	},
