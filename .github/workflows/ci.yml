@@ -19,8 +19,12 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: Install dependencies with retry
+        run: |
+          for i in 1 2 3; do
+            echo "Attempt $i: installing dependencies..."
+            yarn install --frozen-lockfile && break || sleep 20
+          done
 
       - name: Lint JavaScript
         run: yarn lint:js:ci

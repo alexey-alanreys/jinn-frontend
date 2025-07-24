@@ -2,7 +2,7 @@
 
 Official frontend implementation of the Jinn algorithmic trading framework.
 
-This project provides the web-based interface for Jinn and is designed to be built and deployed via the core backend (`jinn-core`).  
+This project provides the web interface for Jinn and is integrated into the core backend (jinn-core).  
 It requires `jinn-core` to be running in order to function properly.
 
 ---
