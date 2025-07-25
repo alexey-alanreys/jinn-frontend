@@ -1,8 +1,8 @@
 .trades-tab {
+	position: relative;
 	display: none;
 	flex: 1;
 	overflow-y: auto;
-	position: relative;
 
 	> .table {
 		display: flex;
@@ -48,9 +48,9 @@
 		}
 
 		> .items {
-			border-top: 1px solid var(--color-border-primary);
 			position: relative;
 			min-height: 100%;
+			border-top: 1px solid var(--color-border-primary);
 		}
 	}
 }
