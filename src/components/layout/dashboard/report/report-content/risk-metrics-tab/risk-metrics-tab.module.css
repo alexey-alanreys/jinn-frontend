@@ -2,7 +2,6 @@
 	display: none;
 	flex: 1;
 	overflow-y: auto;
-	contain: strict;
 
 	> .table {
 		display: flex;
