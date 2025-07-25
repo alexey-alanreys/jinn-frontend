@@ -5,6 +5,5 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: stretch;
-	contain: strict;
 	overflow: hidden;
 }
