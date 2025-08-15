@@ -1,3 +1,5 @@
+import { toSnakeCaseParams } from '@/utils/to-snake-case-params.util';
+
 import { BaseService } from '@/api/core/base.service';
 
 /**
@@ -7,19 +9,33 @@ import { BaseService } from '@/api/core/base.service';
  */
 class AlertsService extends BaseService {
 	/**
-	 * Fetches all active strategy alerts.
+	 * Fetches active strategy alerts with optional filtering.
 	 *
-	 * @param {number} [limit] Maximum number of recent alerts to return.
-	 * @returns {Promise<Object>} Resolves with dictionary of active alerts.
-	 * @throws {Error} If request errors occur.
+	 * @param {Object} [options] Request options.
+	 * @param {number} [options.limit] Maximum number of recent alerts to return.
+	 * @param {string} [options.sinceId] Alert identifier for filtering.
+	 *        Only alerts created after this ID will be returned.
+	 * @returns {Promise<Object>} Resolves with dictionary of alerts.
+	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	async getAll(limit) {
-		const queryParams = limit ? { limit } : undefined;
+	async get({ limit, sinceId } = {}) {
+		if (sinceId) {
+			this._validateRequired({ sinceId }, 'sinceId is required');
+		}
+
+		const queryParams = {};
+		if (limit) queryParams.limit = limit;
+		if (sinceId) queryParams.sinceId = sinceId;
+
+		const finalQueryParams =
+			Object.keys(queryParams).length > 0
+				? toSnakeCaseParams(queryParams)
+				: undefined;
 
 		return this._executeRequest({
 			path: '/alerts',
 			method: 'GET',
-			queryParams,
+			queryParams: finalQueryParams,
 			errorMessage: 'Failed to load alerts',
 		});
 	}
@@ -38,20 +54,6 @@ class AlertsService extends BaseService {
 			path: `/alerts/${alertId}`,
 			method: 'DELETE',
 			errorMessage: 'Failed to delete alert',
-		});
-	}
-
-	/**
-	 * Fetches new alerts that haven't been fetched yet and clears the buffer.
-	 *
-	 * @returns {Promise<Object>} Resolves with dictionary of new alerts.
-	 * @throws {Error} If request errors occur.
-	 */
-	async getNew() {
-		return this._executeRequest({
-			path: '/alerts/new',
-			method: 'GET',
-			errorMessage: 'Failed to fetch new alerts',
 		});
 	}
 }

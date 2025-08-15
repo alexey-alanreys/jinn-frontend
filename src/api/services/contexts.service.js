@@ -1,3 +1,5 @@
+import { toSnakeCaseParams } from '@/utils/to-snake-case-params.util';
+
 import { BaseService } from '@/api/core/base.service';
 
 /**
@@ -25,15 +27,22 @@ class ContextsService extends BaseService {
 	 * Fetches summary information for specific strategy context.
 	 *
 	 * @param {string} contextId Unique identifier of the strategy context.
+	 * @param {number} [updatedAfter] Unix timestamp. If provided, returns
+	 *        empty response if context has not been updated since this time.
 	 * @returns {Promise<Object>} Resolves with base context data.
 	 * @throws {Error} If validation fails or request errors occur.
 	 */
-	async get(contextId) {
+	async get(contextId, updatedAfter) {
 		this._validateRequired({ contextId }, 'contextId is required');
+
+		const queryParams = updatedAfter
+			? toSnakeCaseParams({ updatedAfter })
+			: undefined;
 
 		return this._executeRequest({
 			path: `/contexts/${contextId}`,
 			method: 'GET',
+			queryParams,
 			errorMessage: 'Failed to load strategy data',
 		});
 	}
@@ -75,21 +84,6 @@ class ContextsService extends BaseService {
 			path: `/contexts/${contextId}`,
 			method: 'DELETE',
 			errorMessage: 'Failed to delete strategy',
-		});
-	}
-
-	/**
-	 * Fetches IDs of contexts that were recently updated.
-	 *
-	 * @returns {Promise<Array<string>>} Resolves with list of
-	 *          updated context IDs.
-	 * @throws {Error} If request errors occur.
-	 */
-	async getUpdates() {
-		return this._executeRequest({
-			path: '/contexts/updates',
-			method: 'GET',
-			errorMessage: 'Failed to fetch updates list',
 		});
 	}
 }
