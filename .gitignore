@@ -4,17 +4,23 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
+# Node modules
 node_modules
+
+# Build output
 dist
 dist-ssr
+
+# Local configs
 *.local
 
-# Editor directories and files
+# Yarn cache
+.yarn/cache/*
+.yarn/install-state.gz
+
+# Editor files
 .vscode/*
-!.vscode/extensions.json
 .idea
 .DS_Store
 *.suo
