@@ -1,6 +1,6 @@
-import { contextsService } from '@/api/services/contexts.service.js';
 import { stateService } from '@/core/services/state.service.js';
 
+import { contextsService } from '@/api/services/contexts.service.js';
 
 /**
  * @module automationService
@@ -10,30 +10,32 @@ import { stateService } from '@/core/services/state.service.js';
  */
 class AutomationService {
 	#intervalId = null;
-	#intervalMs = 5000;
+	#pollingInterval = 5000;
 
 	/**
-	 * Starts polling the backend for updated context IDs.
-	 *
-	 * If the current context is among the updated ones,
-	 * its reference is reassigned to trigger reactive updates
-	 * in subscribed components.
+	 * Starts polling the backend for updated context.
 	 */
 	start() {
 		if (this.#intervalId !== null) return;
 
 		this.#intervalId = setInterval(async () => {
 			try {
-				const updatedIds = await contextsService.getUpdates();
-				const currentContext = stateService.get('context');
+				const candlestickSeries = stateService.get('candlestickSeries');
+				const context = stateService.get('context');
 
-				if (updatedIds.includes(currentContext.id)) {
-					stateService.set('context', { ...currentContext });
+				const updatedContext = await contextsService.get(
+					context.id,
+					candlestickSeries.data().at(-1).time * 1000,
+				);
+
+				if (Object.keys(updatedContext).length) {
+					const [[id, data]] = Object.entries(updatedContext);
+					stateService.set('context', { id, ...data });
 				}
 			} catch (error) {
-				console.error('Failed to fetch IDs of updated contexts.', error);
+				console.error('Failed to fetch updated context.', error);
 			}
-		}, this.#intervalMs);
+		}, this.#pollingInterval);
 	}
 
 	/**

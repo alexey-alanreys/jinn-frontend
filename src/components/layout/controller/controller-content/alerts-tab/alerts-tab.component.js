@@ -1,26 +1,28 @@
-import { alertsService } from '@/api/services/alerts.service';
-import { SERVER_MODE } from '@/config/mode.config';
-import {
-	ALERTS_FETCH_LIMIT,
-	ALERTS_POLLING_INTERVAL,
-} from '@/constants/alerts.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { SERVER_MODE } from '@/config/mode.config';
 
+import {
+	ALERTS_FETCH_LIMIT,
+	ALERTS_POLLING_INTERVAL,
+} from '@/constants/alerts.constants';
 
-import { AlertsItem } from './alerts-item/alerts-item.component';
+import { alertsService } from '@/api/services/alerts.service';
+
 import styles from './alerts-tab.module.css';
 import templateHTML from './alerts-tab.template.html?raw';
 
+import { AlertsItem } from './alerts-item/alerts-item.component';
 
 export class AlertsTab extends BaseComponent {
 	static COMPONENT_NAME = 'AlertsTab';
 
 	#$element;
+	#$alertsItems;
 
 	#contextId = null;
 	#items = new Map();
@@ -52,7 +54,9 @@ export class AlertsTab extends BaseComponent {
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
+
 		this.#$element = $Q(this.element);
+		this.#$alertsItems = this.#$element.find('[data-ref="alertsItems"]');
 	}
 
 	#setupInitialState() {
@@ -65,11 +69,10 @@ export class AlertsTab extends BaseComponent {
 	}
 
 	async #renderInitialItems() {
-		const alerts = await alertsService.getAll(ALERTS_FETCH_LIMIT);
-		const $items = this.#$element.find('[data-ref="alertsItems"]');
+		const alerts = await alertsService.get({ limit: ALERTS_FETCH_LIMIT });
 
 		Object.entries(alerts).forEach(([id, alert]) => {
-			this.#createAlertItem(id, alert, $items);
+			this.#createAlertItem(id, alert);
 		});
 	}
 
@@ -121,13 +124,16 @@ export class AlertsTab extends BaseComponent {
 	#pollNewAlerts() {
 		setInterval(async () => {
 			try {
-				const newAlerts = await alertsService.getNew();
-				const $items = this.#$element.find('[data-ref="alertsItems"]');
+				console.log(Array.from(this.#items.keys()).at(-1));
+
+				const newAlerts = await alertsService.get({
+					sinceId: Array.from(this.#items.keys()).at(-1),
+				});
 
 				Object.entries(newAlerts).forEach(([id, alert]) => {
 					if (this.#items.has(id)) return;
 
-					this.#createAlertItem(id, alert, $items);
+					this.#createAlertItem(id, alert);
 				});
 			} catch (error) {
 				console.error('Failed to fetch new alerts.', error);
@@ -135,10 +141,11 @@ export class AlertsTab extends BaseComponent {
 		}, ALERTS_POLLING_INTERVAL);
 	}
 
-	#createAlertItem(id, alert, $container) {
+	#createAlertItem(id, alert) {
 		const item = new AlertsItem();
+
+		this.#$alertsItems.prepend(item.render());
 		this.#items.set(id, item);
-		$container.prepend(item.render());
 		item.update(id, alert);
 	}
 }
