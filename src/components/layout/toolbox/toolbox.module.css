@@ -5,7 +5,7 @@
 	align-items: center;
 	gap: 4px;
 	min-width: 46px;
-	padding-top: 6px;
+	padding: 6px 0;
 	margin-right: 4px;
 	background-color: var(--color-bg-primary);
 }
