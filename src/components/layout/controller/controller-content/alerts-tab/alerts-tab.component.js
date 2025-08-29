@@ -4,8 +4,6 @@ import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { SERVER_MODE } from '@/config/mode.config';
-
 import {
 	ALERTS_FETCH_LIMIT,
 	ALERTS_POLLING_INTERVAL,
@@ -33,7 +31,9 @@ export class AlertsTab extends BaseComponent {
 
 	render() {
 		this.#initDOM();
-		this.#setupInitialState();
+
+		// TODO
+		// this.#setupInitialState();
 
 		return this.element;
 	}
@@ -60,8 +60,6 @@ export class AlertsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		if (SERVER_MODE !== 'AUTOMATION') return;
-
 		this.#contextId = stateService.get('context').id;
 
 		this.#renderInitialItems();

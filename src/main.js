@@ -1,14 +1,11 @@
-import { Layout } from '@/components/layout/layout.component';
-import { Notification } from '@/components/notification/notification.component';
 import { $Q } from '@/core/libs/query.lib';
-import { automationService } from '@/core/services/automation.service';
 import { initService } from '@/core/services/init.service';
 import { notificationService } from '@/core/services/notification.service';
 
+import { Layout } from '@/components/layout/layout.component';
+import { Notification } from '@/components/notification/notification.component';
 
 import '@/styles/global.css';
-
-import { SERVER_MODE } from './config/mode.config';
 
 class AppInitializer {
 	static async start() {
@@ -17,7 +14,6 @@ class AppInitializer {
 
 			this.renderNotificationShell(app);
 			await this.initializeAppState();
-			this.startAutomationIfNeeded();
 			this.renderApp(app);
 		} catch (error) {
 			this.handleFatalError(error);
@@ -34,12 +30,6 @@ class AppInitializer {
 
 	static renderApp(app) {
 		app.append(new Layout().render());
-	}
-
-	static startAutomationIfNeeded() {
-		if (SERVER_MODE === 'AUTOMATION') {
-			automationService.start();
-		}
 	}
 
 	static handleFatalError(error) {
