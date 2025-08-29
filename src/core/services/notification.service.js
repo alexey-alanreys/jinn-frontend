@@ -1,6 +1,6 @@
-import styles from '@/components/notification/notification.module.css';
 import { $Q } from '@/core/libs/query.lib';
 
+import styles from '@/components/notification/notification.module.css';
 
 /**
  * @module notificationService
@@ -54,7 +54,7 @@ class NotificationService {
 	show(type, message) {
 		if (!['info', 'success', 'warning', 'error'].includes(type)) {
 			throw new Error(
-				'Invalid notification type: expected "success" or "error".',
+				'Invalid notification type: expected "success" or "error"',
 			);
 		}
 

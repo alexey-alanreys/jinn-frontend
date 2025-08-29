@@ -1,15 +1,15 @@
-import { contextsService } from '@/api/services/contexts.service';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { ExecutionService } from '@/api/services/execution.service';
 
-import { StrategiesItem } from './strategies-item/strategies-item.component';
 import styles from './strategies-tab.module.css';
 import templateHTML from './strategies-tab.template.html?raw';
 
+import { StrategiesItem } from './strategies-item/strategies-item.component';
 
 export class StrategiesTab extends BaseComponent {
 	static COMPONENT_NAME = 'StrategiesTab';
@@ -101,7 +101,7 @@ export class StrategiesTab extends BaseComponent {
 				return;
 			}
 
-			await contextsService.delete(contextId);
+			await ExecutionService.delete(contextId);
 
 			const currentContextId = stateService.get('context').id;
 			const { [contextId]: _, ...remaining } = contexts;

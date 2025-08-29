@@ -8,9 +8,9 @@ import {
 
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
+import { drawingsService } from '@/core/services/drawings.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
-import { storageService } from '@/core/services/storage.service';
 
 import { Spinner } from '@/components/ui/spinner/spinner.component';
 
@@ -203,7 +203,8 @@ export class Chart extends BaseComponent {
 		this.#removeCandlestickSeries();
 		this.#removeIndicatorSeries();
 		this.#clearDeals();
-		this.#removeDrawings();
+
+		drawingsService.removeAll();
 	}
 
 	#removeCandlestickSeries() {
@@ -224,14 +225,6 @@ export class Chart extends BaseComponent {
 
 	#clearDeals() {
 		this.#series.deals = null;
-	}
-
-	#removeDrawings() {
-		const drawings = stateService.get('drawings');
-		drawings.forEach((series) => {
-			this.#chartApi.removeSeries(series);
-		});
-		stateService.set('drawings', []);
 	}
 
 	#createSeries() {
@@ -343,22 +336,7 @@ export class Chart extends BaseComponent {
 	}
 
 	#loadDrawings() {
-		const drawings = storageService.getItem('drawings');
-		if (!drawings?.trendlines) return;
-
-		const contextTrendlines = drawings.trendlines[this.#contextId];
-		if (!contextTrendlines?.length) return;
-
-		const lineSeries = contextTrendlines.map((trendline) => {
-			const lineSeries = this.#chartApi.addSeries(
-				LineSeries,
-				TRENDLINE_OPTIONS,
-			);
-			lineSeries.setData(trendline);
-			return lineSeries;
-		});
-
-		stateService.set('drawings', lineSeries);
+		drawingsService.load('trendlines', LineSeries, TRENDLINE_OPTIONS);
 	}
 
 	#updateSeries() {

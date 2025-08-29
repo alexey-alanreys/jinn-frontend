@@ -1,9 +1,9 @@
-import { HIDE_DRAWINGS_BUTTON_TITLES as TITLES } from '@/constants/drawings-titles.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
+import { drawingsService } from '@/core/services/drawings.service';
 import { renderService } from '@/core/services/render.service';
-import { stateService } from '@/core/services/state.service';
 
+import { HIDE_DRAWINGS_BUTTON_TITLES as TITLES } from '@/constants/drawings-titles.constants';
 
 import styles from './hide-drawings-button.module.css';
 import templateHTML from './hide-drawings-button.template.html?raw';
@@ -27,10 +27,7 @@ export class HideDrawingsButton extends BaseComponent {
 	}
 
 	deactivate() {
-		if (!this.#isActive) return;
-
-		this.#$element.data('active', 'false').attr('title', TITLES['false']);
-		this.#showDrawings(stateService.get('drawings'));
+		this.#setActive(false);
 	}
 
 	get #isActive() {
@@ -44,30 +41,19 @@ export class HideDrawingsButton extends BaseComponent {
 
 	#setupInitialState() {
 		this.#$element.on('click', this.#handleClick.bind(this));
-		stateService.subscribe('drawings', this.#hideDrawings.bind(this));
 	}
 
 	#handleClick() {
-		if (this.#isActive) {
-			this.deactivate();
-		} else {
-			this.#activate();
-			this.onActivate?.();
-		}
+		const newState = !this.#isActive;
+		this.#setActive(newState);
+		if (newState) this.onActivate?.();
 	}
 
-	#activate() {
-		this.#$element.data('active', 'true').attr('title', TITLES['true']);
-		this.#hideDrawings(stateService.get('drawings'));
-	}
+	#setActive(active) {
+		this.#$element
+			.data('active', active)
+			.attr('title', TITLES[active ? 'true' : 'false']);
 
-	#showDrawings(drawings) {
-		if (!drawings?.length) return;
-		drawings.forEach((series) => series.applyOptions({ visible: true }));
-	}
-
-	#hideDrawings(drawings) {
-		if (!this.#isActive || !drawings.length) return;
-		drawings.forEach((series) => series.applyOptions({ visible: false }));
+		active ? drawingsService.hide() : drawingsService.show();
 	}
 }

@@ -1,13 +1,13 @@
 import { LineSeries } from 'lightweight-charts';
 
-import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
+import { drawingsService } from '@/core/services/drawings.service';
 import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
-import { storageService } from '@/core/services/storage.service';
 
+import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import styles from './trendline-tool-button.module.css';
 import templateHTML from './trendline-tool-button.template.html?raw';
@@ -127,21 +127,8 @@ export class TrendlineToolButton extends BaseComponent {
 		const lineSeries = chartApi.addSeries(LineSeries, TRENDLINE_OPTIONS);
 		lineSeries.setData(this.#selectedPoints);
 
-		const drawings = stateService.get('drawings');
-		stateService.set('drawings', [lineSeries, ...drawings]);
-		this.#saveTrendlineToStorage();
+		drawingsService.add('trendlines', this.#selectedPoints);
+
 		this.deactivate();
-	}
-
-	#saveTrendlineToStorage() {
-		const contextId = stateService.get('context').id;
-		const drawings = storageService.getItem('drawings') || { trendlines: {} };
-
-		drawings.trendlines[contextId] = [
-			this.#selectedPoints,
-			...(drawings.trendlines[contextId] || []),
-		];
-
-		storageService.setItem('drawings', drawings);
 	}
 }

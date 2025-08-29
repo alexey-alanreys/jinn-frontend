@@ -1,6 +1,6 @@
 import { stateService } from '@/core/services/state.service.js';
 
-import { contextsService } from '@/api/services/contexts.service.js';
+import { ExecutionService } from '@/api/services/execution.service.js';
 
 /**
  * @module automationService
@@ -23,7 +23,7 @@ class AutomationService {
 				const candlestickSeries = stateService.get('candlestickSeries');
 				const context = stateService.get('context');
 
-				const updatedContext = await contextsService.get(
+				const updatedContext = await ExecutionService.get(
 					context.id,
 					candlestickSeries.data().at(-1).time * 1000,
 				);

@@ -1,11 +1,16 @@
 import { $Q } from '@/core/libs/query.lib';
-import { initService } from '@/core/services/init.service';
 import { notificationService } from '@/core/services/notification.service';
+import { stateService } from '@/core/services/state.service.js';
 
 import { Layout } from '@/components/layout/layout.component';
 import { Notification } from '@/components/notification/notification.component';
 
 import '@/styles/global.css';
+
+import { ExecutionService } from '@/api/services/execution.service';
+
+import { drawingsService } from './core/services/drawings.service';
+import { themeService } from './core/services/theme.service';
 
 class AppInitializer {
 	static async start() {
@@ -13,7 +18,13 @@ class AppInitializer {
 			const app = $Q('#app');
 
 			this.renderNotificationShell(app);
+
+			//
+			themeService.init();
+			drawingsService.init();
 			await this.initializeAppState();
+			//
+
 			this.renderApp(app);
 		} catch (error) {
 			this.handleFatalError(error);
@@ -25,7 +36,12 @@ class AppInitializer {
 	}
 
 	static async initializeAppState() {
-		await initService.initialize();
+		const contexts = await ExecutionService.getAll();
+		const [[id, data]] = Object.entries(contexts);
+		const context = { id, ...data };
+
+		stateService.set('contexts', contexts);
+		stateService.set('context', context);
 	}
 
 	static renderApp(app) {
