@@ -177,7 +177,7 @@ class DrawingsService {
 	 */
 	#getContextId() {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
-		return context?.id || null;
+		return context.id || null;
 	}
 
 	/**

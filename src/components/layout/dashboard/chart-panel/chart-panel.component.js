@@ -12,6 +12,7 @@ import { drawingsService } from '@/core/services/drawings.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { NoData } from '@/components/ui/no-data/no-data.component';
 import { Spinner } from '@/components/ui/spinner/spinner.component';
 
 import {
@@ -32,14 +33,14 @@ import { chartService } from '@/api/services/chart.service';
 import styles from './chart-panel.module.css';
 import templateHTML from './chart-panel.template.html?raw';
 
-import { ChartInfoPanel } from './chart-info-panel/chart-info-panel.component';
 import { IndicatorsInfoPanel } from './indicators-info-panel/indicators-info-panel.component';
+import { MainInfoPanel } from './main-info-panel/main-info-panel.component';
 import { RulerTool } from './ruler-tool/ruler-tool.component';
-import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-realtime-button.component';
+import { ScrollButton } from './scroll-button/scroll-button.component';
 
 export class ChartPanel extends BaseComponent {
 	static COMPONENT_NAME = 'ChartPanel';
-	static indicatorTypes = {
+	static INDICATOR_TYPES = {
 		line: LineSeries,
 		histogram: HistogramSeries,
 	};
@@ -62,6 +63,10 @@ export class ChartPanel extends BaseComponent {
 	#indicatorPanels = new Map();
 	#visibleRange = DATA_BATCH_SIZE;
 
+	set height(height) {
+		this.#$element.css('bottom', `${height}px`);
+	}
+
 	render() {
 		this.#initComponents();
 		this.#initDOM();
@@ -70,12 +75,13 @@ export class ChartPanel extends BaseComponent {
 		return this.element;
 	}
 
-	set height(height) {
-		this.#$element.css('bottom', `${height}px`);
-	}
-
 	async update(context) {
-		await this.#loadData();
+		if (!context.id) {
+			this.#handleEmptyContext();
+			return;
+		}
+
+		await this.#loadData(context);
 
 		if (this.#contextId !== context.id) {
 			this.#contextId = context.id;
@@ -83,13 +89,14 @@ export class ChartPanel extends BaseComponent {
 			this.#removePanels();
 			this.#removeSeries();
 
-			this.#createSeries();
-			this.#createPanels();
-			this.#loadDrawings();
+			if (this.#hasValidData()) {
+				this.#createSeries();
+				this.#createPanels();
+				this.#loadDrawings();
+			}
 		}
 
-		this.#updateSeries();
-		this.#resetInfoPanels();
+		this.#updateDisplayState();
 
 		if (!this.#firstLoadDone) {
 			this.#firstLoadDone = true;
@@ -99,9 +106,10 @@ export class ChartPanel extends BaseComponent {
 
 	#initComponents() {
 		this.spinner = new Spinner();
+		this.noData = new NoData();
 		this.rulerTool = new RulerTool();
-		this.chartInfoPanel = new ChartInfoPanel();
-		this.scrollToRealtimeButton = new ScrollToRealtimeButton();
+		this.ScrollButton = new ScrollButton();
+		this.mainInfoPanel = new MainInfoPanel();
 	}
 
 	#initDOM() {
@@ -109,9 +117,10 @@ export class ChartPanel extends BaseComponent {
 			templateHTML,
 			[
 				this.spinner,
+				this.noData,
 				this.rulerTool,
-				this.chartInfoPanel,
-				this.scrollToRealtimeButton,
+				this.ScrollButton,
+				this.mainInfoPanel,
 			],
 			styles,
 		);
@@ -121,7 +130,7 @@ export class ChartPanel extends BaseComponent {
 	#setupInitialState() {
 		this.#initChart();
 		this.#attachListeners();
-		this.#registerState();
+		this.#registerInitialState();
 		this.#applyContext();
 	}
 
@@ -153,9 +162,10 @@ export class ChartPanel extends BaseComponent {
 		);
 	}
 
-	#registerState() {
+	#registerInitialState() {
 		stateService.set(STATE_KEYS.RULER_TOOL, this.rulerTool);
 		stateService.set(STATE_KEYS.CHART_API, this.#chartApi);
+		stateService.set(STATE_KEYS.CANDLE_SERIES, null);
 	}
 
 	#applyContext() {
@@ -163,34 +173,83 @@ export class ChartPanel extends BaseComponent {
 		this.update(context);
 	}
 
-	async #loadData() {
-		try {
-			await Promise.all([
-				this.#loadCandlesticks(),
-				this.#loadIndicators(),
-				this.#loadDeals(),
-			]);
-		} catch (error) {
-			console.error('Error loading chart data.', error);
+	#handleEmptyContext() {
+		this.#contextId = null;
+
+		this.#clearAllData();
+		this.#removePanels();
+		this.#removeSeries();
+
+		this.noData.show();
+		stateService.set(STATE_KEYS.CANDLE_SERIES, null);
+
+		if (!this.#firstLoadDone) {
+			this.#firstLoadDone = true;
+			this.spinner.hide();
 		}
 	}
 
-	async #loadCandlesticks() {
-		this.#data.candlesticks = await chartService.getKlines(
-			stateService.get(STATE_KEYS.CONTEXT).id,
-		);
+	#updateDisplayState() {
+		if (this.#hasValidData()) {
+			this.#updateSeries();
+			this.#resetInfoPanels();
+
+			this.noData.hide();
+			stateService.set(STATE_KEYS.CANDLE_SERIES, this.#series.candlestick);
+		} else {
+			this.noData.show();
+			stateService.set(STATE_KEYS.CANDLE_SERIES, null);
+		}
 	}
 
-	async #loadIndicators() {
-		this.#data.indicators = await chartService.getIndicators(
-			stateService.get(STATE_KEYS.CONTEXT).id,
-		);
+	async #loadData(context) {
+		if (!context.id) {
+			this.#clearAllData();
+			return;
+		}
+
+		try {
+			await Promise.all([
+				this.#loadCandlesticks(context.id),
+				this.#loadIndicators(context.id),
+				this.#loadDeals(context.id),
+			]);
+		} catch (error) {
+			console.error('Error loading chart data.', error);
+			this.#clearAllData();
+		}
 	}
 
-	async #loadDeals() {
-		this.#data.deals = await chartService.getDeals(
-			stateService.get(STATE_KEYS.CONTEXT).id,
-		);
+	async #loadCandlesticks(contextId) {
+		try {
+			this.#data.candlesticks = await chartService.getKlines(contextId);
+		} catch {
+			this.#data.candlesticks = [];
+		}
+	}
+
+	async #loadIndicators(contextId) {
+		try {
+			this.#data.indicators = await chartService.getIndicators(contextId);
+		} catch {
+			this.#data.indicators = {};
+		}
+	}
+
+	async #loadDeals(contextId) {
+		try {
+			this.#data.deals = await chartService.getDeals(contextId);
+		} catch {
+			this.#data.deals = [];
+		}
+	}
+
+	#clearAllData() {
+		this.#data = {
+			candlesticks: null,
+			indicators: null,
+			deals: null,
+		};
 	}
 
 	#removePanels() {
@@ -229,25 +288,26 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#createSeries() {
-		this.#createCandlestickSeries();
-		this.#createIndicatorSeries();
+		const context = stateService.get(STATE_KEYS.CONTEXT);
 
-		this.#applyCandlestickOptions();
-		this.#applyIndicatorOptions();
+		this.#createCandlestickSeries();
+		this.#createIndicatorSeries(context);
+
+		this.#applyCandlestickOptions(context);
+		this.#applyIndicatorOptions(context);
 	}
 
 	#createCandlestickSeries() {
 		this.#series.candlestick = this.#chartApi.addSeries(CandlestickSeries);
-		stateService.set(STATE_KEYS.CANDLE_SERIES, this.#series.candlestick);
 	}
 
-	#createIndicatorSeries() {
-		const { indicatorOptions } = stateService.get(STATE_KEYS.CONTEXT);
+	#createIndicatorSeries(context) {
+		const indicatorOptions = context.indicatorOptions || {};
 
 		Object.entries(indicatorOptions).forEach(([name, options]) => {
+			const indicatorTypes = ChartPanel.INDICATOR_TYPES;
 			const typeKey = options.type ?? 'line';
-			const indicatorType =
-				ChartPanel.indicatorTypes[typeKey] ?? ChartPanel.indicatorTypes.line;
+			const indicatorType = indicatorTypes[typeKey] ?? indicatorTypes.line;
 			const paneIndex = Math.max(0, Math.min(3, options.pane ?? 0));
 
 			const series = this.#chartApi.addSeries(
@@ -262,7 +322,7 @@ export class ChartPanel extends BaseComponent {
 	#createPanels() {
 		requestAnimationFrame(() => {
 			const context = stateService.get(STATE_KEYS.CONTEXT);
-			const indicatorOptions = context.indicatorOptions ?? {};
+			const indicatorOptions = context.indicatorOptions || {};
 
 			this.#initIndicatorPanels(indicatorOptions);
 			const $panes = this.#getPaneContainers();
@@ -304,8 +364,12 @@ export class ChartPanel extends BaseComponent {
 
 	#applyOptions() {
 		this.#applyChartOptions();
-		this.#applyCandlestickOptions();
-		this.#applyIndicatorOptions();
+
+		if (this.#hasValidData()) {
+			const context = stateService.get(STATE_KEYS.CONTEXT);
+			this.#applyCandlestickOptions(context);
+			this.#applyIndicatorOptions(context);
+		}
 	}
 
 	#applyChartOptions() {
@@ -313,8 +377,10 @@ export class ChartPanel extends BaseComponent {
 		this.#chartApi.applyOptions(chartOptions);
 	}
 
-	#applyCandlestickOptions() {
-		const { precision, minMove } = stateService.get(STATE_KEYS.CONTEXT);
+	#applyCandlestickOptions(context) {
+		if (!this.#series.candlestick || !context) return;
+
+		const { precision, minMove } = context;
 		const candlestickOptions = getCandlestickOptions();
 
 		this.#series.candlestick.applyOptions({
@@ -327,12 +393,17 @@ export class ChartPanel extends BaseComponent {
 		});
 	}
 
-	#applyIndicatorOptions() {
-		const { indicatorOptions } = stateService.get(STATE_KEYS.CONTEXT);
+	#applyIndicatorOptions(context) {
+		if (!context.indicatorOptions) return;
+
+		const { indicatorOptions } = context;
 		const lineOptions = getLineOptions();
 
 		this.#series.indicators.forEach((series, key) => {
-			series.applyOptions({ ...lineOptions, ...indicatorOptions[key] });
+			const options = indicatorOptions[key];
+			if (options) {
+				series.applyOptions({ ...lineOptions, ...options });
+			}
 		});
 	}
 
@@ -341,7 +412,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#updateSeries() {
-		if (!this.#series.candlestick) return;
+		if (!this.#series.candlestick || !this.#hasValidData()) return;
 
 		this.#updateCandlesticks();
 		this.#updateIndicators();
@@ -355,6 +426,8 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#updateIndicators() {
+		if (!Object.values(this.#data.indicators).length) return;
+
 		this.#series.indicators.forEach((series, key) => {
 			const data = this.#data.indicators[key];
 			series.setData(data.slice(-this.#visibleRange));
@@ -362,7 +435,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#updateDeals() {
-		if (!this.#data.deals) return;
+		if (!this.#data.deals.length) return;
 
 		const startTime = this.#series.candlestick.data()[0].time;
 		const visibleDeals = this.#data.deals.filter(
@@ -380,6 +453,8 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#resetInfoPanels() {
+		if (!this.#hasValidData()) return;
+
 		this.#resetChartInfoPanel();
 
 		requestAnimationFrame(() => {
@@ -389,18 +464,20 @@ export class ChartPanel extends BaseComponent {
 
 	#resetChartInfoPanel() {
 		const candlestick = this.#series.candlestick.data().at(-1);
-		this.chartInfoPanel.update(candlestick, true);
+		if (candlestick) {
+			this.mainInfoPanel.update(candlestick, true);
+		}
 	}
 
 	#resetIndicatorInfoPanels() {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
-		const indicatorOptions = context.indicatorOptions ?? {};
+		const indicatorOptions = context.indicatorOptions || {};
 
 		const indicatorValues = Object.fromEntries(
-			Array.from(this.#series.indicators, ([key, series]) => [
-				key,
-				series.data().at(-1),
-			]),
+			Array.from(this.#series.indicators, ([key, series]) => {
+				const data = series.data();
+				return [key, data.length > 0 ? data.at(-1) : null];
+			}),
 		);
 
 		this.#indicatorPanels.forEach((panel, paneIndex) => {
@@ -415,7 +492,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#handleCrosshairMove({ logical, point, seriesData, sourceEvent, time }) {
-		if (!point || !time) return;
+		if (!point || !time || !this.#hasValidData()) return;
 
 		const candlestick = seriesData.get(this.#series.candlestick);
 
@@ -425,7 +502,9 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#updateChartInfoPanel(candlestick) {
-		this.chartInfoPanel.update(candlestick);
+		if (candlestick) {
+			this.mainInfoPanel.update(candlestick);
+		}
 	}
 
 	#updateIndicatorPanels(seriesData) {
@@ -451,6 +530,8 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#handleVisibleLogicalRangeChange(newRange) {
+		if (!this.#hasValidData()) return;
+
 		if (newRange === null) {
 			this.#visibleRange = DATA_BATCH_SIZE;
 			return;
@@ -465,7 +546,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#handleSelectedTradeTime(time) {
-		if (!time) return;
+		if (!time || !this.#hasValidData()) return;
 
 		const candles = this.#data.candlesticks;
 		let targetIndex = null;
@@ -496,5 +577,9 @@ export class ChartPanel extends BaseComponent {
 			from: logicalIndex - VISIBLE_RANGE_PADDING,
 			to: logicalIndex + VISIBLE_RANGE_PADDING,
 		});
+	}
+
+	#hasValidData() {
+		return this.#data.candlesticks && this.#data.candlesticks.length > 0;
 	}
 }

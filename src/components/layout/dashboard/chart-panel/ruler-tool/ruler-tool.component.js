@@ -110,10 +110,10 @@ export class RulerTool extends BaseComponent {
 			return;
 		}
 
-		const series = stateService.get(STATE_KEYS.CANDLE_SERIES);
-		if (!series) return;
+		const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
+		if (!candlestickSeries) return;
 
-		this.#prepare({ logical, point, sourceEvent, series });
+		this.#prepare({ logical, point, sourceEvent, candlestickSeries });
 	}
 
 	#finish() {
@@ -122,14 +122,14 @@ export class RulerTool extends BaseComponent {
 		}
 	}
 
-	#prepare({ logical, point, sourceEvent, series }) {
+	#prepare({ logical, point, sourceEvent, candlestickSeries }) {
 		const { minMove, precision } = stateService.get(STATE_KEYS.CONTEXT);
 		this.#minMove = minMove;
 		this.#precision = precision;
 
 		this.#startParams = {
 			chartX: logical,
-			chartY: series.coordinateToPrice(point.y),
+			chartY: candlestickSeries.coordinateToPrice(point.y),
 			localX: sourceEvent.localX,
 			localY: sourceEvent.localY,
 		};

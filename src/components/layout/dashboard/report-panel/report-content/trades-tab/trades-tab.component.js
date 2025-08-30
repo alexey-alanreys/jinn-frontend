@@ -38,7 +38,15 @@ export class TradesTab extends BaseComponent {
 
 	async update(context) {
 		try {
-			const trades = await reportService.getTrades(context.id);
+			let trades = [];
+			if (context.id) {
+				try {
+					trades = await reportService.getTrades(context.id);
+				} catch {
+					trades = [];
+				}
+			}
+
 			this.#cachedTrades = [...trades];
 
 			this.#clearRenderedItems();

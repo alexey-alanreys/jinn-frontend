@@ -19,6 +19,10 @@ export class ReportHeader extends BaseComponent {
 		this.toggleExpansionButton = toggleExpansionButton;
 	}
 
+	get minHeight() {
+		return parseInt(this.#$element.css('min-height'));
+	}
+
 	render() {
 		this.#initComponents();
 		this.#initDOM();
@@ -33,10 +37,6 @@ export class ReportHeader extends BaseComponent {
 				onTabChange?.(name);
 			});
 		});
-	}
-
-	get minHeight() {
-		return parseInt(this.#$element.css('min-height'));
 	}
 
 	#initComponents() {

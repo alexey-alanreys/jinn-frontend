@@ -5,11 +5,11 @@ import { stateService } from '@/core/services/state.service';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
-import styles from './chart-info-panel.module.css';
-import templateHTML from './chart-info-panel.template.html?raw';
+import styles from './main-info-panel.module.css';
+import templateHTML from './main-info-panel.template.html?raw';
 
-export class ChartInfoPanel extends BaseComponent {
-	static COMPONENT_NAME = 'ChartInfoPanel';
+export class MainInfoPanel extends BaseComponent {
+	static COMPONENT_NAME = 'MainInfoPanel';
 
 	#$element;
 

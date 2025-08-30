@@ -26,7 +26,7 @@ export class AlertsItem extends BaseComponent {
 
 	update(alertId, alert) {
 		this.#dataFields.forEach(({ element }, key) => {
-			this.#$element.data('context-id', alert.contextId);
+			this.#$element.data('context-id', alert.context);
 			this.#$element.data('alert-id', alertId);
 
 			const value = alert[key];

@@ -7,11 +7,11 @@ import { getChartOptions } from '@/config/chart.config';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
-import styles from './scroll-to-realtime-button.module.css';
-import templateHTML from './scroll-to-realtime-button.template.html?raw';
+import styles from './scroll-button.module.css';
+import templateHTML from './scroll-button.template.html?raw';
 
-export class ScrollToRealtimeButton extends BaseComponent {
-	static COMPONENT_NAME = 'ScrollToRealtimeButton';
+export class ScrollButton extends BaseComponent {
+	static COMPONENT_NAME = 'ScrollButton';
 
 	#$element;
 

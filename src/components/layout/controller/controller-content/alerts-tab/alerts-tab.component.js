@@ -1,10 +1,8 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
-import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { ALERTS_FETCH_LIMIT } from '@/constants/alerts.constants';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { alertsService } from '@/api/services/alerts.service';
@@ -29,17 +27,16 @@ export class AlertsTab extends BaseComponent {
 
 	render() {
 		this.#initDOM();
-
-		// TODO
-		// this.#setupInitialState();
+		this.#setupInitialState();
 
 		return this.element;
 	}
 
 	update(context) {
-		if (this.#contextId === context.id) return;
+		const newContextId = context.id ?? null;
+		if (this.#contextId === newContextId) return;
 
-		this.#contextId = context.id;
+		this.#contextId = newContextId;
 	}
 
 	hide() {
@@ -58,24 +55,38 @@ export class AlertsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#contextId = stateService.get(STATE_KEYS.CONTEXT).id;
+		const context = stateService.get(STATE_KEYS.CONTEXT);
+		this.#contextId = context.id ?? null;
 
-		this.#renderInitialItems();
+		this.#renderInitialAlerts();
 		this.#attachListeners();
 	}
 
-	async #renderInitialItems() {
-		const alerts = await alertsService.get({ limit: ALERTS_FETCH_LIMIT });
+	#renderInitialAlerts() {
+		const alerts = stateService.get(STATE_KEYS.ALERTS) || [];
 
-		Object.entries(alerts).forEach(([id, alert]) => {
-			this.#createAlertItem(id, alert);
+		alerts.forEach((alert) => {
+			this.#createAlertItem(alert.alertId, alert);
 		});
 	}
 
 	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
 		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
-		this.#pollNewAlerts();
+		stateService.subscribe(
+			STATE_KEYS.ALERTS,
+			this.#handleAlertsUpdate.bind(this),
+		);
+	}
+
+	#handleAlertsUpdate(alerts) {
+		if (!alerts.length) return;
+
+		alerts.forEach((alert) => {
+			if (!this.#items.has(alert.alertId)) {
+				this.#createAlertItem(alert.alertId, alert);
+			}
+		});
 	}
 
 	#handleClick(event) {
@@ -100,7 +111,10 @@ export class AlertsTab extends BaseComponent {
 	#setContext(contextId) {
 		if (this.#contextId === contextId) return;
 
-		const newContext = stateService.get(STATE_KEYS.CONTEXTS)[contextId];
+		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
+		if (!contexts[contextId]) return;
+
+		const newContext = contexts[contextId];
 		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
 	}
 
@@ -108,33 +122,14 @@ export class AlertsTab extends BaseComponent {
 		try {
 			await alertsService.delete(alertId);
 
-			this.#items.get(alertId).remove();
-			this.#items.delete(alertId);
-
-			notificationService.show('success', 'Alert deleted successfully');
+			const item = this.#items.get(alertId);
+			if (item) {
+				item.remove();
+				this.#items.delete(alertId);
+			}
 		} catch (error) {
 			console.error('Failed to remove alert.', error);
 		}
-	}
-
-	#pollNewAlerts() {
-		setInterval(async () => {
-			try {
-				console.log(Array.from(this.#items.keys()).at(-1));
-
-				const newAlerts = await alertsService.get({
-					sinceId: Array.from(this.#items.keys()).at(-1),
-				});
-
-				Object.entries(newAlerts).forEach(([id, alert]) => {
-					if (this.#items.has(id)) return;
-
-					this.#createAlertItem(id, alert);
-				});
-			} catch (error) {
-				console.error('Failed to fetch new alerts.', error);
-			}
-		}, ALERTS_POLLING_INTERVAL);
 	}
 
 	#createAlertItem(id, alert) {

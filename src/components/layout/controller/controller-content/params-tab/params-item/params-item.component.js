@@ -1,6 +1,7 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
+
 import { calculateStep } from '@/utils/number-step.util';
 
 import styles from './params-item.module.css';
@@ -21,7 +22,6 @@ export class ParamsItem extends BaseComponent {
 		id: null,
 		title: null,
 		value: null,
-		group: null,
 	};
 
 	get title() {
@@ -42,10 +42,6 @@ export class ParamsItem extends BaseComponent {
 		}
 	}
 
-	get group() {
-		return this.#state.group;
-	}
-
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
@@ -57,13 +53,13 @@ export class ParamsItem extends BaseComponent {
 		this.element.remove();
 	}
 
-	update({ id, title, value, group = null }) {
-		this.#setState({ id, title, value, group });
+	update({ id, title, value }) {
+		this.#setState({ id, title, value });
 		this.#updateDOM();
 	}
 
-	commit({ id, title, value, group = null }) {
-		this.#state = { id, title, value, group };
+	commit({ id, title, value }) {
+		this.#state = { id, title, value };
 	}
 
 	rollback() {
@@ -94,11 +90,7 @@ export class ParamsItem extends BaseComponent {
 	}
 
 	#updateDOM() {
-		const { id, title, value, group } = this.#state;
-
-		if (group) {
-			this.#$element.attr('data-group', group);
-		}
+		const { id, title, value } = this.#state;
 
 		this.#$label.attr('for', id).text(title);
 		this.#$input.attr('id', id);

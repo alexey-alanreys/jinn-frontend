@@ -19,7 +19,6 @@ export class ParamsTab extends BaseComponent {
 
 	#contextId = null;
 	#itemsById = new Map();
-	#itemsByGroup = new Map();
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -33,34 +32,25 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	update(context) {
-		if (this.#contextId === context.id) return;
+		const newContextId = context.id ?? null;
+		if (this.#contextId === newContextId) return;
 
-		this.#contextId = context.id;
 		this.#clear();
 
-		const params = context.strategyParams;
-		const $items = this.#$element.find('[data-ref="paramsItems"]');
+		if (newContextId) {
+			const $items = this.#$element.find('[data-ref="paramsItems"]');
 
-		Object.entries(params).forEach(([title, value]) => {
-			if (Array.isArray(value)) {
-				value.forEach((entry, index) => {
-					const item = new ParamsItem();
-					const label = `${title} ${index + 1}`;
-					const id = `param-${title}-${index}`;
-
-					$items.append(item.render());
-					item.update({ id, title: label, value: entry, group: title });
-					this.#registerItem(item, id, title);
-				});
-			} else {
+			Object.entries(context.params).forEach(([title, value]) => {
 				const item = new ParamsItem();
 				const id = `param-${title}`;
 
 				$items.append(item.render());
 				item.update({ id, title, value });
-				this.#registerItem(item, id);
-			}
-		});
+				this.#itemsById.set(id, item);
+			});
+		}
+
+		this.#contextId = newContextId;
 	}
 
 	hide() {
@@ -86,15 +76,6 @@ export class ParamsTab extends BaseComponent {
 		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 	}
 
-	#registerItem(item, id, group = null) {
-		this.#itemsById.set(id, item);
-		if (!group) return;
-
-		const groupItems = this.#itemsByGroup.get(group) ?? [];
-		groupItems.push(item);
-		this.#itemsByGroup.set(group, groupItems);
-	}
-
 	async #handleInput(event) {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
 		const contextId = context.id;
@@ -102,31 +83,17 @@ export class ParamsTab extends BaseComponent {
 		const id = $Q(event.target).attr('id');
 		const item = this.#itemsById.get(id);
 		const title = item.title;
-		const group = item.group;
 		const value = item.value;
 
 		try {
-			let param = null;
-			let valueToRequest = null;
-
-			if (group) {
-				param = group;
-				valueToRequest = Array.from(
-					this.#itemsByGroup.get(group).values(),
-				).map((item) => item.value);
-			} else {
-				param = title;
-				valueToRequest = value;
-			}
-
-			await ExecutionService.update(contextId, param, valueToRequest);
-			item.commit({ id, title, value, group });
+			await ExecutionService.update(contextId, title, value);
+			item.commit({ id, title, value });
 
 			stateService.set(STATE_KEYS.CONTEXT, {
 				...context,
-				strategyParams: {
-					...context.strategyParams,
-					[param]: value,
+				params: {
+					...context.params,
+					[title]: value,
 				},
 			});
 		} catch (error) {
@@ -138,6 +105,5 @@ export class ParamsTab extends BaseComponent {
 	#clear() {
 		this.#itemsById.forEach((item) => item.remove());
 		this.#itemsById.clear();
-		this.#itemsByGroup.clear();
 	}
 }

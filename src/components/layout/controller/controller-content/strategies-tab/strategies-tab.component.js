@@ -33,11 +33,18 @@ export class StrategiesTab extends BaseComponent {
 	}
 
 	update(context) {
-		if (this.#contextId === context.id) return;
+		const newContextId = context.id ?? null;
+		if (this.#contextId === newContextId) return;
 
-		this.#items.get(this.#contextId).deactivate();
-		this.#items.get(context.id).activate();
-		this.#contextId = context.id;
+		if (this.#contextId && this.#items.has(this.#contextId)) {
+			this.#items.get(this.#contextId).deactivate();
+		}
+
+		if (newContextId && this.#items.has(newContextId)) {
+			this.#items.get(newContextId).activate();
+		}
+
+		this.#contextId = newContextId;
 	}
 
 	hide() {
@@ -54,7 +61,8 @@ export class StrategiesTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#contextId = stateService.get(STATE_KEYS.CONTEXT).id;
+		const context = stateService.get(STATE_KEYS.CONTEXT);
+		this.#contextId = context.id ?? null;
 
 		this.#renderInitialItems();
 		this.#attachListeners();
@@ -62,8 +70,11 @@ export class StrategiesTab extends BaseComponent {
 
 	#renderInitialItems() {
 		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
-		const contextId = stateService.get(STATE_KEYS.CONTEXT).id;
 		const $items = this.#$element.find('[data-ref="strategiesItems"]');
+
+		if (!Object.keys(contexts).length) {
+			return;
+		}
 
 		Object.entries(contexts).forEach(([id, context]) => {
 			const item = new StrategiesItem();
@@ -72,7 +83,9 @@ export class StrategiesTab extends BaseComponent {
 			item.update(id, context);
 		});
 
-		this.#items.get(contextId)?.activate();
+		if (this.#contextId && this.#items.has(this.#contextId)) {
+			this.#items.get(this.#contextId).activate();
+		}
 	}
 
 	#attachListeners() {
@@ -96,30 +109,33 @@ export class StrategiesTab extends BaseComponent {
 
 	async #handleDelete(contextId) {
 		try {
-			const contexts = stateService.get(STATE_KEYS.CONTEXTS);
-
-			if (Object.keys(contexts).length === 1) {
-				notificationService.show('warning', 'Cannot delete the last strategy');
-				return;
-			}
-
 			await ExecutionService.delete(contextId);
 
-			const currentContextId = stateService.get(STATE_KEYS.CONTEXT).id;
+			const contexts = stateService.get(STATE_KEYS.CONTEXTS);
 			const { [contextId]: _, ...remaining } = contexts;
 			stateService.set(STATE_KEYS.CONTEXTS, remaining);
 
-			if (contextId === currentContextId) {
-				const newContextId = Object.keys(remaining)[0];
-				this.#setContext(newContextId);
+			if (contextId === this.#contextId) {
+				const remainingKeys = Object.keys(remaining);
+
+				if (remainingKeys.length > 0) {
+					const newContextId = remainingKeys[0];
+					this.#setContext(newContextId);
+				} else {
+					this.#setEmptyContext();
+				}
 			}
 
-			this.#items.get(contextId).remove();
-			this.#items.delete(contextId);
+			// Удаляем элемент из DOM и коллекции
+			if (this.#items.has(contextId)) {
+				this.#items.get(contextId).remove();
+				this.#items.delete(contextId);
+			}
 
 			notificationService.show('success', 'Strategy deleted successfully');
 		} catch (error) {
 			console.error('Failed to remove strategy context.', error);
+			notificationService.show('error', 'Failed to delete strategy');
 		}
 	}
 
@@ -128,5 +144,10 @@ export class StrategiesTab extends BaseComponent {
 
 		const newContext = stateService.get(STATE_KEYS.CONTEXTS)[contextId];
 		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
+	}
+
+	#setEmptyContext() {
+		stateService.set(STATE_KEYS.CONTEXT, {});
+		this.#contextId = null;
 	}
 }

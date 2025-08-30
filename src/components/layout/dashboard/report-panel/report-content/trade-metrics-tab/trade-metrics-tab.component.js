@@ -27,20 +27,16 @@ export class TradeMetricsTab extends BaseComponent {
 
 	async update(context) {
 		try {
-			const metrics = await reportService.getTradeMetrics(context.id);
-			const $items = this.#$element.find('[data-ref="metricsItems"]');
-
-			metrics.forEach((metric, index) => {
-				let item = this.#items.get(index);
-
-				if (!item) {
-					item = new MetricsItem();
-					this.#items.set(index, item);
-					$items.append(item.render());
+			let metrics = [];
+			if (context.id) {
+				try {
+					metrics = await reportService.getTradeMetrics(context.id);
+				} catch {
+					metrics = [];
 				}
+			}
 
-				item.update(metric);
-			});
+			this.#renderMetrics(metrics);
 		} catch (error) {
 			console.error('Failed to update metrics.', error);
 		}
@@ -62,5 +58,21 @@ export class TradeMetricsTab extends BaseComponent {
 	#setupInitialState() {
 		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 		this.update(stateService.get(STATE_KEYS.CONTEXT));
+	}
+
+	#renderMetrics(metrics) {
+		const $items = this.#$element.find('[data-ref="metricsItems"]');
+
+		metrics.forEach((metric, index) => {
+			let item = this.#items.get(index);
+
+			if (!item) {
+				item = new MetricsItem();
+				this.#items.set(index, item);
+				$items.append(item.render());
+			}
+
+			item.update(metric);
+		});
 	}
 }

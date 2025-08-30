@@ -1,5 +1,6 @@
 import { stateService } from '@/core/services/state.service.js';
 
+import { ALERTS_FETCH_LIMIT } from '@/constants/alerts.constants';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { alertsService } from '@/api/services/alerts.service.js';
@@ -80,7 +81,7 @@ class LiveTradingService {
 			try {
 				const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
 				const context = stateService.get(STATE_KEYS.CONTEXT);
-				if (!context?.id) return;
+				if (!context.id || !candlestickSeries) return;
 
 				const updatedContext = await ExecutionService.get(
 					context.id,
@@ -111,9 +112,16 @@ class LiveTradingService {
 
 		this.#alertsIntervalId = setInterval(async () => {
 			try {
-				const alerts = await alertsService.get();
-				if (Object.keys(alerts).length) {
-					stateService.set(STATE_KEYS.ALERTS, alerts);
+				const currentAlerts = stateService.get(STATE_KEYS.ALERTS) || [];
+				const lastAlertId =
+					currentAlerts.length > 0 ? currentAlerts.at(-1).alertId : null;
+
+				const newAlerts = lastAlertId
+					? await alertsService.get({ sinceId: lastAlertId })
+					: await alertsService.get({ limit: ALERTS_FETCH_LIMIT });
+
+				if (newAlerts.length > 0) {
+					stateService.set(STATE_KEYS.ALERTS, newAlerts);
 				}
 			} catch (error) {
 				console.error('Failed to fetch alerts.', error);
