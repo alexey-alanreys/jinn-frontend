@@ -2,10 +2,10 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { ReportTabButton } from '@/components/ui/report-tab-button/report-tab-button.component';
-
 import styles from './report-header.module.css';
 import templateHTML from './report-header.template.html?raw';
+
+import { ReportTabButton } from './report-tab-button/report-tab-button.component';
 
 export class ReportHeader extends BaseComponent {
 	static COMPONENT_NAME = 'ReportHeader';

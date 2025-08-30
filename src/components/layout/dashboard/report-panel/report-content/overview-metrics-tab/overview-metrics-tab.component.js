@@ -3,8 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { NoData } from '@/components/ui/no-data/no-data.component';
-import { Spinner } from '@/components/ui/spinner/spinner.component';
+import { NoData } from '@/components/ui/dashboard/no-data/no-data.component';
+import { Spinner } from '@/components/ui/dashboard/spinner/spinner.component';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
