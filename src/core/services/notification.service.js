@@ -1,6 +1,6 @@
 import { $Q } from '@/core/libs/query.lib';
 
-import styles from '@/components/notification/notification.module.css';
+import styles from '@/components/layout/notification/notification.module.css';
 
 /**
  * @module notificationService

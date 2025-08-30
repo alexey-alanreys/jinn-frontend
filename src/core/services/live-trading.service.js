@@ -4,7 +4,7 @@ import { ALERTS_FETCH_LIMIT } from '@/constants/alerts.constants';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { alertsService } from '@/api/services/alerts.service.js';
-import { ExecutionService } from '@/api/services/execution.service.js';
+import { executionService } from '@/api/services/execution.service.js';
 
 /**
  * @module liveTradingService
@@ -83,7 +83,7 @@ class LiveTradingService {
 				const context = stateService.get(STATE_KEYS.CONTEXT);
 				if (!context.id || !candlestickSeries) return;
 
-				const updatedContext = await ExecutionService.get(
+				const updatedContext = await executionService.get(
 					context.id,
 					candlestickSeries.data().at(-1).time * 1000,
 				);

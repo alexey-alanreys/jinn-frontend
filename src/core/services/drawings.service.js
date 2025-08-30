@@ -3,7 +3,7 @@ import { storageService } from '@/core/services/storage.service';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
-import { ExecutionService } from '@/api/services/execution.service';
+import { executionService } from '@/api/services/execution.service';
 
 /**
  * @module drawingsService
@@ -30,7 +30,7 @@ class DrawingsService {
 	 * drawings for contexts that are no longer active.
 	 */
 	async init() {
-		const statuses = await ExecutionService.getAllStatuses();
+		const statuses = await executionService.getAllStatuses();
 		const activeContextIds = Object.entries(statuses)
 			.filter(([_, status]) => status === 'READY')
 			.map(([contextId]) => contextId);

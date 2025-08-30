@@ -24,10 +24,10 @@ export class AlertsItem extends BaseComponent {
 		this.element.remove();
 	}
 
-	update(alertId, alert) {
+	update(alert) {
 		this.#dataFields.forEach(({ element }, key) => {
-			this.#$element.data('context-id', alert.context);
-			this.#$element.data('alert-id', alertId);
+			this.#$element.data('context-id', alert.contextId);
+			this.#$element.data('alert-id', alert.alertId);
 
 			const value = alert[key];
 			element.text(value);

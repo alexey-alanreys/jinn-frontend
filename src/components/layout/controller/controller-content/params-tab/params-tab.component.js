@@ -5,7 +5,7 @@ import { stateService } from '@/core/services/state.service';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
-import { ExecutionService } from '@/api/services/execution.service';
+import { executionService } from '@/api/services/execution.service';
 
 import styles from './params-tab.module.css';
 import templateHTML from './params-tab.template.html?raw';
@@ -67,7 +67,7 @@ export class ParamsTab extends BaseComponent {
 		const value = item.value;
 
 		try {
-			await ExecutionService.update(contextId, title, value);
+			await executionService.update(contextId, title, value);
 			item.commit({ id, title, value });
 
 			stateService.set(STATE_KEYS.CONTEXT, {

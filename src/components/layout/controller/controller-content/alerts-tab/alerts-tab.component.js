@@ -140,6 +140,6 @@ export class AlertsTab extends BaseComponent {
 
 		this.#$alertsItems.prepend(item.render());
 		this.#items.set(id, item);
-		item.update(id, alert);
+		item.update(alert);
 	}
 }

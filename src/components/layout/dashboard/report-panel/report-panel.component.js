@@ -54,6 +54,7 @@ export class ReportPanel extends BaseComponent {
 			[this.reportHeader, this.reportContent],
 			styles,
 		);
+
 		this.#$element = $Q(this.element);
 	}
 

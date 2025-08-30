@@ -11,7 +11,7 @@ import '@/styles/global.css';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { dataService } from '@/api/services/data.service';
-import { ExecutionService } from '@/api/services/execution.service';
+import { executionService } from '@/api/services/execution.service';
 
 class AppInitializer {
 	static async start() {
@@ -36,7 +36,7 @@ class AppInitializer {
 			dataService.getStrategies(),
 			dataService.getExchanges(),
 			dataService.getIntervals(),
-			ExecutionService.getAll(),
+			executionService.getAll(),
 		]);
 
 		if (!Object.keys(strategies).length) {

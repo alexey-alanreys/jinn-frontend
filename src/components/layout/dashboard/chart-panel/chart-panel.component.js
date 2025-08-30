@@ -175,6 +175,139 @@ export class ChartPanel extends BaseComponent {
 		}
 	}
 
+	#applyOptions() {
+		this.#applyChartOptions();
+
+		if (this.#hasValidData()) {
+			const context = stateService.get(STATE_KEYS.CONTEXT);
+			this.#applyCandlestickOptions(context);
+			this.#applyIndicatorOptions(context);
+		}
+	}
+
+	#applyChartOptions() {
+		const chartOptions = getChartOptions();
+		this.#chartApi.applyOptions(chartOptions);
+	}
+
+	#applyCandlestickOptions(context) {
+		if (!this.#series.candlestick || !context) return;
+
+		const { precision, minMove } = context;
+		const candlestickOptions = getCandlestickOptions();
+
+		this.#series.candlestick.applyOptions({
+			...candlestickOptions,
+			priceFormat: {
+				type: 'price',
+				precision,
+				minMove,
+			},
+		});
+	}
+
+	#applyIndicatorOptions(context) {
+		if (!context.indicatorOptions) return;
+
+		const { indicatorOptions } = context;
+		const lineOptions = getLineOptions();
+
+		this.#series.indicators.forEach((series, key) => {
+			const options = indicatorOptions[key];
+			if (options) {
+				series.applyOptions({ ...lineOptions, ...options });
+			}
+		});
+	}
+
+	#handleSelectedTradeTime(time) {
+		if (!time || !this.#hasValidData()) return;
+
+		const candles = this.#data.candlesticks;
+		let targetIndex = null;
+
+		for (let i = 0; i < candles.length - 1; i++) {
+			const current = candles[i].time;
+			const next = candles[i + 1].time;
+
+			if (time >= current && time < next) {
+				targetIndex = i;
+				break;
+			}
+		}
+		if (targetIndex === null) return;
+
+		const neededFrom = candles.length - targetIndex;
+
+		if (neededFrom > this.#visibleRange) {
+			this.#visibleRange = neededFrom + DATA_BATCH_SIZE;
+			this.#updateSeries();
+		}
+
+		const logicalIndex = this.#chartApi
+			.timeScale()
+			.timeToIndex(candles[targetIndex].time);
+
+		this.#chartApi.timeScale().setVisibleLogicalRange({
+			from: logicalIndex - VISIBLE_RANGE_PADDING,
+			to: logicalIndex + VISIBLE_RANGE_PADDING,
+		});
+	}
+
+	#handleCrosshairMove({ logical, point, seriesData, sourceEvent, time }) {
+		if (!point || !time || !this.#hasValidData()) return;
+
+		const candlestick = seriesData.get(this.#series.candlestick);
+
+		this.#updateChartInfoPanel(candlestick);
+		this.#updateIndicatorPanels(seriesData);
+		this.#updateRulerTool({ logical, point, sourceEvent });
+	}
+
+	#updateChartInfoPanel(candlestick) {
+		if (candlestick) {
+			this.mainInfoPanel.update(candlestick);
+		}
+	}
+
+	#updateIndicatorPanels(seriesData) {
+		const indicators = Object.fromEntries(
+			[...this.#series.indicators].map(([key, series]) => [
+				key,
+				seriesData.get(series),
+			]),
+		);
+
+		this.#indicatorPanels.forEach((panel) => {
+			panel.update(indicators);
+		});
+	}
+
+	#updateRulerTool({ logical, point, sourceEvent }) {
+		this.rulerTool.update({
+			logical,
+			point,
+			sourceEvent,
+			candlestickSeries: this.#series.candlestick,
+		});
+	}
+
+	#handleVisibleLogicalRangeChange(newRange) {
+		if (!this.#hasValidData()) return;
+
+		if (newRange === null) {
+			this.#visibleRange = DATA_BATCH_SIZE;
+			return;
+		}
+
+		if (this.#visibleRange >= this.#data.candlesticks.length) return;
+
+		if (newRange.from < 50) {
+			this.#visibleRange += DATA_BATCH_SIZE;
+			this.#updateSeries();
+		}
+	}
+
 	#handleEmptyContext() {
 		this.#contextId = null;
 
@@ -222,6 +355,14 @@ export class ChartPanel extends BaseComponent {
 		}
 	}
 
+	#clearAllData() {
+		this.#data = {
+			candlesticks: null,
+			indicators: null,
+			deals: null,
+		};
+	}
+
 	async #loadCandlesticks(contextId) {
 		try {
 			this.#data.candlesticks = await chartService.getKlines(contextId);
@@ -244,14 +385,6 @@ export class ChartPanel extends BaseComponent {
 		} catch {
 			this.#data.deals = [];
 		}
-	}
-
-	#clearAllData() {
-		this.#data = {
-			candlesticks: null,
-			indicators: null,
-			deals: null,
-		};
 	}
 
 	#removePanels() {
@@ -287,6 +420,10 @@ export class ChartPanel extends BaseComponent {
 
 	#clearDeals() {
 		this.#series.deals = null;
+	}
+
+	#hasValidData() {
+		return this.#data.candlesticks && this.#data.candlesticks.length > 0;
 	}
 
 	#createSeries() {
@@ -361,51 +498,6 @@ export class ChartPanel extends BaseComponent {
 			const panelElement = panel.render(isPrimaryPane);
 
 			container.append(panelElement);
-		});
-	}
-
-	#applyOptions() {
-		this.#applyChartOptions();
-
-		if (this.#hasValidData()) {
-			const context = stateService.get(STATE_KEYS.CONTEXT);
-			this.#applyCandlestickOptions(context);
-			this.#applyIndicatorOptions(context);
-		}
-	}
-
-	#applyChartOptions() {
-		const chartOptions = getChartOptions();
-		this.#chartApi.applyOptions(chartOptions);
-	}
-
-	#applyCandlestickOptions(context) {
-		if (!this.#series.candlestick || !context) return;
-
-		const { precision, minMove } = context;
-		const candlestickOptions = getCandlestickOptions();
-
-		this.#series.candlestick.applyOptions({
-			...candlestickOptions,
-			priceFormat: {
-				type: 'price',
-				precision,
-				minMove,
-			},
-		});
-	}
-
-	#applyIndicatorOptions(context) {
-		if (!context.indicatorOptions) return;
-
-		const { indicatorOptions } = context;
-		const lineOptions = getLineOptions();
-
-		this.#series.indicators.forEach((series, key) => {
-			const options = indicatorOptions[key];
-			if (options) {
-				series.applyOptions({ ...lineOptions, ...options });
-			}
 		});
 	}
 
@@ -491,97 +583,5 @@ export class ChartPanel extends BaseComponent {
 
 			panel.update(indicatorValues, true, indicatorKeys);
 		});
-	}
-
-	#handleCrosshairMove({ logical, point, seriesData, sourceEvent, time }) {
-		if (!point || !time || !this.#hasValidData()) return;
-
-		const candlestick = seriesData.get(this.#series.candlestick);
-
-		this.#updateChartInfoPanel(candlestick);
-		this.#updateIndicatorPanels(seriesData);
-		this.#updateRulerTool({ logical, point, sourceEvent });
-	}
-
-	#updateChartInfoPanel(candlestick) {
-		if (candlestick) {
-			this.mainInfoPanel.update(candlestick);
-		}
-	}
-
-	#updateIndicatorPanels(seriesData) {
-		const indicators = Object.fromEntries(
-			[...this.#series.indicators].map(([key, series]) => [
-				key,
-				seriesData.get(series),
-			]),
-		);
-
-		this.#indicatorPanels.forEach((panel) => {
-			panel.update(indicators);
-		});
-	}
-
-	#updateRulerTool({ logical, point, sourceEvent }) {
-		this.rulerTool.update({
-			logical,
-			point,
-			sourceEvent,
-			candlestickSeries: this.#series.candlestick,
-		});
-	}
-
-	#handleVisibleLogicalRangeChange(newRange) {
-		if (!this.#hasValidData()) return;
-
-		if (newRange === null) {
-			this.#visibleRange = DATA_BATCH_SIZE;
-			return;
-		}
-
-		if (this.#visibleRange >= this.#data.candlesticks.length) return;
-
-		if (newRange.from < 50) {
-			this.#visibleRange += DATA_BATCH_SIZE;
-			this.#updateSeries();
-		}
-	}
-
-	#handleSelectedTradeTime(time) {
-		if (!time || !this.#hasValidData()) return;
-
-		const candles = this.#data.candlesticks;
-		let targetIndex = null;
-
-		for (let i = 0; i < candles.length - 1; i++) {
-			const current = candles[i].time;
-			const next = candles[i + 1].time;
-
-			if (time >= current && time < next) {
-				targetIndex = i;
-				break;
-			}
-		}
-		if (targetIndex === null) return;
-
-		const neededFrom = candles.length - targetIndex;
-
-		if (neededFrom > this.#visibleRange) {
-			this.#visibleRange = neededFrom + DATA_BATCH_SIZE;
-			this.#updateSeries();
-		}
-
-		const logicalIndex = this.#chartApi
-			.timeScale()
-			.timeToIndex(candles[targetIndex].time);
-
-		this.#chartApi.timeScale().setVisibleLogicalRange({
-			from: logicalIndex - VISIBLE_RANGE_PADDING,
-			to: logicalIndex + VISIBLE_RANGE_PADDING,
-		});
-	}
-
-	#hasValidData() {
-		return this.#data.candlesticks && this.#data.candlesticks.length > 0;
 	}
 }

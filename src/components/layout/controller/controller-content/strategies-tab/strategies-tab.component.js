@@ -6,7 +6,7 @@ import { stateService } from '@/core/services/state.service';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
-import { ExecutionService } from '@/api/services/execution.service';
+import { executionService } from '@/api/services/execution.service';
 
 import styles from './strategies-tab.module.css';
 import templateHTML from './strategies-tab.template.html?raw';
@@ -97,7 +97,7 @@ export class StrategiesTab extends BaseComponent {
 
 	async #handleDelete(contextId) {
 		try {
-			await ExecutionService.delete(contextId);
+			await executionService.delete(contextId);
 
 			const contexts = stateService.get(STATE_KEYS.CONTEXTS);
 			const { [contextId]: _, ...remaining } = contexts;
