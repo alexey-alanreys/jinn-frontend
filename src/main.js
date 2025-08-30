@@ -9,6 +9,7 @@ import '@/styles/global.css';
 
 import { ExecutionService } from '@/api/services/execution.service';
 
+import { STATE_KEYS } from './constants/state-keys.constants';
 import { drawingsService } from './core/services/drawings.service';
 import { themeService } from './core/services/theme.service';
 
@@ -40,8 +41,8 @@ class AppInitializer {
 		const [[id, data]] = Object.entries(contexts);
 		const context = { id, ...data };
 
-		stateService.set('contexts', contexts);
-		stateService.set('context', context);
+		stateService.set(STATE_KEYS.CONTEXTS, contexts);
+		stateService.set(STATE_KEYS.CONTEXT, context);
 	}
 
 	static renderApp(app) {

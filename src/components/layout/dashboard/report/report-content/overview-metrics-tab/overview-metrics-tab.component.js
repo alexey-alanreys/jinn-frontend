@@ -5,6 +5,8 @@ import { stateService } from '@/core/services/state.service';
 
 import { Spinner } from '@/components/ui/spinner/spinner.component';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import { reportService } from '@/api/services/report.service';
 
 import styles from './overview-metrics-tab.module.css';
@@ -75,7 +77,7 @@ export class OverviewMetricsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		stateService.subscribe('context', this.update.bind(this));
-		this.update(stateService.get('context'));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
+		this.update(stateService.get(STATE_KEYS.CONTEXT));
 	}
 }

@@ -4,6 +4,8 @@ import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import { ExecutionService } from '@/api/services/execution.service';
 
 import styles from './strategies-tab.module.css';
@@ -52,15 +54,15 @@ export class StrategiesTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#contextId = stateService.get('context').id;
+		this.#contextId = stateService.get(STATE_KEYS.CONTEXT).id;
 
 		this.#renderInitialItems();
 		this.#attachListeners();
 	}
 
 	#renderInitialItems() {
-		const contexts = stateService.get('contexts');
-		const contextId = stateService.get('context').id;
+		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
+		const contextId = stateService.get(STATE_KEYS.CONTEXT).id;
 		const $items = this.#$element.find('[data-ref="strategiesItems"]');
 
 		Object.entries(contexts).forEach(([id, context]) => {
@@ -75,7 +77,7 @@ export class StrategiesTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
-		stateService.subscribe('context', this.update.bind(this));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 	}
 
 	#handleClick(event) {
@@ -94,7 +96,7 @@ export class StrategiesTab extends BaseComponent {
 
 	async #handleDelete(contextId) {
 		try {
-			const contexts = stateService.get('contexts');
+			const contexts = stateService.get(STATE_KEYS.CONTEXTS);
 
 			if (Object.keys(contexts).length === 1) {
 				notificationService.show('warning', 'Cannot delete the last strategy');
@@ -103,9 +105,9 @@ export class StrategiesTab extends BaseComponent {
 
 			await ExecutionService.delete(contextId);
 
-			const currentContextId = stateService.get('context').id;
+			const currentContextId = stateService.get(STATE_KEYS.CONTEXT).id;
 			const { [contextId]: _, ...remaining } = contexts;
-			stateService.set('contexts', remaining);
+			stateService.set(STATE_KEYS.CONTEXTS, remaining);
 
 			if (contextId === currentContextId) {
 				const newContextId = Object.keys(remaining)[0];
@@ -124,7 +126,7 @@ export class StrategiesTab extends BaseComponent {
 	#setContext(contextId) {
 		if (this.#contextId === contextId) return;
 
-		const newContext = stateService.get('contexts')[contextId];
-		stateService.set('context', { id: contextId, ...newContext });
+		const newContext = stateService.get(STATE_KEYS.CONTEXTS)[contextId];
+		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
 	}
 }

@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import styles from './screenshot-button.module.css';
 import templateHTML from './screenshot-button.template.html?raw';
 
@@ -28,7 +30,7 @@ export class ScreenshotButton extends BaseComponent {
 	}
 
 	#handleClick() {
-		const chartApi = stateService.get('chartApi');
+		const chartApi = stateService.get(STATE_KEYS.CHART_API);
 		if (!chartApi) return;
 
 		chartApi.takeScreenshot().toBlob(this.#openScreenshot, 'image/png', 1);

@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import { ExecutionService } from '@/api/services/execution.service';
 
 import styles from './params-tab.module.css';
@@ -76,12 +78,12 @@ export class ParamsTab extends BaseComponent {
 
 	#setupInitialState() {
 		this.#attachListeners();
-		this.update(stateService.get('context'));
+		this.update(stateService.get(STATE_KEYS.CONTEXT));
 	}
 
 	#attachListeners() {
 		this.#$element.on('change', this.#handleInput.bind(this));
-		stateService.subscribe('context', this.update.bind(this));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 	}
 
 	#registerItem(item, id, group = null) {
@@ -94,7 +96,7 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	async #handleInput(event) {
-		const context = stateService.get('context');
+		const context = stateService.get(STATE_KEYS.CONTEXT);
 		const contextId = context.id;
 
 		const id = $Q(event.target).attr('id');
@@ -120,7 +122,7 @@ export class ParamsTab extends BaseComponent {
 			await ExecutionService.update(contextId, param, valueToRequest);
 			item.commit({ id, title, value, group });
 
-			stateService.set('context', {
+			stateService.set(STATE_KEYS.CONTEXT, {
 				...context,
 				strategyParams: {
 					...context.strategyParams,

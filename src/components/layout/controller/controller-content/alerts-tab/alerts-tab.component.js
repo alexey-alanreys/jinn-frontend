@@ -5,6 +5,7 @@ import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
 import { ALERTS_FETCH_LIMIT } from '@/constants/alerts.constants';
+import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { alertsService } from '@/api/services/alerts.service';
 
@@ -57,7 +58,7 @@ export class AlertsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#contextId = stateService.get('context').id;
+		this.#contextId = stateService.get(STATE_KEYS.CONTEXT).id;
 
 		this.#renderInitialItems();
 		this.#attachListeners();
@@ -73,7 +74,7 @@ export class AlertsTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
-		stateService.subscribe('context', this.update.bind(this));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 		this.#pollNewAlerts();
 	}
 
@@ -99,8 +100,8 @@ export class AlertsTab extends BaseComponent {
 	#setContext(contextId) {
 		if (this.#contextId === contextId) return;
 
-		const newContext = stateService.get('contexts')[contextId];
-		stateService.set('context', { id: contextId, ...newContext });
+		const newContext = stateService.get(STATE_KEYS.CONTEXTS)[contextId];
+		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
 	}
 
 	async #handleDelete(alertId) {

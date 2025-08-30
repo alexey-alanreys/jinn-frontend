@@ -5,6 +5,8 @@ import { stateService } from '@/core/services/state.service';
 
 import { MetricsItem } from '@/components/ui/metrics-item/metrics-item.component';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import { reportService } from '@/api/services/report.service';
 
 import styles from './risk-metrics-tab.module.css';
@@ -58,7 +60,7 @@ export class RiskMetricsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		stateService.subscribe('context', this.update.bind(this));
-		this.update(stateService.get('context'));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
+		this.update(stateService.get(STATE_KEYS.CONTEXT));
 	}
 }

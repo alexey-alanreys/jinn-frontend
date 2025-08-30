@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import styles from './ruler-tool.module.css';
 import templateHTML from './ruler-tool.template.html?raw';
 
@@ -78,7 +80,7 @@ export class RulerTool extends BaseComponent {
 			this.#dataFields.set(key, { element: el });
 		});
 
-		stateService.subscribe('context', this.#finish.bind(this));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.#finish.bind(this));
 	}
 
 	#activate() {
@@ -89,14 +91,14 @@ export class RulerTool extends BaseComponent {
 	}
 
 	#subscribeToChart() {
-		const chartApi = stateService.get('chartApi');
+		const chartApi = stateService.get(STATE_KEYS.CHART_API);
 		if (!chartApi) return;
 
 		chartApi.subscribeClick(this.#chartClickHandler);
 	}
 
 	#unsubscribeFromChart() {
-		const chartApi = stateService.get('chartApi');
+		const chartApi = stateService.get(STATE_KEYS.CHART_API);
 		if (!chartApi) return;
 
 		chartApi.unsubscribeClick(this.#chartClickHandler);
@@ -108,7 +110,7 @@ export class RulerTool extends BaseComponent {
 			return;
 		}
 
-		const series = stateService.get('candlestickSeries');
+		const series = stateService.get(STATE_KEYS.CANDLESTICK_SERIES);
 		if (!series) return;
 
 		this.#prepare({ logical, point, sourceEvent, series });
@@ -116,12 +118,12 @@ export class RulerTool extends BaseComponent {
 
 	#finish() {
 		if (this.#isActive) {
-			stateService.set('rulerActive', false);
+			stateService.set(STATE_KEYS.RULER_ACTIVE, false);
 		}
 	}
 
 	#prepare({ logical, point, sourceEvent, series }) {
-		const { minMove, precision } = stateService.get('context');
+		const { minMove, precision } = stateService.get(STATE_KEYS.CONTEXT);
 		this.#minMove = minMove;
 		this.#precision = precision;
 

@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import { reportService } from '@/api/services/report.service';
 
 import styles from './trades-tab.module.css';
@@ -82,12 +84,12 @@ export class TradesTab extends BaseComponent {
 
 	#setupInitialState() {
 		this.#attachListeners();
-		this.update(stateService.get('context'));
+		this.update(stateService.get(STATE_KEYS.CONTEXT));
 	}
 
 	#attachListeners() {
 		this.#$element.on('scroll', this.#handleScroll.bind(this));
-		stateService.subscribe('context', this.update.bind(this));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 	}
 
 	#handleScroll() {

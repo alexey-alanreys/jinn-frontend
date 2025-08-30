@@ -7,6 +7,7 @@ import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
 import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import styles from './trendline-tool-button.module.css';
@@ -55,7 +56,10 @@ export class TrendlineToolButton extends BaseComponent {
 		this.#$element.on('click', this.#handleClick.bind(this));
 		this.#chartClickHandler = this.#handleChartClick.bind(this);
 
-		stateService.subscribe('candlestickSeries', this.deactivate.bind(this));
+		stateService.subscribe(
+			STATE_KEYS.CANDLESTICK_SERIES,
+			this.deactivate.bind(this),
+		);
 	}
 
 	#handleClick() {
@@ -74,22 +78,22 @@ export class TrendlineToolButton extends BaseComponent {
 	}
 
 	#subscribeToChart() {
-		const chartApi = stateService.get('chartApi');
+		const chartApi = stateService.get(STATE_KEYS.CHART_API);
 		if (!chartApi) return;
 
 		chartApi.subscribeClick(this.#chartClickHandler);
 	}
 
 	#unsubscribeFromChart() {
-		const chartApi = stateService.get('chartApi');
+		const chartApi = stateService.get(STATE_KEYS.CHART_API);
 		if (!chartApi) return;
 
 		chartApi.unsubscribeClick(this.#chartClickHandler);
 	}
 
 	#handleChartClick({ time, point }) {
-		const chartApi = stateService.get('chartApi');
-		const candlestickSeries = stateService.get('candlestickSeries');
+		const chartApi = stateService.get(STATE_KEYS.CHART_API);
+		const candlestickSeries = stateService.get(STATE_KEYS.CANDLESTICK_SERIES);
 
 		if (!chartApi || !candlestickSeries) return;
 

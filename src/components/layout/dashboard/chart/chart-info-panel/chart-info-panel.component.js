@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import styles from './chart-info-panel.module.css';
 import templateHTML from './chart-info-panel.template.html?raw';
 
@@ -57,7 +59,7 @@ export class ChartInfoPanel extends BaseComponent {
 	}
 
 	#updateMeta() {
-		const context = stateService.get('context');
+		const context = stateService.get(STATE_KEYS.CONTEXT);
 
 		this.#metaFields.forEach(({ element }, key) => {
 			element.text(context[key]);

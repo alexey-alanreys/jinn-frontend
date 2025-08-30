@@ -1,6 +1,8 @@
 import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import { ExecutionService } from '@/api/services/execution.service';
 
 /**
@@ -174,7 +176,7 @@ class DrawingsService {
 	 * @returns {string|null} Current context ID or null if not available.
 	 */
 	#getContextId() {
-		const context = stateService.get('context');
+		const context = stateService.get(STATE_KEYS.CONTEXT);
 		return context?.id || null;
 	}
 
@@ -185,7 +187,7 @@ class DrawingsService {
 	 * @returns {object|null} Chart API instance or null if not available.
 	 */
 	#getChartApi() {
-		return stateService.get('chartApi') || null;
+		return stateService.get(STATE_KEYS.CHART_API) || null;
 	}
 
 	/**

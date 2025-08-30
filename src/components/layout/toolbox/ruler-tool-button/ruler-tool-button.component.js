@@ -3,6 +3,8 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import styles from './ruler-tool-button.module.css';
 import templateHTML from './ruler-tool-button.template.html?raw';
 
@@ -25,7 +27,7 @@ export class RulerToolButton extends BaseComponent {
 	}
 
 	deactivate() {
-		const rulerTool = stateService.get('rulerTool');
+		const rulerTool = stateService.get(STATE_KEYS.RULER_TOOL);
 		if (!this.#isActive || !rulerTool) return;
 
 		this.#$element.data('active', 'false');
@@ -46,7 +48,7 @@ export class RulerToolButton extends BaseComponent {
 		this.#$element.on('click', this.#handleClick.bind(this));
 
 		stateService.subscribe(
-			'rulerActive',
+			STATE_KEYS.RULER_ACTIVE,
 			this.#handleRulerActiveChange.bind(this),
 		);
 	}
@@ -67,7 +69,7 @@ export class RulerToolButton extends BaseComponent {
 	}
 
 	#activate() {
-		const rulerTool = stateService.get('rulerTool');
+		const rulerTool = stateService.get(STATE_KEYS.RULER_TOOL);
 		if (!rulerTool) return;
 
 		this.#$element.data('active', 'true');

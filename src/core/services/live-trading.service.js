@@ -1,5 +1,7 @@
 import { stateService } from '@/core/services/state.service.js';
 
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
 import { alertsService } from '@/api/services/alerts.service.js';
 import { ExecutionService } from '@/api/services/execution.service.js';
 
@@ -22,11 +24,17 @@ class LiveTradingService {
 	 * and contexts changes and applying initial state updates.
 	 */
 	init() {
-		stateService.subscribe('context', this.#handleContextChange.bind(this));
-		stateService.subscribe('contexts', this.#handleContextsChange.bind(this));
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextChange.bind(this),
+		);
+		stateService.subscribe(
+			STATE_KEYS.CONTEXTS,
+			this.#handleContextsChange.bind(this),
+		);
 
-		this.#handleContextChange(stateService.get('context'));
-		this.#handleContextsChange(stateService.get('contexts'));
+		this.#handleContextChange(stateService.get(STATE_KEYS.CONTEXT));
+		this.#handleContextsChange(stateService.get(STATE_KEYS.CONTEXTS));
 	}
 
 	/**
@@ -70,8 +78,10 @@ class LiveTradingService {
 
 		this.#contextIntervalId = setInterval(async () => {
 			try {
-				const candlestickSeries = stateService.get('candlestickSeries');
-				const context = stateService.get('context');
+				const candlestickSeries = stateService.get(
+					STATE_KEYS.CANDLESTICK_SERIES,
+				);
+				const context = stateService.get(STATE_KEYS.CONTEXT);
 				if (!context?.id) return;
 
 				const updatedContext = await ExecutionService.get(
@@ -81,7 +91,7 @@ class LiveTradingService {
 
 				if (Object.keys(updatedContext).length) {
 					const [[id, data]] = Object.entries(updatedContext);
-					stateService.set('context', { id, ...data });
+					stateService.set(STATE_KEYS.CONTEXT, { id, ...data });
 				}
 			} catch (error) {
 				console.error('Failed to fetch updated context.', error);
@@ -105,7 +115,7 @@ class LiveTradingService {
 			try {
 				const alerts = await alertsService.get();
 				if (Object.keys(alerts).length) {
-					stateService.set('alerts', alerts);
+					stateService.set(STATE_KEYS.ALERTS, alerts);
 				}
 			} catch (error) {
 				console.error('Failed to fetch alerts.', error);

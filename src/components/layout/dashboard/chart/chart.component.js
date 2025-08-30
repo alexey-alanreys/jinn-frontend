@@ -24,6 +24,7 @@ import {
 	DATA_BATCH_SIZE,
 	VISIBLE_RANGE_PADDING,
 } from '@/constants/chart.constants';
+import { STATE_KEYS } from '@/constants/state-keys.constants';
 import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import { chartService } from '@/api/services/chart.service';
@@ -144,21 +145,21 @@ export class Chart extends BaseComponent {
 				this.#handleVisibleLogicalRangeChange.bind(this),
 			);
 
-		stateService.subscribe('context', this.update.bind(this));
-		stateService.subscribe('theme', this.#applyOptions.bind(this));
+		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
+		stateService.subscribe(STATE_KEYS.THEME, this.#applyOptions.bind(this));
 		stateService.subscribe(
-			'selectedTradeTime',
+			STATE_KEYS.SELECTED_TRADE_TIME,
 			this.#handleSelectedTradeTime.bind(this),
 		);
 	}
 
 	#registerState() {
-		stateService.set('rulerTool', this.rulerTool);
-		stateService.set('chartApi', this.#chartApi);
+		stateService.set(STATE_KEYS.RULER_TOOL, this.rulerTool);
+		stateService.set(STATE_KEYS.CHART_API, this.#chartApi);
 	}
 
 	#applyContext() {
-		const context = stateService.get('context');
+		const context = stateService.get(STATE_KEYS.CONTEXT);
 		this.update(context);
 	}
 
@@ -176,19 +177,19 @@ export class Chart extends BaseComponent {
 
 	async #loadCandlesticks() {
 		this.#data.candlesticks = await chartService.getKlines(
-			stateService.get('context').id,
+			stateService.get(STATE_KEYS.CONTEXT).id,
 		);
 	}
 
 	async #loadIndicators() {
 		this.#data.indicators = await chartService.getIndicators(
-			stateService.get('context').id,
+			stateService.get(STATE_KEYS.CONTEXT).id,
 		);
 	}
 
 	async #loadDeals() {
 		this.#data.deals = await chartService.getDeals(
-			stateService.get('context').id,
+			stateService.get(STATE_KEYS.CONTEXT).id,
 		);
 	}
 
@@ -237,11 +238,11 @@ export class Chart extends BaseComponent {
 
 	#createCandlestickSeries() {
 		this.#series.candlestick = this.#chartApi.addSeries(CandlestickSeries);
-		stateService.set('candlestickSeries', this.#series.candlestick);
+		stateService.set(STATE_KEYS.CANDLESTICK_SERIES, this.#series.candlestick);
 	}
 
 	#createIndicatorSeries() {
-		const { indicatorOptions } = stateService.get('context');
+		const { indicatorOptions } = stateService.get(STATE_KEYS.CONTEXT);
 
 		Object.entries(indicatorOptions).forEach(([name, options]) => {
 			const typeKey = options.type ?? 'line';
@@ -260,7 +261,7 @@ export class Chart extends BaseComponent {
 
 	#createPanels() {
 		requestAnimationFrame(() => {
-			const context = stateService.get('context');
+			const context = stateService.get(STATE_KEYS.CONTEXT);
 			const indicatorOptions = context.indicatorOptions ?? {};
 
 			this.#initIndicatorPanels(indicatorOptions);
@@ -313,7 +314,7 @@ export class Chart extends BaseComponent {
 	}
 
 	#applyCandlestickOptions() {
-		const { precision, minMove } = stateService.get('context');
+		const { precision, minMove } = stateService.get(STATE_KEYS.CONTEXT);
 		const candlestickOptions = getCandlestickOptions();
 
 		this.#series.candlestick.applyOptions({
@@ -327,7 +328,7 @@ export class Chart extends BaseComponent {
 	}
 
 	#applyIndicatorOptions() {
-		const { indicatorOptions } = stateService.get('context');
+		const { indicatorOptions } = stateService.get(STATE_KEYS.CONTEXT);
 		const lineOptions = getLineOptions();
 
 		this.#series.indicators.forEach((series, key) => {
@@ -392,7 +393,7 @@ export class Chart extends BaseComponent {
 	}
 
 	#resetIndicatorInfoPanels() {
-		const context = stateService.get('context');
+		const context = stateService.get(STATE_KEYS.CONTEXT);
 		const indicatorOptions = context.indicatorOptions ?? {};
 
 		const indicatorValues = Object.fromEntries(
