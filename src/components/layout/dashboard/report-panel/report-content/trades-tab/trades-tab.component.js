@@ -36,28 +36,6 @@ export class TradesTab extends BaseComponent {
 		return this.element;
 	}
 
-	async update(context) {
-		try {
-			let trades = [];
-			if (context.id) {
-				try {
-					trades = await reportService.getTrades(context.id);
-				} catch {
-					trades = [];
-				}
-			}
-
-			this.#cachedTrades = [...trades];
-
-			this.#clearRenderedItems();
-			this.#ensureCorrectSortOrder();
-			this.#calculateVisibleRange();
-			this.#renderTrades();
-		} catch (error) {
-			console.error('Failed to update trades.', error);
-		}
-	}
-
 	handleSortingToggle() {
 		if (this.#cachedTrades.length > 0) {
 			this.#clearRenderedItems();
@@ -92,12 +70,15 @@ export class TradesTab extends BaseComponent {
 
 	#setupInitialState() {
 		this.#attachListeners();
-		this.update(stateService.get(STATE_KEYS.CONTEXT));
+		this.#handleContextUpdate(stateService.get(STATE_KEYS.CONTEXT));
 	}
 
 	#attachListeners() {
 		this.#$element.on('scroll', this.#handleScroll.bind(this));
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextUpdate.bind(this),
+		);
 	}
 
 	#handleScroll() {
@@ -111,6 +92,35 @@ export class TradesTab extends BaseComponent {
 		this.#renderTrades();
 	}
 
+	async #handleContextUpdate(context) {
+		try {
+			let trades = [];
+			if (context.id) {
+				try {
+					trades = await reportService.getTrades(context.id);
+				} catch {
+					trades = [];
+				}
+			}
+
+			this.#cachedTrades = [...trades];
+
+			this.#clearRenderedItems();
+			this.#ensureCorrectSortOrder();
+			this.#calculateVisibleRange();
+			this.#renderTrades();
+		} catch (error) {
+			console.error('Failed to update trades.', error);
+		}
+	}
+
+	#clearRenderedItems() {
+		for (const item of this.#renderedItems.values()) {
+			item.element.remove();
+		}
+		this.#renderedItems.clear();
+	}
+
 	#ensureCorrectSortOrder() {
 		if (this.#cachedTrades.length < 2) return;
 
@@ -121,6 +131,10 @@ export class TradesTab extends BaseComponent {
 		if (shouldReverse) {
 			this.#applySorting();
 		}
+	}
+
+	#applySorting() {
+		this.#cachedTrades.reverse();
 	}
 
 	#calculateVisibleRange() {
@@ -175,16 +189,5 @@ export class TradesTab extends BaseComponent {
 		}
 
 		this.#renderedItems = newRenderedItems;
-	}
-
-	#clearRenderedItems() {
-		for (const item of this.#renderedItems.values()) {
-			item.element.remove();
-		}
-		this.#renderedItems.clear();
-	}
-
-	#applySorting() {
-		this.#cachedTrades.reverse();
 	}
 }

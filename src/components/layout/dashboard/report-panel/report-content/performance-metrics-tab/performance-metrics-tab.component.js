@@ -25,23 +25,6 @@ export class PerformanceMetricsTab extends BaseComponent {
 		return this.element;
 	}
 
-	async update(context) {
-		try {
-			let metrics = [];
-			if (context.id) {
-				try {
-					metrics = await reportService.getPerformanceMetrics(context.id);
-				} catch {
-					metrics = [];
-				}
-			}
-
-			this.#renderMetrics(metrics);
-		} catch (error) {
-			console.error('Failed to update metrics.', error);
-		}
-	}
-
 	hide() {
 		this.#$element.css('display', 'none');
 	}
@@ -56,8 +39,28 @@ export class PerformanceMetricsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
-		this.update(stateService.get(STATE_KEYS.CONTEXT));
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextUpdate.bind(this),
+		);
+		this.#handleContextUpdate(stateService.get(STATE_KEYS.CONTEXT));
+	}
+
+	async #handleContextUpdate(context) {
+		try {
+			let metrics = [];
+			if (context.id) {
+				try {
+					metrics = await reportService.getPerformanceMetrics(context.id);
+				} catch {
+					metrics = [];
+				}
+			}
+
+			this.#renderMetrics(metrics);
+		} catch (error) {
+			console.error('Failed to update metrics.', error);
+		}
 	}
 
 	#renderMetrics(metrics) {

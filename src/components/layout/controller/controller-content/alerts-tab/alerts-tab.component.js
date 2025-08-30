@@ -32,13 +32,6 @@ export class AlertsTab extends BaseComponent {
 		return this.element;
 	}
 
-	update(context) {
-		const newContextId = context.id ?? null;
-		if (this.#contextId === newContextId) return;
-
-		this.#contextId = newContextId;
-	}
-
 	hide() {
 		this.#$element.css('display', 'none');
 	}
@@ -72,21 +65,14 @@ export class AlertsTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextUpdate.bind(this),
+		);
 		stateService.subscribe(
 			STATE_KEYS.ALERTS,
 			this.#handleAlertsUpdate.bind(this),
 		);
-	}
-
-	#handleAlertsUpdate(alerts) {
-		if (!alerts.length) return;
-
-		alerts.forEach((alert) => {
-			if (!this.#items.has(alert.alertId)) {
-				this.#createAlertItem(alert.alertId, alert);
-			}
-		});
 	}
 
 	#handleClick(event) {
@@ -130,6 +116,23 @@ export class AlertsTab extends BaseComponent {
 		} catch (error) {
 			console.error('Failed to remove alert.', error);
 		}
+	}
+
+	#handleContextUpdate(context) {
+		const newContextId = context.id ?? null;
+		if (this.#contextId === newContextId) return;
+
+		this.#contextId = newContextId;
+	}
+
+	#handleAlertsUpdate(alerts) {
+		if (!alerts.length) return;
+
+		alerts.forEach((alert) => {
+			if (!this.#items.has(alert.alertId)) {
+				this.#createAlertItem(alert.alertId, alert);
+			}
+		});
 	}
 
 	#createAlertItem(id, alert) {

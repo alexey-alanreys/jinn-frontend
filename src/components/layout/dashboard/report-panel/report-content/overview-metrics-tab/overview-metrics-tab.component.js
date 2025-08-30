@@ -38,7 +38,31 @@ export class OverviewMetricsTab extends BaseComponent {
 		this.#$element.css('display', 'flex');
 	}
 
-	async update(context) {
+	#initComponents() {
+		this.spinner = new Spinner();
+		this.noData = new NoData();
+		this.overviewMetrics = new OverviewMetrics();
+		this.equityCurve = new EquityCurve();
+	}
+
+	#initDOM() {
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[this.spinner, this.noData, this.overviewMetrics, this.equityCurve],
+			styles,
+		);
+		this.#$element = $Q(this.element);
+	}
+
+	#setupInitialState() {
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextUpdate.bind(this),
+		);
+		this.#handleContextUpdate(stateService.get(STATE_KEYS.CONTEXT));
+	}
+
+	async #handleContextUpdate(context) {
 		try {
 			let metrics = { primary: [], equity: [] };
 			if (context.id) {
@@ -65,26 +89,5 @@ export class OverviewMetricsTab extends BaseComponent {
 		} catch (error) {
 			console.error('Failed to update overview.', error);
 		}
-	}
-
-	#initComponents() {
-		this.spinner = new Spinner();
-		this.noData = new NoData();
-		this.overviewMetrics = new OverviewMetrics();
-		this.equityCurve = new EquityCurve();
-	}
-
-	#initDOM() {
-		this.element = renderService.htmlToElement(
-			templateHTML,
-			[this.spinner, this.noData, this.overviewMetrics, this.equityCurve],
-			styles,
-		);
-		this.#$element = $Q(this.element);
-	}
-
-	#setupInitialState() {
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
-		this.update(stateService.get(STATE_KEYS.CONTEXT));
 	}
 }

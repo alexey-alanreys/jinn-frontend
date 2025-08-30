@@ -31,28 +31,6 @@ export class ParamsTab extends BaseComponent {
 		return this.element;
 	}
 
-	update(context) {
-		const newContextId = context.id ?? null;
-		if (this.#contextId === newContextId) return;
-
-		this.#clear();
-
-		if (newContextId) {
-			const $items = this.#$element.find('[data-ref="paramsItems"]');
-
-			Object.entries(context.params).forEach(([title, value]) => {
-				const item = new ParamsItem();
-				const id = `param-${title}`;
-
-				$items.append(item.render());
-				item.update({ id, title, value });
-				this.#itemsById.set(id, item);
-			});
-		}
-
-		this.#contextId = newContextId;
-	}
-
 	hide() {
 		this.#$element.css('display', 'none');
 	}
@@ -68,12 +46,15 @@ export class ParamsTab extends BaseComponent {
 
 	#setupInitialState() {
 		this.#attachListeners();
-		this.update(stateService.get(STATE_KEYS.CONTEXT));
+		this.#handleContextUpdate(stateService.get(STATE_KEYS.CONTEXT));
 	}
 
 	#attachListeners() {
 		this.#$element.on('change', this.#handleInput.bind(this));
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextUpdate.bind(this),
+		);
 	}
 
 	async #handleInput(event) {
@@ -100,6 +81,28 @@ export class ParamsTab extends BaseComponent {
 			console.error('Failed to update strategy parameter.', error);
 			item.rollback();
 		}
+	}
+
+	#handleContextUpdate(context) {
+		const newContextId = context.id ?? null;
+		if (this.#contextId === newContextId) return;
+
+		this.#clear();
+
+		if (newContextId) {
+			const $items = this.#$element.find('[data-ref="paramsItems"]');
+
+			Object.entries(context.params).forEach(([title, value]) => {
+				const item = new ParamsItem();
+				const id = `param-${title}`;
+
+				$items.append(item.render());
+				item.update({ id, title, value });
+				this.#itemsById.set(id, item);
+			});
+		}
+
+		this.#contextId = newContextId;
 	}
 
 	#clear() {

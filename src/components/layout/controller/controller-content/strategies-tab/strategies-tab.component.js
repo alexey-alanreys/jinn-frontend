@@ -32,21 +32,6 @@ export class StrategiesTab extends BaseComponent {
 		return this.element;
 	}
 
-	update(context) {
-		const newContextId = context.id ?? null;
-		if (this.#contextId === newContextId) return;
-
-		if (this.#contextId && this.#items.has(this.#contextId)) {
-			this.#items.get(this.#contextId).deactivate();
-		}
-
-		if (newContextId && this.#items.has(newContextId)) {
-			this.#items.get(newContextId).activate();
-		}
-
-		this.#contextId = newContextId;
-	}
-
 	hide() {
 		this.#$element.css('display', 'none');
 	}
@@ -90,7 +75,10 @@ export class StrategiesTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextUpdate.bind(this),
+		);
 	}
 
 	#handleClick(event) {
@@ -126,7 +114,6 @@ export class StrategiesTab extends BaseComponent {
 				}
 			}
 
-			// Удаляем элемент из DOM и коллекции
 			if (this.#items.has(contextId)) {
 				this.#items.get(contextId).remove();
 				this.#items.delete(contextId);
@@ -149,5 +136,20 @@ export class StrategiesTab extends BaseComponent {
 	#setEmptyContext() {
 		stateService.set(STATE_KEYS.CONTEXT, {});
 		this.#contextId = null;
+	}
+
+	#handleContextUpdate(context) {
+		const newContextId = context.id ?? null;
+		if (this.#contextId === newContextId) return;
+
+		if (this.#contextId && this.#items.has(this.#contextId)) {
+			this.#items.get(this.#contextId).deactivate();
+		}
+
+		if (newContextId && this.#items.has(newContextId)) {
+			this.#items.get(newContextId).activate();
+		}
+
+		this.#contextId = newContextId;
 	}
 }

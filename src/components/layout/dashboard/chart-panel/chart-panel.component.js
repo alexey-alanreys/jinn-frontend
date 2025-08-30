@@ -75,35 +75,6 @@ export class ChartPanel extends BaseComponent {
 		return this.element;
 	}
 
-	async update(context) {
-		if (!context.id) {
-			this.#handleEmptyContext();
-			return;
-		}
-
-		await this.#loadData(context);
-
-		if (this.#contextId !== context.id) {
-			this.#contextId = context.id;
-
-			this.#removePanels();
-			this.#removeSeries();
-
-			if (this.#hasValidData()) {
-				this.#createSeries();
-				this.#createPanels();
-				this.#loadDrawings();
-			}
-		}
-
-		this.#updateDisplayState();
-
-		if (!this.#firstLoadDone) {
-			this.#firstLoadDone = true;
-			this.spinner.hide();
-		}
-	}
-
 	#initComponents() {
 		this.spinner = new Spinner();
 		this.noData = new NoData();
@@ -144,22 +115,24 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#attachListeners() {
-		this.#chartApi.subscribeCrosshairMove(
-			this.#handleCrosshairMove.bind(this),
+		stateService.subscribe(
+			STATE_KEYS.CONTEXT,
+			this.#handleContextUpdate.bind(this),
 		);
-
-		this.#chartApi
-			.timeScale()
-			.subscribeVisibleLogicalRangeChange(
-				this.#handleVisibleLogicalRangeChange.bind(this),
-			);
-
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 		stateService.subscribe(STATE_KEYS.THEME, this.#applyOptions.bind(this));
 		stateService.subscribe(
 			STATE_KEYS.SELECTED_TIME,
 			this.#handleSelectedTradeTime.bind(this),
 		);
+
+		this.#chartApi.subscribeCrosshairMove(
+			this.#handleCrosshairMove.bind(this),
+		);
+		this.#chartApi
+			.timeScale()
+			.subscribeVisibleLogicalRangeChange(
+				this.#handleVisibleLogicalRangeChange.bind(this),
+			);
 	}
 
 	#registerInitialState() {
@@ -170,7 +143,36 @@ export class ChartPanel extends BaseComponent {
 
 	#applyContext() {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
-		this.update(context);
+		this.#handleContextUpdate(context);
+	}
+
+	async #handleContextUpdate(context) {
+		if (!context.id) {
+			this.#handleEmptyContext();
+			return;
+		}
+
+		await this.#loadData(context);
+
+		if (this.#contextId !== context.id) {
+			this.#contextId = context.id;
+
+			this.#removePanels();
+			this.#removeSeries();
+
+			if (this.#hasValidData()) {
+				this.#createSeries();
+				this.#createPanels();
+				this.#loadDrawings();
+			}
+		}
+
+		this.#updateDisplayState();
+
+		if (!this.#firstLoadDone) {
+			this.#firstLoadDone = true;
+			this.spinner.hide();
+		}
 	}
 
 	#handleEmptyContext() {
