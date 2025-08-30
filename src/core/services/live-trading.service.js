@@ -78,9 +78,7 @@ class LiveTradingService {
 
 		this.#contextIntervalId = setInterval(async () => {
 			try {
-				const candlestickSeries = stateService.get(
-					STATE_KEYS.CANDLESTICK_SERIES,
-				);
+				const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
 				const context = stateService.get(STATE_KEYS.CONTEXT);
 				if (!context?.id) return;
 

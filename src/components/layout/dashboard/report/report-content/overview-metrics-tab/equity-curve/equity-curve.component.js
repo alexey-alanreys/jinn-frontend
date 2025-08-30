@@ -110,7 +110,7 @@ export class EquityCurve extends BaseComponent {
 	}
 
 	#handleClick({ time }) {
-		stateService.set(STATE_KEYS.SELECTED_TRADE_TIME, time);
+		stateService.set(STATE_KEYS.SELECTED_TIME, time);
 	}
 
 	#handleCrosshairMove(param) {

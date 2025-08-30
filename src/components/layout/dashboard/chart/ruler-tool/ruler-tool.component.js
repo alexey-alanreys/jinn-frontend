@@ -110,7 +110,7 @@ export class RulerTool extends BaseComponent {
 			return;
 		}
 
-		const series = stateService.get(STATE_KEYS.CANDLESTICK_SERIES);
+		const series = stateService.get(STATE_KEYS.CANDLE_SERIES);
 		if (!series) return;
 
 		this.#prepare({ logical, point, sourceEvent, series });

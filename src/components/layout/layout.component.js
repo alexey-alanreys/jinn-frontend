@@ -1,10 +1,12 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { renderService } from '@/core/services/render.service';
 
-import { Controller } from './controller/controller.component';
-import { Dashboard } from './dashboard/dashboard.component';
 import styles from './layout.module.css';
 import templateHTML from './layout.template.html?raw';
+
+import { Controller } from './controller/controller.component';
+import { Dashboard } from './dashboard/dashboard.component';
+import { Notification } from './notification/notification.component';
 import { Toolbox } from './toolbox/toolbox.component';
 
 export class Layout extends BaseComponent {
@@ -13,7 +15,7 @@ export class Layout extends BaseComponent {
 	render() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[Toolbox, Dashboard, Controller],
+			[Toolbox, Dashboard, Controller, Notification],
 			styles,
 		);
 		return this.element;

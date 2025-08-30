@@ -1,11 +1,14 @@
 export const STATE_KEYS = {
 	ALERTS: 'alerts',
-	CANDLESTICK_SERIES: 'candlestickSeries',
+	CANDLE_SERIES: 'candleSeries',
 	CHART_API: 'chartApi',
 	CONTEXT: 'context',
 	CONTEXTS: 'contexts',
+	EXCHANGES: 'exchanges',
+	INTERVALS: 'intervals',
 	RULER_ACTIVE: 'rulerActive',
 	RULER_TOOL: 'rulerTool',
-	SELECTED_TRADE_TIME: 'selectedTradeTime',
+	SELECTED_TIME: 'selectedTime',
+	STRATEGIES: 'strategies',
 	THEME: 'theme',
 };

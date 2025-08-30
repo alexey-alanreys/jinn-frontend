@@ -57,7 +57,7 @@ export class TrendlineToolButton extends BaseComponent {
 		this.#chartClickHandler = this.#handleChartClick.bind(this);
 
 		stateService.subscribe(
-			STATE_KEYS.CANDLESTICK_SERIES,
+			STATE_KEYS.CANDLE_SERIES,
 			this.deactivate.bind(this),
 		);
 	}
@@ -93,7 +93,7 @@ export class TrendlineToolButton extends BaseComponent {
 
 	#handleChartClick({ time, point }) {
 		const chartApi = stateService.get(STATE_KEYS.CHART_API);
-		const candlestickSeries = stateService.get(STATE_KEYS.CANDLESTICK_SERIES);
+		const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
 
 		if (!chartApi || !candlestickSeries) return;
 

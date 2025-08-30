@@ -148,7 +148,7 @@ export class Chart extends BaseComponent {
 		stateService.subscribe(STATE_KEYS.CONTEXT, this.update.bind(this));
 		stateService.subscribe(STATE_KEYS.THEME, this.#applyOptions.bind(this));
 		stateService.subscribe(
-			STATE_KEYS.SELECTED_TRADE_TIME,
+			STATE_KEYS.SELECTED_TIME,
 			this.#handleSelectedTradeTime.bind(this),
 		);
 	}
@@ -238,7 +238,7 @@ export class Chart extends BaseComponent {
 
 	#createCandlestickSeries() {
 		this.#series.candlestick = this.#chartApi.addSeries(CandlestickSeries);
-		stateService.set(STATE_KEYS.CANDLESTICK_SERIES, this.#series.candlestick);
+		stateService.set(STATE_KEYS.CANDLE_SERIES, this.#series.candlestick);
 	}
 
 	#createIndicatorSeries() {
