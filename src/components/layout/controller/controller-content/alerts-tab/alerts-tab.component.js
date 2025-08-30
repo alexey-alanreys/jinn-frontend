@@ -4,10 +4,7 @@ import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import {
-	ALERTS_FETCH_LIMIT,
-	ALERTS_POLLING_INTERVAL,
-} from '@/constants/alerts.constants';
+import { ALERTS_FETCH_LIMIT } from '@/constants/alerts.constants';
 
 import { alertsService } from '@/api/services/alerts.service';
 

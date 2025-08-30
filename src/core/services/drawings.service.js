@@ -24,8 +24,8 @@ class DrawingsService {
 	}
 
 	/**
-	 * Initializes the drawings service by cleaning up orphaned drawings
-	 * for contexts that are no longer active.
+	 * Initializes the drawings service by cleaning up orphaned
+	 * drawings for contexts that are no longer active.
 	 */
 	async init() {
 		const statuses = await ExecutionService.getAllStatuses();
@@ -136,9 +136,7 @@ class DrawingsService {
 		this.#drawings = series;
 	}
 
-	/**
-	 * Shows all drawings by setting their visibility to true.
-	 */
+	/** Shows all drawings by setting their visibility to true. */
 	show() {
 		if (!this.#drawings.length) return;
 
@@ -149,9 +147,7 @@ class DrawingsService {
 		this.#isVisible = true;
 	}
 
-	/**
-	 * Hides all drawings by setting their visibility to false.
-	 */
+	/** Hides all drawings by setting their visibility to false. */
 	hide() {
 		if (!this.#drawings.length) return;
 
@@ -162,9 +158,7 @@ class DrawingsService {
 		this.#isVisible = false;
 	}
 
-	/**
-	 * Removes all drawing series from chart and clears state.
-	 */
+	/** Removes all drawing series from chart and clears state. */
 	removeAll() {
 		const chartApi = this.#getChartApi();
 		if (!chartApi) return;
