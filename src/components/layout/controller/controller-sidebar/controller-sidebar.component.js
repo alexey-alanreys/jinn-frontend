@@ -7,6 +7,7 @@ import templateHTML from './controller-sidebar.template.html?raw';
 import { AlertsTabButton } from './alerts-tab-button/alerts-tab-button.component';
 import { ParamsTabButton } from './params-tab-button/params-tab-button.component';
 import { StrategiesTabButton } from './strategies-tab-button/strategies-tab-button.component';
+import { ThemeButton } from './theme-button/theme-button.component';
 
 export class ControllerSidebar extends BaseComponent {
 	static COMPONENT_NAME = 'ControllerSidebar';
@@ -43,7 +44,7 @@ export class ControllerSidebar extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[...Object.values(this.buttons)],
+			[...Object.values(this.buttons), ThemeButton],
 			styles,
 		);
 	}

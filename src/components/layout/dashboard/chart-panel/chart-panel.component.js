@@ -29,16 +29,16 @@ import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
 import { chartService } from '@/api/services/chart.service';
 
-import styles from './chart.module.css';
-import templateHTML from './chart.template.html?raw';
+import styles from './chart-panel.module.css';
+import templateHTML from './chart-panel.template.html?raw';
 
 import { ChartInfoPanel } from './chart-info-panel/chart-info-panel.component';
 import { IndicatorsInfoPanel } from './indicators-info-panel/indicators-info-panel.component';
 import { RulerTool } from './ruler-tool/ruler-tool.component';
 import { ScrollToRealtimeButton } from './scroll-to-realtime-button/scroll-to-realtime-button.component';
 
-export class Chart extends BaseComponent {
-	static COMPONENT_NAME = 'Chart';
+export class ChartPanel extends BaseComponent {
+	static COMPONENT_NAME = 'ChartPanel';
 	static indicatorTypes = {
 		line: LineSeries,
 		histogram: HistogramSeries,
@@ -247,7 +247,7 @@ export class Chart extends BaseComponent {
 		Object.entries(indicatorOptions).forEach(([name, options]) => {
 			const typeKey = options.type ?? 'line';
 			const indicatorType =
-				Chart.indicatorTypes[typeKey] ?? Chart.indicatorTypes.line;
+				ChartPanel.indicatorTypes[typeKey] ?? ChartPanel.indicatorTypes.line;
 			const paneIndex = Math.max(0, Math.min(3, options.pane ?? 0));
 
 			const series = this.#chartApi.addSeries(

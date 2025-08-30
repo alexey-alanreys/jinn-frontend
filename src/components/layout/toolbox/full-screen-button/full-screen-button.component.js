@@ -27,7 +27,7 @@ export class FullScreenButton extends BaseComponent {
 	}
 
 	#handleClick() {
-		const chart = $Q('[data-ref="chart"]').element;
+		const chart = $Q('[data-ref="chartPanel"]').element;
 		if (!chart) return;
 
 		const requestFullScreen =

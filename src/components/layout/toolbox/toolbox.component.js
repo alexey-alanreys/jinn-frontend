@@ -9,7 +9,6 @@ import { FullScreenButton } from './full-screen-button/full-screen-button.compon
 import { HideDrawingsButton } from './hide-drawings-button/hide-drawings-button.component';
 import { RulerToolButton } from './ruler-tool-button/ruler-tool-button.component';
 import { ScreenshotButton } from './screenshot-button/screenshot-button.component';
-import { ThemeButton } from './theme-button/theme-button.component';
 import { TrendlineToolButton } from './trendline-tool-button/trendline-tool-button.component';
 
 export class Toolbox extends BaseComponent {
@@ -58,7 +57,6 @@ export class Toolbox extends BaseComponent {
 				this.rulerToolButton,
 				this.hideDrawingsButton,
 				ClearDrawingsButton,
-				ThemeButton,
 			],
 			styles,
 		);

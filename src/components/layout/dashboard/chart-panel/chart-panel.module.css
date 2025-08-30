@@ -1,4 +1,4 @@
-.chart {
+.chart-panel {
 	position: absolute;
 	inset: 0 0 40%;
 	display: flex;
@@ -9,17 +9,6 @@
 	background-color: var(--color-bg-primary);
 	border-radius: 0 0 6px 6px;
 	cursor: crosshair;
-
-	> .spinner-wrapper {
-		position: absolute;
-		z-index: 10;
-		inset: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: var(--color-bg-primary);
-		pointer-events: none;
-	}
 
 	> .chart-canvas {
 		display: block;

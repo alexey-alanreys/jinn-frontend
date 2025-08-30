@@ -2,13 +2,13 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
+import styles from './report-panel.module.css';
+import templateHTML from './report-panel.template.html?raw';
+
 import { ReportContent } from './report-content/report-content.component';
-import styles from './report.module.css';
-import templateHTML from './report.template.html?raw';
 
-
-export class Report extends BaseComponent {
-	static COMPONENT_NAME = 'Report';
+export class ReportPanel extends BaseComponent {
+	static COMPONENT_NAME = 'ReportPanel';
 
 	#$element;
 

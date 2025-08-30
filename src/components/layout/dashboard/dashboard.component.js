@@ -2,13 +2,14 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { Chart } from './chart/chart.component';
 import styles from './dashboard.module.css';
 import templateHTML from './dashboard.template.html?raw';
-import { ReportHeader } from './report/report-header/report-header.component';
-import { ToggleExpansionButton } from './report/report-header/toggle-expansion-button/toggle-expansion-button.component';
-import { ToggleVisibilityButton } from './report/report-header/toggle-visibility-button/toggle-visibility-button.component';
-import { Report } from './report/report.component';
+
+import { ChartPanel } from './chart-panel/chart-panel.component';
+import { ReportHeader } from './report-panel/report-header/report-header.component';
+import { ToggleExpansionButton } from './report-panel/report-header/toggle-expansion-button/toggle-expansion-button.component';
+import { ToggleVisibilityButton } from './report-panel/report-header/toggle-visibility-button/toggle-visibility-button.component';
+import { ReportPanel } from './report-panel/report-panel.component';
 
 export class Dashboard extends BaseComponent {
 	static COMPONENT_NAME = 'Dashboard';
@@ -57,7 +58,7 @@ export class Dashboard extends BaseComponent {
 	handleManualResize(startY) {
 		this.#updateReportMetrics();
 
-		const startHeight = this.report.height;
+		const startHeight = this.reportPanel.height;
 
 		let isVisActive = this.toggleVisibilityButton.isActive;
 		let isExpActive = this.toggleExpansionButton.isActive;
@@ -103,7 +104,7 @@ export class Dashboard extends BaseComponent {
 	}
 
 	#initComponents() {
-		this.chart = new Chart();
+		this.chartPanel = new ChartPanel();
 
 		this.toggleVisibilityButton = new ToggleVisibilityButton({
 			onClick: this.handleVisibilityToggle.bind(this),
@@ -118,7 +119,7 @@ export class Dashboard extends BaseComponent {
 			toggleExpansionButton: this.toggleExpansionButton,
 		});
 
-		this.report = new Report({
+		this.reportPanel = new ReportPanel({
 			reportHeader: this.reportHeader,
 			onMousedown: this.handleManualResize.bind(this),
 		});
@@ -127,7 +128,7 @@ export class Dashboard extends BaseComponent {
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[this.chart, this.report],
+			[this.chartPanel, this.reportPanel],
 			styles,
 		);
 		this.#$element = $Q(this.element);
@@ -138,13 +139,13 @@ export class Dashboard extends BaseComponent {
 	}
 
 	#updateReportMetrics() {
-		this.#reportHeight = this.report.height;
-		this.#reportMinHeight = this.report.minHeight;
+		this.#reportHeight = this.reportPanel.height;
+		this.#reportMinHeight = this.reportPanel.minHeight;
 		this.#reportMaxHeight = parseInt(this.#$element.css('height'));
 	}
 
 	#resizePanels(height) {
-		this.chart.height = height;
-		this.report.height = height;
+		this.chartPanel.height = height;
+		this.reportPanel.height = height;
 	}
 }
