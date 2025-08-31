@@ -19,8 +19,7 @@ export class ReportTabButton extends BaseComponent {
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
-		this.#$element = $Q(this.element);
-		this.#$element.text(this.#title);
+		this.#$element = $Q(this.element).text(this.#title);
 		return this.element;
 	}
 

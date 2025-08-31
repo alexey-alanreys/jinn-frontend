@@ -2,6 +2,9 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
+import { DeleteButton } from '@/components/ui/controller/buttons/delete-button/delete-button.component';
+import { OpenButton } from '@/components/ui/controller/buttons/open-button/open-button.component';
+
 import { ALERT_COLORS } from '@/constants/alerts.constants';
 
 import styles from './alerts-item.module.css';
@@ -43,7 +46,14 @@ export class AlertsItem extends BaseComponent {
 	}
 
 	#initDOM() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.element = renderService.htmlToElement(
+			templateHTML,
+			[
+				new OpenButton({ title: 'Open Strategy' }),
+				new DeleteButton({ title: 'Delete Alert' }),
+			],
+			styles,
+		);
 		this.#$element = $Q(this.element);
 	}
 

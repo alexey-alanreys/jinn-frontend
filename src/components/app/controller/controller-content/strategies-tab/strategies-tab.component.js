@@ -89,7 +89,7 @@ export class StrategiesTab extends BaseComponent {
 
 		const contextId = $item.data('context-id');
 
-		if ($target.closest('button')) {
+		if ($target.closest('[data-ref="deleteButton"]')) {
 			this.#handleDelete(contextId);
 		} else {
 			this.#setContext(contextId);

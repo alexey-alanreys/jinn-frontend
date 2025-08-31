@@ -80,12 +80,12 @@ export class AlertsTab extends BaseComponent {
 		const $item = $target.closest('[data-alert-id]');
 		if (!$item) return;
 
-		if ($target.closest('[data-ref="openStrategy"]')) {
+		if ($target.closest('[data-ref="openButton"]')) {
 			this.#setContext($item.data('context-id'));
 			return;
 		}
 
-		if ($target.closest('[data-ref="removeAlert"]')) {
+		if ($target.closest('[data-ref="deleteButton"]')) {
 			this.#handleDelete($item.data('alert-id'));
 			return;
 		}
@@ -114,7 +114,7 @@ export class AlertsTab extends BaseComponent {
 				this.#items.delete(alertId);
 			}
 		} catch (error) {
-			console.error('Failed to remove alert.', error);
+			console.error('Failed to delete alert.', error);
 		}
 	}
 

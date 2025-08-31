@@ -63,8 +63,8 @@ export class ParamsTab extends BaseComponent {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
 		const contextId = context.id;
 
-		const root = $Q(event.target).closest('[data-param-id]');
-		const id = root.data('param-id');
+		const $root = $Q(event.target).closest('[data-param-id]');
+		const id = $root.data('param-id');
 		const item = this.#items.get(id);
 		const value = item.value;
 
@@ -87,13 +87,11 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	#handleClick(event) {
-		const target = $Q(event.target);
-		if (target.data('ref') !== 'paramTitle') return;
+		const $target = $Q(event.target);
+		if ($target.data('ref') !== 'paramTitle') return;
 
-		const root = $Q(event.target).closest('[data-param-id]');
-		const item = this.#items.get(root.data('param-id'));
-
-		item.focus();
+		const root = $target.closest('[data-param-id]');
+		this.#items.get(root.data('param-id')).focus();
 	}
 
 	#handleContextUpdate(context) {
