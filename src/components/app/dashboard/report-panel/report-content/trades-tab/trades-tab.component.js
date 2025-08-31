@@ -152,6 +152,12 @@ export class TradesTab extends BaseComponent {
 
 	#renderTrades() {
 		const $items = this.#$element.find('[data-ref="tradesItems"]');
+
+		if (!this.#cachedTrades.length) {
+			$items.css('height', '0px');
+			return;
+		}
+
 		const totalHeight = this.#cachedTrades.length * this.#itemHeight;
 		$items.css('height', `${totalHeight}px`);
 

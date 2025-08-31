@@ -64,6 +64,12 @@ export class RiskMetricsTab extends BaseComponent {
 	}
 
 	#renderMetrics(metrics) {
+		if (!metrics.length) {
+			this.#items.forEach((item) => item.element.remove());
+			this.#items.clear();
+			return;
+		}
+
 		const $items = this.#$element.find('[data-ref="metricsItems"]');
 
 		metrics.forEach((metric, index) => {
