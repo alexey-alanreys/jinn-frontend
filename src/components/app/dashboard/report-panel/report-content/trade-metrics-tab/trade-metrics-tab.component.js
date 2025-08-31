@@ -3,7 +3,7 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
-import { MetricsItem } from '@/components/ui/report-content/metrics-item/metrics-item.component';
+import { MetricsItem } from '@/components/ui/dashboard/metrics-item/metrics-item.component';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 

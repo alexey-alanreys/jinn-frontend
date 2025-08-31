@@ -2,50 +2,28 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { calculateStep } from '@/utils/number-step.util';
+import { CheckboxInput } from '@/components/ui/controller/inputs/checkbox-input/checkbox-input.component';
+import { NumberInput } from '@/components/ui/controller/inputs/number-input/number-input.component';
 
 import styles from './params-item.module.css';
 import templateHTML from './params-item.template.html?raw';
 
 export class ParamsItem extends BaseComponent {
 	static COMPONENT_NAME = 'ParamsItem';
-	static INPUT_TYPES = {
-		NUMBER: 'number',
-		CHECKBOX: 'checkbox',
-	};
 
 	#$element;
-	#$label;
-	#$input;
-
-	#state = {
-		id: null,
-		value: null,
-		title: null,
-	};
+	#input = null;
 
 	get id() {
-		return this.#state.id;
+		return this.#$element.data('param-id');
 	}
 
 	get value() {
-		const type = this.#$input.element.type;
-		const element = this.#$input.element;
-
-		switch (type) {
-			case ParamsItem.INPUT_TYPES.NUMBER:
-				return element.valueAsNumber;
-			case ParamsItem.INPUT_TYPES.CHECKBOX:
-				return element.checked;
-			default:
-				return element.value;
-		}
+		return this.#input?.value ?? null;
 	}
 
 	render() {
 		this.#initDOM();
-		this.#setupInitialState();
-
 		return this.element;
 	}
 
@@ -54,100 +32,49 @@ export class ParamsItem extends BaseComponent {
 	}
 
 	update({ id, value, title }) {
-		this.#state = { id, value, title };
-		this.#updateDOM();
+		this.#$element.data('param-id', id);
+		this.#$element.find('[data-ref="paramTitle"]').text(title);
+
+		this.#renderInput(value);
 	}
 
 	commit(newValue) {
-		this.#state.value = newValue;
+		if (this.#input) {
+			this.#input.commit(newValue);
+		}
 	}
 
 	rollback() {
-		this.#updateDOM();
+		if (this.#input) {
+			this.#input.rollback();
+		}
+	}
+
+	focus() {
+		this.#input.focus?.();
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
-
 		this.#$element = $Q(this.element);
-		this.#$label = this.#$element.find('label');
-		this.#$input = this.#$element.find('input');
-
 		return this.element;
 	}
 
-	#setupInitialState() {
-		this.#$element
-			.find('[data-ref="stepperUp"]')
-			.click(this.#handleStepperUp.bind(this));
-		this.#$element
-			.find('[data-ref="stepperDown"]')
-			.click(this.#handleStepperDown.bind(this));
-	}
-
-	#updateDOM() {
-		const { id, value, title } = this.#state;
-
-		this.#$label.attr('for', id).text(title);
-		this.#$input.attr('id', id);
-
-		this.#configureInputByType(value);
-	}
-
-	#configureInputByType(value) {
-		const stepperElement = this.#$element.find('[data-ref="numberStepper"]');
+	#renderInput(value) {
+		if (this.#input) {
+			this.#input.remove();
+			this.#input = null;
+		}
 
 		if (typeof value === 'number') {
-			this.#configureNumberInput(value);
-			stepperElement.css('display', 'flex');
+			this.#input = new NumberInput();
 		} else if (typeof value === 'boolean') {
-			this.#configureBooleanInput(value);
-			stepperElement.css('display', 'none');
+			this.#input = new CheckboxInput();
+		} else {
+			return;
 		}
-	}
 
-	#configureNumberInput(value) {
-		this.#$input
-			.attr('type', ParamsItem.INPUT_TYPES.NUMBER)
-			.attr('step', calculateStep(value));
-		this.#$input.element.value = value;
-	}
-
-	#configureBooleanInput(value) {
-		this.#$input.attr('type', ParamsItem.INPUT_TYPES.CHECKBOX);
-		this.#$input.element.checked = Boolean(value);
-	}
-
-	#handleStepperUp(event) {
-		event.preventDefault();
-		event.stopPropagation();
-
-		if (this.#$input.element.type !== ParamsItem.INPUT_TYPES.NUMBER) return;
-
-		const currentValue = this.#$input.element.valueAsNumber || 0;
-		const step = parseFloat(this.#$input.attr('step')) || 1;
-		const newValue = currentValue + step;
-
-		this.#$input.element.value = newValue;
-		this.#triggerChange();
-	}
-
-	#handleStepperDown(event) {
-		event.preventDefault();
-		event.stopPropagation();
-
-		if (this.#$input.element.type !== ParamsItem.INPUT_TYPES.NUMBER) return;
-
-		const currentValue = this.#$input.element.valueAsNumber || 0;
-		const step = parseFloat(this.#$input.attr('step')) || 1;
-		const newValue = currentValue - step;
-
-		this.#$input.element.value = newValue;
-		this.#triggerChange();
-	}
-
-	#triggerChange() {
-		const changeEvent = new Event('change', { bubbles: true });
-		this.#$input.element.dispatchEvent(changeEvent);
+		this.#$element.append(this.#input.render());
+		this.#input.update(value);
 	}
 }

@@ -18,7 +18,7 @@ export class ParamsTab extends BaseComponent {
 	#$element;
 
 	#contextId = null;
-	#itemsById = new Map();
+	#items = new Map();
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -51,6 +51,8 @@ export class ParamsTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.on('change', this.#handleInput.bind(this));
+		this.#$element.click(this.#handleClick.bind(this));
+
 		stateService.subscribe(
 			STATE_KEYS.CONTEXT,
 			this.#handleContextUpdate.bind(this),
@@ -61,12 +63,14 @@ export class ParamsTab extends BaseComponent {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
 		const contextId = context.id;
 
-		const id = $Q(event.target).attr('id');
-		const item = this.#itemsById.get(id);
+		const root = $Q(event.target).closest('[data-param-id]');
+		const id = root.data('param-id');
+		const item = this.#items.get(id);
 		const value = item.value;
 
 		try {
 			await executionService.update(contextId, id, value);
+
 			item.commit(value);
 
 			stateService.set(STATE_KEYS.CONTEXT, {
@@ -80,6 +84,16 @@ export class ParamsTab extends BaseComponent {
 			console.error('Failed to update strategy parameter.', error);
 			item.rollback();
 		}
+	}
+
+	#handleClick(event) {
+		const target = $Q(event.target);
+		if (target.data('ref') !== 'paramTitle') return;
+
+		const root = $Q(event.target).closest('[data-param-id]');
+		const item = this.#items.get(root.data('param-id'));
+
+		item.focus();
 	}
 
 	#handleContextUpdate(context) {
@@ -98,7 +112,7 @@ export class ParamsTab extends BaseComponent {
 				const item = new ParamsItem();
 				$items.append(item.render());
 				item.update({ id, value, title: labels[id] || id });
-				this.#itemsById.set(id, item);
+				this.#items.set(id, item);
 			});
 		}
 
@@ -106,7 +120,7 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	#clear() {
-		this.#itemsById.forEach((item) => item.remove());
-		this.#itemsById.clear();
+		this.#items.forEach((item) => item.remove());
+		this.#items.clear();
 	}
 }
