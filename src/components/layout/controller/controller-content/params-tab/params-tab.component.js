@@ -31,12 +31,12 @@ export class ParamsTab extends BaseComponent {
 		return this.element;
 	}
 
-	hide() {
-		this.#$element.css('display', 'none');
-	}
-
 	show() {
 		this.#$element.css('display', 'flex');
+	}
+
+	hide() {
+		this.#$element.css('display', 'none');
 	}
 
 	#initDOM() {

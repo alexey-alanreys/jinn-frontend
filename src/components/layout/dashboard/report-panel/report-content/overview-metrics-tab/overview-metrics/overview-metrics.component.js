@@ -20,8 +20,6 @@ export class OverviewMetrics extends BaseComponent {
 	}
 
 	update(metrics) {
-		if (!parseInt(metrics[8])) return;
-
 		this.#dataFields.forEach(({ element, isProfitField }, index) => {
 			const value = metrics[index];
 			element.text(value);

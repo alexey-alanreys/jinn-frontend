@@ -13,8 +13,11 @@ export class Spinner extends BaseComponent {
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);
-
 		return this.element;
+	}
+
+	show() {
+		this.#$element.css('display', 'flex');
 	}
 
 	hide() {

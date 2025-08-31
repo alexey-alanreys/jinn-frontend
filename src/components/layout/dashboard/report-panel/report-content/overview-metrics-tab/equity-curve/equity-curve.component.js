@@ -38,18 +38,16 @@ export class EquityCurve extends BaseComponent {
 	}
 
 	update(equity) {
-		if (!equity.length) return;
-
 		this.#series.setData(equity);
 		this.#chartApi.timeScale().fitContent();
 	}
 
-	hide() {
-		this.#$element.css('display', 'none');
-	}
-
 	show() {
 		this.#$element.css('display', 'block');
+	}
+
+	hide() {
+		this.#$element.css('display', 'none');
 	}
 
 	#initComponents() {

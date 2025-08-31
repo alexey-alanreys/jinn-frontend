@@ -45,12 +45,12 @@ export class TradesTab extends BaseComponent {
 		}
 	}
 
-	hide() {
-		this.#$element.css('display', 'none');
-	}
-
 	show() {
 		this.#$element.css('display', 'flex');
+	}
+
+	hide() {
+		this.#$element.css('display', 'none');
 	}
 
 	#initComponents() {

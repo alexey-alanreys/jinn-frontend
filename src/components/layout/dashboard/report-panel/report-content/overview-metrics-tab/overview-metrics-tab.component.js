@@ -6,6 +6,7 @@ import { stateService } from '@/core/services/state.service';
 import { NoData } from '@/components/ui/dashboard/no-data/no-data.component';
 import { Spinner } from '@/components/ui/dashboard/spinner/spinner.component';
 
+import { SPINNER_DELAY_MS } from '@/constants/spinner.constants';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { reportService } from '@/api/services/report.service';
@@ -20,7 +21,6 @@ export class OverviewMetricsTab extends BaseComponent {
 	static COMPONENT_NAME = 'OverviewMetricsTab';
 
 	#$element;
-	#firstLoadDone = false;
 
 	render() {
 		this.#initComponents();
@@ -30,12 +30,12 @@ export class OverviewMetricsTab extends BaseComponent {
 		return this.element;
 	}
 
-	hide() {
-		this.#$element.css('display', 'none');
-	}
-
 	show() {
 		this.#$element.css('display', 'flex');
+	}
+
+	hide() {
+		this.#$element.css('display', 'none');
 	}
 
 	#initComponents() {
@@ -65,29 +65,42 @@ export class OverviewMetricsTab extends BaseComponent {
 	async #handleContextUpdate(context) {
 		try {
 			let metrics = { primary: [], equity: [] };
+
 			if (context.id) {
 				try {
-					metrics = await reportService.getOverviewMetrics(context.id);
+					metrics = await this.#withSpinner(
+						reportService.getOverviewMetrics(context.id),
+					);
 				} catch {
 					metrics = { primary: [], equity: [] };
 				}
 			}
 
-			this.overviewMetrics.update(metrics.primary);
-			this.equityCurve.update(metrics.equity);
-
 			if (metrics.equity.length) {
+				this.overviewMetrics.update(metrics.primary);
+				this.equityCurve.update(metrics.equity);
+
 				this.noData.hide();
 			} else {
 				this.noData.show();
 			}
-
-			if (!this.#firstLoadDone) {
-				this.#firstLoadDone = true;
-				this.spinner.hide();
-			}
 		} catch (error) {
 			console.error('Failed to update overview.', error);
+		}
+	}
+
+	async #withSpinner(promise) {
+		let timer;
+
+		try {
+			timer = setTimeout(() => {
+				this.spinner.show();
+			}, SPINNER_DELAY_MS);
+
+			return await promise;
+		} finally {
+			clearTimeout(timer);
+			this.spinner.hide();
 		}
 	}
 }

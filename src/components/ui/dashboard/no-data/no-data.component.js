@@ -10,21 +10,17 @@ export class NoData extends BaseComponent {
 
 	#$element;
 
-	get isActive() {
-		return this.#$element.css('display') === 'flex';
-	}
-
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);
 		return this.element;
 	}
 
-	hide() {
-		this.#$element.css('display', 'none');
-	}
-
 	show() {
 		this.#$element.css('display', 'flex');
+	}
+
+	hide() {
+		this.#$element.css('display', 'none');
 	}
 }

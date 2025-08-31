@@ -54,12 +54,12 @@ export class ControllerContent extends BaseComponent {
 		this.#$element = $Q(this.element);
 	}
 
-	#hide() {
-		this.#$element.css('display', 'none');
-	}
-
 	#show() {
 		this.#$element.css('display', 'flex');
+	}
+
+	#hide() {
+		this.#$element.css('display', 'none');
 	}
 
 	#activateTab(tabNameToShow) {

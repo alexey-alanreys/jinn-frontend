@@ -25,6 +25,7 @@ import {
 	DATA_BATCH_SIZE,
 	VISIBLE_RANGE_PADDING,
 } from '@/constants/chart.constants';
+import { SPINNER_DELAY_MS } from '@/constants/spinner.constants';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 import { TRENDLINE_OPTIONS } from '@/constants/trendline-tool.constants';
 
@@ -344,14 +345,31 @@ export class ChartPanel extends BaseComponent {
 		}
 
 		try {
-			await Promise.all([
-				this.#loadCandlesticks(context.id),
-				this.#loadIndicators(context.id),
-				this.#loadDeals(context.id),
-			]);
+			await this.#withSpinner(
+				Promise.all([
+					this.#loadCandlesticks(context.id),
+					this.#loadIndicators(context.id),
+					this.#loadDeals(context.id),
+				]),
+			);
 		} catch (error) {
 			console.error('Error loading chart data.', error);
 			this.#clearAllData();
+		}
+	}
+
+	async #withSpinner(promise) {
+		let timer;
+
+		try {
+			timer = setTimeout(() => {
+				this.spinner.show();
+			}, SPINNER_DELAY_MS);
+
+			return await promise;
+		} finally {
+			clearTimeout(timer);
+			this.spinner.hide();
 		}
 	}
 
