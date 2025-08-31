@@ -35,9 +35,7 @@ class DrawingsService {
 			.filter(([_, status]) => status === 'READY')
 			.map(([contextId]) => contextId);
 
-		const stored = storageService.getItem(this.#storageKey) || {};
-		const drawingTypes = Object.keys(stored);
-
+		const drawingTypes = this.getTypes();
 		drawingTypes.forEach((type) => {
 			this.#cleanupOrphanedDrawings(activeContextIds, type);
 		});
@@ -120,8 +118,8 @@ class DrawingsService {
 		if (drawingType) {
 			this.set(drawingType, []);
 		} else {
-			const types = this.getTypes();
-			types.forEach((type) => this.set(type, []));
+			const drawingTypes = this.getTypes();
+			drawingTypes.forEach((type) => this.set(type, []));
 		}
 	}
 
@@ -136,31 +134,6 @@ class DrawingsService {
 	}
 
 	/**
-	 * Loads drawings for the current context from storage.
-	 * Creates chart series and updates internal drawings array.
-	 *
-	 * @param {string} drawingType Type of drawings to load.
-	 * @param {object} seriesClass Chart series class constructor.
-	 * @param {object} seriesOptions Options for creating series.
-	 */
-	load(drawingType, seriesClass, seriesOptions) {
-		const chartApi = this.#getChartApi();
-
-		if (!chartApi) return;
-
-		const contextData = this.get(drawingType);
-		if (!contextData.length) return;
-
-		const series = contextData.map((data) => {
-			const lineSeries = chartApi.addSeries(seriesClass, seriesOptions);
-			lineSeries.setData(data);
-			return lineSeries;
-		});
-
-		this.#drawings = series;
-	}
-
-	/**
 	 * Adds a new drawing series to chart and storage for the current context.
 	 *
 	 * @param {string} drawingType Type of drawings.
@@ -168,7 +141,7 @@ class DrawingsService {
 	 * @param {object} seriesOptions Options for creating series.
 	 * @param {array} data Data points for the series.
 	 */
-	addSeries(drawingType, seriesClass, seriesOptions, data) {
+	renderSeries(seriesClass, seriesOptions, data) {
 		const chartApi = this.#getChartApi();
 		if (!chartApi) return;
 
@@ -176,9 +149,6 @@ class DrawingsService {
 		series.setData(data);
 
 		this.#drawings.push(series);
-
-		const currentData = this.get(drawingType);
-		this.set(drawingType, [data, ...currentData]);
 	}
 
 	/** Removes all drawing series from chart and clears state. */

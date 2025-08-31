@@ -164,7 +164,6 @@ export class ChartPanel extends BaseComponent {
 			if (this.#hasValidData()) {
 				this.#createSeries();
 				this.#createPanels();
-				this.#loadDrawings();
 			}
 		}
 
@@ -415,6 +414,7 @@ export class ChartPanel extends BaseComponent {
 	#removeSeries() {
 		this.#removeCandlestickSeries();
 		this.#removeIndicatorSeries();
+		this.#removeDrawings();
 		this.#clearDeals();
 
 		drawingsService.removeAll();
@@ -436,6 +436,10 @@ export class ChartPanel extends BaseComponent {
 		this.#series.indicators.clear();
 	}
 
+	#removeDrawings() {
+		drawingsService.removeAll();
+	}
+
 	#clearDeals() {
 		this.#series.deals = null;
 	}
@@ -449,6 +453,7 @@ export class ChartPanel extends BaseComponent {
 
 		this.#createCandlestickSeries();
 		this.#createIndicatorSeries(context);
+		this.#createDrawings();
 
 		this.#applyCandlestickOptions(context);
 		this.#applyIndicatorOptions(context);
@@ -473,6 +478,19 @@ export class ChartPanel extends BaseComponent {
 				paneIndex,
 			);
 			this.#series.indicators.set(name, series);
+		});
+	}
+
+	#createDrawings() {
+		this.#createTrendlines();
+	}
+
+	#createTrendlines() {
+		const contextData = drawingsService.get('trendlines');
+		if (!contextData.length) return;
+
+		contextData.forEach((data) => {
+			drawingsService.renderSeries(LineSeries, TRENDLINE_OPTIONS, data);
 		});
 	}
 
@@ -517,10 +535,6 @@ export class ChartPanel extends BaseComponent {
 
 			container.append(panelElement);
 		});
-	}
-
-	#loadDrawings() {
-		drawingsService.load('trendlines', LineSeries, TRENDLINE_OPTIONS);
 	}
 
 	#updateSeries() {

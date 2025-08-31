@@ -1,5 +1,6 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
+import { drawingsService } from '@/core/services/drawings.service';
 import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
@@ -98,6 +99,9 @@ export class StrategiesTab extends BaseComponent {
 	async #handleDelete(contextId) {
 		try {
 			await executionService.delete(contextId);
+
+			drawingsService.removeAll();
+			drawingsService.clear();
 
 			const contexts = stateService.get(STATE_KEYS.CONTEXTS);
 			const { [contextId]: _, ...remaining } = contexts;

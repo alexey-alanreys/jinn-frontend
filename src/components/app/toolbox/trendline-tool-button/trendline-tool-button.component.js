@@ -140,12 +140,12 @@ export class TrendlineToolButton extends BaseComponent {
 			this.#selectedPoints.unshift(newPoint);
 		}
 
-		drawingsService.addSeries(
-			'trendlines',
+		drawingsService.renderSeries(
 			LineSeries,
 			TRENDLINE_OPTIONS,
 			this.#selectedPoints,
 		);
+		drawingsService.add('trendlines', this.#selectedPoints);
 
 		this.deactivate();
 	}
