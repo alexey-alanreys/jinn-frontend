@@ -20,12 +20,12 @@ export class ParamsItem extends BaseComponent {
 
 	#state = {
 		id: null,
-		title: null,
 		value: null,
+		title: null,
 	};
 
-	get title() {
-		return this.#state.title;
+	get id() {
+		return this.#state.id;
 	}
 
 	get value() {
@@ -53,13 +53,13 @@ export class ParamsItem extends BaseComponent {
 		this.element.remove();
 	}
 
-	update({ id, title, value }) {
-		this.#setState({ id, title, value });
+	update({ id, value, title }) {
+		this.#state = { id, value, title };
 		this.#updateDOM();
 	}
 
-	commit({ id, title, value }) {
-		this.#state = { id, title, value };
+	commit(newValue) {
+		this.#state.value = newValue;
 	}
 
 	rollback() {
@@ -85,12 +85,8 @@ export class ParamsItem extends BaseComponent {
 			.click(this.#handleStepperDown.bind(this));
 	}
 
-	#setState(newState) {
-		this.#state = { ...newState };
-	}
-
 	#updateDOM() {
-		const { id, title, value } = this.#state;
+		const { id, value, title } = this.#state;
 
 		this.#$label.attr('for', id).text(title);
 		this.#$input.attr('id', id);

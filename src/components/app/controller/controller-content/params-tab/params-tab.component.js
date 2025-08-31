@@ -63,18 +63,17 @@ export class ParamsTab extends BaseComponent {
 
 		const id = $Q(event.target).attr('id');
 		const item = this.#itemsById.get(id);
-		const title = item.title;
 		const value = item.value;
 
 		try {
-			await executionService.update(contextId, title, value);
-			item.commit({ id, title, value });
+			await executionService.update(contextId, id, value);
+			item.commit(value);
 
 			stateService.set(STATE_KEYS.CONTEXT, {
 				...context,
 				params: {
 					...context.params,
-					[title]: value,
+					[id]: value,
 				},
 			});
 		} catch (error) {
@@ -91,13 +90,14 @@ export class ParamsTab extends BaseComponent {
 
 		if (newContextId) {
 			const $items = this.#$element.find('[data-ref="paramsItems"]');
+			const strategies = stateService.get(STATE_KEYS.STRATEGIES);
+			const strategy = strategies[context.strategy];
+			const labels = strategy.paramLabels || {};
 
-			Object.entries(context.params).forEach(([title, value]) => {
+			Object.entries(context.params).forEach(([id, value]) => {
 				const item = new ParamsItem();
-				const id = `param-${title}`;
-
 				$items.append(item.render());
-				item.update({ id, title, value });
+				item.update({ id, value, title: labels[id] || id });
 				this.#itemsById.set(id, item);
 			});
 		}
