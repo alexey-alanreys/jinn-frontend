@@ -113,14 +113,15 @@ class LiveTradingService {
 		this.#alertsIntervalId = setInterval(async () => {
 			try {
 				const currentAlerts = stateService.get(STATE_KEYS.ALERTS) || [];
-				const lastAlertId =
-					currentAlerts.length > 0 ? currentAlerts.at(-1).alertId : null;
+				const lastAlertId = currentAlerts.length
+					? currentAlerts.at(-1).alertId
+					: null;
 
 				const newAlerts = lastAlertId
 					? await alertsService.get({ sinceId: lastAlertId })
 					: await alertsService.get({ limit: ALERTS_FETCH_LIMIT });
 
-				if (newAlerts.length > 0) {
+				if (newAlerts.length) {
 					stateService.set(STATE_KEYS.ALERTS, newAlerts);
 				}
 			} catch (error) {

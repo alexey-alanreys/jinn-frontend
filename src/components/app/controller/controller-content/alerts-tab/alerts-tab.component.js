@@ -86,7 +86,7 @@ export class AlertsTab extends BaseComponent {
 		}
 
 		if ($target.closest('[data-ref="deleteButton"]')) {
-			this.#handleDelete($item.data('alert-id'));
+			this.#handleAlertDelete($item.data('alert-id'));
 			return;
 		}
 
@@ -102,20 +102,6 @@ export class AlertsTab extends BaseComponent {
 
 		const newContext = contexts[contextId];
 		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
-	}
-
-	async #handleDelete(alertId) {
-		try {
-			await alertsService.delete(alertId);
-
-			const item = this.#items.get(alertId);
-			if (item) {
-				item.remove();
-				this.#items.delete(alertId);
-			}
-		} catch (error) {
-			console.error('Failed to delete alert.', error);
-		}
 	}
 
 	#handleContextUpdate(context) {
@@ -141,5 +127,25 @@ export class AlertsTab extends BaseComponent {
 		this.#$alertsItems.prepend(item.render());
 		this.#items.set(id, item);
 		item.update(alert);
+	}
+
+	async #handleAlertDelete(alertId) {
+		try {
+			await alertsService.delete(alertId);
+
+			const currentAlerts = stateService.get(STATE_KEYS.ALERTS) || [];
+			const filteredAlerts = currentAlerts.filter(
+				(alert) => alert.alertId !== alertId,
+			);
+			stateService.set(STATE_KEYS.ALERTS, filteredAlerts);
+
+			const item = this.#items.get(alertId);
+			if (item) {
+				item.remove();
+				this.#items.delete(alertId);
+			}
+		} catch (error) {
+			console.error('Failed to delete alert.', error);
+		}
 	}
 }
