@@ -4,7 +4,7 @@ import { liveTradingService } from '@/core/services/live-trading.service';
 import { stateService } from '@/core/services/state.service.js';
 import { themeService } from '@/core/services/theme.service';
 
-import { Layout } from '@/components/layout/layout.component';
+import { App } from '@/components/app/app.component';
 
 import '@/styles/global.css';
 
@@ -61,8 +61,7 @@ class AppInitializer {
 	}
 
 	static renderApp() {
-		const app = $Q('#app');
-		app.append(new Layout().render());
+		$Q('#app').append(new App().render());
 	}
 }
 
