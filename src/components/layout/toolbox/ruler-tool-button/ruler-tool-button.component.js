@@ -1,5 +1,6 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
+import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
@@ -57,6 +58,14 @@ export class RulerToolButton extends BaseComponent {
 		if (this.#isActive) {
 			this.deactivate();
 		} else {
+			const chartApi = stateService.get(STATE_KEYS.CHART_API);
+			const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
+
+			if (!chartApi || !candlestickSeries) {
+				notificationService.show('warning', 'No chart data available');
+				return;
+			}
+
 			this.#activate();
 			this.onActivate?.();
 		}

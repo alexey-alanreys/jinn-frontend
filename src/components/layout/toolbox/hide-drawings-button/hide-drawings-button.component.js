@@ -1,9 +1,12 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { drawingsService } from '@/core/services/drawings.service';
+import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
+import { stateService } from '@/core/services/state.service';
 
 import { HIDE_DRAWINGS_BUTTON_TITLES as TITLES } from '@/constants/drawings-titles.constants';
+import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import styles from './hide-drawings-button.module.css';
 import templateHTML from './hide-drawings-button.template.html?raw';
@@ -44,6 +47,14 @@ export class HideDrawingsButton extends BaseComponent {
 	}
 
 	#handleClick() {
+		const chartApi = stateService.get(STATE_KEYS.CHART_API);
+		const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
+
+		if (!chartApi || !candlestickSeries) {
+			notificationService.show('warning', 'No chart data available');
+			return;
+		}
+
 		const newState = !this.#isActive;
 		this.#setActive(newState);
 		if (newState) this.onActivate?.();

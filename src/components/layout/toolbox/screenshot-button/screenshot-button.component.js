@@ -1,5 +1,6 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
+import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
@@ -31,7 +32,12 @@ export class ScreenshotButton extends BaseComponent {
 
 	#handleClick() {
 		const chartApi = stateService.get(STATE_KEYS.CHART_API);
-		if (!chartApi) return;
+		const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
+
+		if (!chartApi || !candlestickSeries) {
+			notificationService.show('warning', 'No chart data available');
+			return;
+		}
 
 		chartApi.takeScreenshot().toBlob(this.#openScreenshot, 'image/png', 1);
 	}

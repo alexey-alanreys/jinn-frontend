@@ -66,6 +66,13 @@ export class TrendlineToolButton extends BaseComponent {
 		if (this.#isActive) {
 			this.deactivate();
 		} else {
+			const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
+
+			if (!candlestickSeries) {
+				notificationService.show('warning', 'No chart data available');
+				return;
+			}
+
 			this.#activate();
 			this.onActivate?.();
 		}
@@ -94,6 +101,11 @@ export class TrendlineToolButton extends BaseComponent {
 	#handleChartClick({ time, point }) {
 		const chartApi = stateService.get(STATE_KEYS.CHART_API);
 		const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
+
+		if (!chartApi || !candlestickSeries) {
+			notificationService.show('warning', 'No chart data available');
+			return;
+		}
 
 		if (!chartApi || !candlestickSeries) return;
 
