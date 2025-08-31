@@ -43,6 +43,28 @@ class DrawingsService {
 		});
 	}
 
+	/** Shows all drawings by setting their visibility to true. */
+	show() {
+		if (!this.#drawings.length) return;
+
+		this.#drawings.forEach((series) => {
+			series.applyOptions({ visible: true });
+		});
+
+		this.#isVisible = true;
+	}
+
+	/** Hides all drawings by setting their visibility to false. */
+	hide() {
+		if (!this.#drawings.length) return;
+
+		this.#drawings.forEach((series) => {
+			series.applyOptions({ visible: false });
+		});
+
+		this.#isVisible = false;
+	}
+
 	/**
 	 * Gets all drawing series for the current context from storage.
 	 *
@@ -55,6 +77,17 @@ class DrawingsService {
 
 		const stored = storageService.getItem(this.#storageKey) || {};
 		return stored[drawingType]?.[contextId] || [];
+	}
+
+	/**
+	 * Adds a new drawing series to the beginning of the drawings array.
+	 *
+	 * @param {string} drawingType Type of drawings.
+	 * @param {object} data Drawing data to add.
+	 */
+	add(drawingType, data) {
+		const current = this.get(drawingType);
+		this.set(drawingType, [data, ...current]);
 	}
 
 	/**
@@ -75,17 +108,6 @@ class DrawingsService {
 
 		stored[drawingType][contextId] = drawings;
 		storageService.setItem(this.#storageKey, stored);
-	}
-
-	/**
-	 * Adds a new drawing series to the beginning of the drawings array.
-	 *
-	 * @param {string} drawingType Type of drawings.
-	 * @param {object} data Drawing data to add.
-	 */
-	add(drawingType, data) {
-		const current = this.get(drawingType);
-		this.set(drawingType, [data, ...current]);
 	}
 
 	/**
@@ -138,26 +160,25 @@ class DrawingsService {
 		this.#drawings = series;
 	}
 
-	/** Shows all drawings by setting their visibility to true. */
-	show() {
-		if (!this.#drawings.length) return;
+	/**
+	 * Adds a new drawing series to chart and storage for the current context.
+	 *
+	 * @param {string} drawingType Type of drawings.
+	 * @param {class} seriesClass Chart series class constructor.
+	 * @param {object} seriesOptions Options for creating series.
+	 * @param {array} data Data points for the series.
+	 */
+	addSeries(drawingType, seriesClass, seriesOptions, data) {
+		const chartApi = this.#getChartApi();
+		if (!chartApi) return;
 
-		this.#drawings.forEach((series) => {
-			series.applyOptions({ visible: true });
-		});
+		const series = chartApi.addSeries(seriesClass, seriesOptions);
+		series.setData(data);
 
-		this.#isVisible = true;
-	}
+		this.#drawings.push(series);
 
-	/** Hides all drawings by setting their visibility to false. */
-	hide() {
-		if (!this.#drawings.length) return;
-
-		this.#drawings.forEach((series) => {
-			series.applyOptions({ visible: false });
-		});
-
-		this.#isVisible = false;
+		const currentData = this.get(drawingType);
+		this.set(drawingType, [data, ...currentData]);
 	}
 
 	/** Removes all drawing series from chart and clears state. */
