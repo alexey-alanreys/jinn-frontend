@@ -5,9 +5,12 @@ import styles from './controller-sidebar.module.css';
 import templateHTML from './controller-sidebar.template.html?raw';
 
 import { AlertsTabButton } from './alerts-tab-button/alerts-tab-button.component';
+import { BacktestingTabButton } from './backtesting-tab-button/backtesting-tab-button.component';
+import { OptimizationTabButton } from './optimization-tab-button/optimization-tab-button.component';
 import { ParamsTabButton } from './params-tab-button/params-tab-button.component';
 import { StrategiesTabButton } from './strategies-tab-button/strategies-tab-button.component';
 import { ThemeButton } from './theme-button/theme-button.component';
+import { TradingTabButton } from './trading-tab-button/trading-tab-button.component';
 
 export class ControllerSidebar extends BaseComponent {
 	static COMPONENT_NAME = 'ControllerSidebar';
@@ -38,6 +41,9 @@ export class ControllerSidebar extends BaseComponent {
 			strategies: new StrategiesTabButton(),
 			params: new ParamsTabButton(),
 			alerts: new AlertsTabButton(),
+			optimization: new OptimizationTabButton(),
+			backtesting: new BacktestingTabButton(),
+			trading: new TradingTabButton(),
 		};
 	}
 

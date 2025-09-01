@@ -7,14 +7,14 @@ import { alertsService } from '@/api/services/alerts.service.js';
 import { executionService } from '@/api/services/execution.service.js';
 
 /**
- * @module liveTradingService
+ * @module tradingService
  * @description
  * Manages live trading mode:
  * - Subscribes to current context and contexts collection
  * - Updates context data from backend in live mode
  * - Polls for alerts when at least one context is live
  */
-class LiveTradingService {
+class TradingService {
 	static POLLING_INTERVAL = 5000;
 
 	#contextIntervalId = null;
@@ -95,7 +95,7 @@ class LiveTradingService {
 			} catch (error) {
 				console.error('Failed to fetch updated context.', error);
 			}
-		}, LiveTradingService.POLLING_INTERVAL);
+		}, TradingService.POLLING_INTERVAL);
 	}
 
 	/** Stops polling ExecutionService for context updates. */
@@ -127,7 +127,7 @@ class LiveTradingService {
 			} catch (error) {
 				console.error('Failed to fetch alerts.', error);
 			}
-		}, LiveTradingService.POLLING_INTERVAL);
+		}, TradingService.POLLING_INTERVAL);
 	}
 
 	/** Stops polling alertsService for new alerts. */
@@ -139,4 +139,4 @@ class LiveTradingService {
 	}
 }
 
-export const liveTradingService = new LiveTradingService();
+export const tradingService = new TradingService();

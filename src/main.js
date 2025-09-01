@@ -1,8 +1,8 @@
 import { $Q } from '@/core/libs/query.lib';
 import { drawingsService } from '@/core/services/drawings.service';
-import { liveTradingService } from '@/core/services/live-trading.service';
 import { stateService } from '@/core/services/state.service.js';
 import { themeService } from '@/core/services/theme.service';
+import { tradingService } from '@/core/services/trading.service';
 
 import { App } from '@/components/app/app.component';
 
@@ -55,8 +55,8 @@ class AppInitializer {
 	}
 
 	static initServices() {
-		liveTradingService.init();
 		drawingsService.init();
+		tradingService.init();
 		themeService.init();
 	}
 
