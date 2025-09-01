@@ -2,8 +2,8 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { DeleteButton } from '@/components/ui/controller/buttons/delete-button/delete-button.component';
-import { OpenButton } from '@/components/ui/controller/buttons/open-button/open-button.component';
+import { DeleteButton } from '@/components/ui/controller/buttons/common/delete-button/delete-button.component';
+import { OpenButton } from '@/components/ui/controller/buttons/common/open-button/open-button.component';
 
 import { ALERT_COLORS } from '@/constants/alerts.constants';
 

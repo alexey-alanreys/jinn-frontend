@@ -2,7 +2,7 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import { DeleteButton } from '@/components/ui/controller/buttons/delete-button/delete-button.component';
+import { DeleteButton } from '@/components/ui/controller/buttons/common/delete-button/delete-button.component';
 
 import styles from './strategies-item.module.css';
 import templateHTML from './strategies-item.template.html?raw';
