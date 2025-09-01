@@ -7,6 +7,8 @@
 	--color-status-loss: #e6404c;
 	--color-status-green: #2e7d32;
 	--color-status-red: #c62828;
+	--color-status-dot-halo: rgb(0 200 0 / 25%);
+	--color-status-dot-center: rgb(8 153 129);
 	--color-ruler-tool-up: #2962ff;
 	--color-ruler-tool-down: #f7525f;
 	--color-ruler-tool-up-bg: rgb(41 98 255 / 30%);

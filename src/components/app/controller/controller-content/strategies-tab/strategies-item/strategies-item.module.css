@@ -21,13 +21,45 @@
 		color: inherit;
 		white-space: nowrap;
 
-		> .strategy-name {
-			font-size: 1.6rem;
-			overflow: hidden;
-			text-overflow: ellipsis;
+		> .strategy-header {
+			display: flex;
+			justify-content: start;
+			align-items: center;
+			gap: 6px;
+
+			> .strategy-name {
+				font-size: 1.6rem;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			> .status-dot {
+				position: relative;
+				display: inline-block;
+				width: 16px;
+				height: 16px;
+				background: var(--color-status-dot-halo);
+				border-radius: 50%;
+
+				&[data-active='false'] {
+					display: none;
+				}
+
+				&::after {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					width: 8px;
+					height: 8px;
+					background: var(--color-status-dot-center);
+					border-radius: 50%;
+					transform: translate(-50%, -50%);
+					content: '';
+				}
+			}
 		}
 
-		> .meta-info {
+		> .strategy-meta {
 			font-size: 1.4rem;
 			overflow: hidden;
 			text-overflow: ellipsis;

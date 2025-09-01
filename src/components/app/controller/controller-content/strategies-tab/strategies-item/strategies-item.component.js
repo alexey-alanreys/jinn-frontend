@@ -28,6 +28,11 @@ export class StrategiesItem extends BaseComponent {
 		this.#dataFields.forEach(({ element }, key) => {
 			this.#$element.data('context-id', contextId);
 			element.text(context[key]);
+
+			if (context.isLive) {
+				const $statusDot = this.#$element.find('[data-ref="statusDot"]');
+				$statusDot.data('active', 'true');
+			}
 		});
 	}
 
