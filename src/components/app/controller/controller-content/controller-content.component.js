@@ -6,8 +6,11 @@ import styles from './controller-content.module.css';
 import templateHTML from './controller-content.template.html?raw';
 
 import { AlertsTab } from './alerts-tab/alerts-tab.component';
+import { BacktestingTab } from './backtesting-tab/backtesting-tab.component';
+import { OptimizationTab } from './optimization-tab/optimization-tab.component';
 import { ParamsTab } from './params-tab/params-tab.component';
 import { StrategiesTab } from './strategies-tab/strategies-tab.component';
+import { TradingTab } from './trading-tab/trading-tab.component';
 
 export class ControllerContent extends BaseComponent {
 	static COMPONENT_NAME = 'ControllerContent';
@@ -42,6 +45,9 @@ export class ControllerContent extends BaseComponent {
 			strategies: new StrategiesTab(),
 			params: new ParamsTab(),
 			alerts: new AlertsTab(),
+			optimization: new OptimizationTab(),
+			backtesting: new BacktestingTab(),
+			trading: new TradingTab(),
 		};
 	}
 
