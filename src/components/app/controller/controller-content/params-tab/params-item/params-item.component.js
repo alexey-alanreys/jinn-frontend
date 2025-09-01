@@ -33,7 +33,7 @@ export class ParamsItem extends BaseComponent {
 
 	update({ id, value, title }) {
 		this.#$element.data('param-id', id);
-		this.#$element.find('[data-ref="paramTitle"]').text(title);
+		this.#$element.find('[data-field="title"]').text(title);
 
 		this.#renderInput(value);
 	}
@@ -48,10 +48,6 @@ export class ParamsItem extends BaseComponent {
 		if (this.#input) {
 			this.#input.rollback();
 		}
-	}
-
-	focus() {
-		this.#input.focus?.();
 	}
 
 	#initDOM() {

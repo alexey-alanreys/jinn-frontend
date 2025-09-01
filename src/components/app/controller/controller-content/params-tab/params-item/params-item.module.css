@@ -8,15 +8,9 @@
 	padding: 8px 16px;
 	white-space: nowrap;
 
-	> .title {
+	> [data-field='title'] {
 		font-size: 1.4rem;
-		cursor: pointer;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-
-	> .input-container {
-		display: flex;
-		align-items: center;
 	}
 }

@@ -51,7 +51,6 @@ export class ParamsTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.on('change', this.#handleInput.bind(this));
-		this.#$element.click(this.#handleClick.bind(this));
 
 		stateService.subscribe(
 			STATE_KEYS.CONTEXT,
@@ -84,14 +83,6 @@ export class ParamsTab extends BaseComponent {
 			console.error('Failed to update strategy parameter.', error);
 			item.rollback();
 		}
-	}
-
-	#handleClick(event) {
-		const $target = $Q(event.target);
-		if ($target.data('ref') !== 'paramTitle') return;
-
-		const root = $target.closest('[data-param-id]');
-		this.#items.get(root.data('param-id')).focus();
 	}
 
 	#handleContextUpdate(context) {
