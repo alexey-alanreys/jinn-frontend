@@ -6,8 +6,8 @@ import { AddConfigButton } from '@/components/ui/controller/buttons/configs/add-
 import { CloneConfigsButton } from '@/components/ui/controller/buttons/configs/clone-configs-button/clone-configs-button.component';
 import { DeleteConfigsButton } from '@/components/ui/controller/buttons/configs/delete-configs-button/delete-configs-button.component';
 import { RunConfigsButton } from '@/components/ui/controller/buttons/configs/run-configs-button/run-configs-button.component';
-import { CustomSelect } from '@/components/ui/controller/inputs/custom-select/custom-select.component';
 import { DateInput } from '@/components/ui/controller/inputs/date-input/date-input.component';
+import { SelectInput } from '@/components/ui/controller/inputs/select-input/select-input.component';
 import { TextInput } from '@/components/ui/controller/inputs/text-input/text-input.component';
 
 import styles from './optimization-tab.module.css';
@@ -73,10 +73,10 @@ export class OptimizationTab extends BaseComponent {
 		this.dateInput = new DateInput();
 		$configItems.append(this.dateInput.render());
 
-		const select = new CustomSelect({
+		this.selectInput = new SelectInput({
 			options: ['BINANCE', 'BYBIT'],
 		});
-		$configItems.append(select.render());
+		$configItems.append(this.selectInput.render());
 	}
 
 	#attachListeners() {
@@ -97,10 +97,18 @@ export class OptimizationTab extends BaseComponent {
 
 	async #handleClick(event) {
 		const $target = $Q(event.target);
+		const $selectInput = $target.closest('[data-ref="selectInput"]');
 
-		if ($target.closest('button')) {
-			const $button = $target.closest('button');
-			console.log($button);
+		if ($selectInput) {
+			this.selectInput.toggle();
+
+			const ref = $target.data('ref');
+
+			if (ref === 'option') {
+				this.selectInput.update($target.data('value'));
+			}
+		} else {
+			this.selectInput.close();
 		}
 	}
 }

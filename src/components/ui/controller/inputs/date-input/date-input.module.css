@@ -4,7 +4,7 @@
 	align-items: center;
 
 	> input[type='text'] {
-		width: 130px;
+		width: 120px;
 		height: 30px;
 		padding: 4px 8px;
 		font-size: 1.4rem;
@@ -19,7 +19,6 @@
 		&:focus {
 			padding-left: 7px;
 			border: 2px solid var(--color-accent-secondary);
-			outline: none;
 		}
 
 		&:hover {
