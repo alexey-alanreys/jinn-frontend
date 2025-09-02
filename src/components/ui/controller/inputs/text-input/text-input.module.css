@@ -13,16 +13,16 @@
 		border-radius: 4px;
 
 		&::placeholder {
-			color: var(--color-text-tertiary);
-		}
-
-		&:focus {
-			padding-left: 7px;
-			border: 2px solid var(--color-accent-secondary);
+			color: var(--color-text-secondary);
 		}
 
 		&:hover {
 			border-color: var(--color-accent-secondary);
+		}
+
+		&:focus {
+			padding: 4px 7px;
+			border: 2px solid var(--color-accent-secondary);
 		}
 	}
 }

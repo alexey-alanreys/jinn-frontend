@@ -1,9 +1,7 @@
 .select-input {
 	position: relative;
-	display: inline-block;
 	width: 120px;
 	font-size: 1.4rem;
-	color: inherit;
 
 	> .trigger {
 		display: flex;
@@ -12,12 +10,10 @@
 		width: 100%;
 		height: 30px;
 		padding: 4px 8px;
-		font-size: 1.4rem;
-		text-align: left;
-		background: white;
 		border: 1px solid var(--color-border-tertiary);
 		border-radius: 4px;
 		cursor: pointer;
+		color: inherit;
 
 		> .arrow {
 			display: flex;
@@ -31,6 +27,7 @@
 		}
 
 		&:hover {
+			background-color: transparent;
 			border-color: var(--color-accent-secondary);
 		}
 
@@ -46,9 +43,7 @@
 		top: 100%;
 		right: 0;
 		left: 0;
-		padding: 0;
-		margin: 2px 0 0;
-		background: white;
+		margin-top: 3px;
 		border: 1px solid var(--color-border-tertiary);
 		border-radius: 4px;
 		box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
@@ -59,7 +54,7 @@
 			cursor: pointer;
 
 			&:hover {
-				color: white;
+				color: var(--color-text-light);
 				background-color: var(--color-accent-secondary);
 			}
 		}

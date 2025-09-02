@@ -47,10 +47,7 @@
 			align-items: center;
 			width: 16px;
 			height: 12px;
-			color: var(--color-text-secondary);
 			background-color: transparent;
-			border: none;
-			border-radius: 2px;
 			cursor: pointer;
 
 			> svg {
@@ -61,7 +58,7 @@
 			}
 
 			&:hover {
-				transform: scale(1.1);
+				transform: scale(1.2);
 			}
 
 			&:active {
@@ -71,10 +68,6 @@
 	}
 
 	&:hover .number-stepper {
-		visibility: visible;
-	}
-
-	&:focus-within .number-stepper {
 		visibility: visible;
 	}
 }
