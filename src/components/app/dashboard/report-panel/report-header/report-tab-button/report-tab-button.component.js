@@ -13,7 +13,6 @@ export class ReportTabButton extends BaseComponent {
 
 	constructor({ title }) {
 		super();
-
 		this.#title = title;
 	}
 

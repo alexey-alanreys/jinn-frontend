@@ -12,7 +12,6 @@ export class ToggleVisibilityButton extends BaseComponent {
 
 	constructor({ onClick }) {
 		super();
-
 		this.onClick = onClick;
 	}
 

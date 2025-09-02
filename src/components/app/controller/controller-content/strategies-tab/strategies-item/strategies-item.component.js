@@ -20,10 +20,6 @@ export class StrategiesItem extends BaseComponent {
 		return this.element;
 	}
 
-	remove() {
-		this.element.remove();
-	}
-
 	update(contextId, context) {
 		this.#dataFields.forEach(({ element }, key) => {
 			this.#$element.data('context-id', contextId);
@@ -34,6 +30,10 @@ export class StrategiesItem extends BaseComponent {
 				$statusDot.data('active', 'true');
 			}
 		});
+	}
+
+	remove() {
+		this.element.remove();
 	}
 
 	activate() {

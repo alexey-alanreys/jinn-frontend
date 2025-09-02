@@ -12,6 +12,10 @@
 		appearance: none;
 		accent-color: var(--color-accent-secondary);
 
+		&:hover {
+			border-color: var(--color-accent-secondary);
+		}
+
 		&:checked {
 			background-color: var(--color-accent-secondary);
 			border-color: var(--color-accent-secondary);

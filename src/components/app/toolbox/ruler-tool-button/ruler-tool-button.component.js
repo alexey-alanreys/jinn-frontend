@@ -16,7 +16,6 @@ export class RulerToolButton extends BaseComponent {
 
 	constructor({ onActivate }) {
 		super();
-
 		this.onActivate = onActivate;
 	}
 

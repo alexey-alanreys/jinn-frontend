@@ -7,7 +7,7 @@
 		width: 80px;
 		height: 30px;
 		padding: 4px 6px;
-		padding-right: 24px;
+		padding-right: 22px;
 		font-size: 1.4rem;
 		color: inherit;
 		border: 1px solid var(--color-border-tertiary);
@@ -17,6 +17,10 @@
 		&::-webkit-inner-spin-button {
 			margin: 0;
 			appearance: none;
+		}
+
+		&:hover {
+			border-color: var(--color-accent-secondary);
 		}
 
 		&:focus {
@@ -49,6 +53,7 @@
 			border: none;
 			border-radius: 2px;
 			cursor: pointer;
+			background-color: transparent;
 
 			&:hover {
 				transform: scale(1.1);

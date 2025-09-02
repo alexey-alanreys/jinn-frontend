@@ -12,7 +12,6 @@ export class ToggleExpansionButton extends BaseComponent {
 
 	constructor({ onClick }) {
 		super();
-
 		this.onClick = onClick;
 	}
 

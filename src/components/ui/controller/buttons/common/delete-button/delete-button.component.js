@@ -12,7 +12,6 @@ export class DeleteButton extends BaseComponent {
 
 	constructor({ title }) {
 		super();
-
 		this.#title = title;
 	}
 

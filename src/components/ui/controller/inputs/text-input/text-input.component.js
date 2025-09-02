@@ -2,23 +2,30 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './checkbox-input.module.css';
-import templateHTML from './checkbox-input.template.html?raw';
+import styles from './text-input.module.css';
+import templateHTML from './text-input.template.html?raw';
 
-export class CheckboxInput extends BaseComponent {
-	static COMPONENT_NAME = 'CheckboxInput';
+export class TextInput extends BaseComponent {
+	static COMPONENT_NAME = 'TextInput';
 
 	#$element;
 	#$input;
 
 	#value = null;
+	#placeholder;
+
+	constructor({ placeholder = '' } = {}) {
+		super();
+		this.#placeholder = placeholder;
+	}
 
 	get value() {
-		return this.#$input.element.checked;
+		return this.#$input.element.value;
 	}
 
 	render() {
 		this.#initDOM();
+		this.#setupInitialState();
 		return this.element;
 	}
 
@@ -27,8 +34,8 @@ export class CheckboxInput extends BaseComponent {
 		this.#updateDOM();
 	}
 
-	commit() {
-		this.#value = this.value;
+	commit(newValue) {
+		this.#value = newValue;
 	}
 
 	rollback() {
@@ -42,7 +49,13 @@ export class CheckboxInput extends BaseComponent {
 		return this.element;
 	}
 
+	#setupInitialState() {
+		if (this.#placeholder) {
+			this.#$input.attr('placeholder', this.#placeholder);
+		}
+	}
+
 	#updateDOM() {
-		this.#$input.element.checked = Boolean(this.#value);
+		this.#$input.element.value = this.#value || '';
 	}
 }

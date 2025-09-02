@@ -14,10 +14,6 @@ export class ParamsItem extends BaseComponent {
 	#$element;
 	#input = null;
 
-	get id() {
-		return this.#$element.data('param-id');
-	}
-
 	get value() {
 		return this.#input?.value ?? null;
 	}
@@ -27,27 +23,25 @@ export class ParamsItem extends BaseComponent {
 		return this.element;
 	}
 
+	update(id, value, title) {
+		this.#$element.find('[data-field="title"]').text(title);
+		this.#renderInput(id, value);
+	}
+
 	remove() {
 		this.element.remove();
 	}
 
-	update({ id, value, title }) {
-		this.#$element.data('param-id', id);
-		this.#$element.find('[data-field="title"]').text(title);
-
-		this.#renderInput(value);
+	isValid() {
+		return this.#input?.isValid();
 	}
 
-	commit(newValue) {
-		if (this.#input) {
-			this.#input.commit(newValue);
-		}
+	commit() {
+		this.#input?.commit();
 	}
 
 	rollback() {
-		if (this.#input) {
-			this.#input.rollback();
-		}
+		this.#input?.rollback();
 	}
 
 	#initDOM() {
@@ -56,7 +50,7 @@ export class ParamsItem extends BaseComponent {
 		return this.element;
 	}
 
-	#renderInput(value) {
+	#renderInput(id, value) {
 		if (this.#input) {
 			this.#input.remove();
 			this.#input = null;
@@ -70,7 +64,10 @@ export class ParamsItem extends BaseComponent {
 			return;
 		}
 
-		this.#$element.append(this.#input.render());
+		const element = this.#input.render();
+		this.#$element.append(element);
+
+		$Q(element).find('input').data('param-id', id);
 		this.#input.update(value);
 	}
 }

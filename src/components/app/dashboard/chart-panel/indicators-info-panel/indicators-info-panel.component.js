@@ -24,10 +24,6 @@ export class IndicatorsInfoPanel extends BaseComponent {
 		return this.element;
 	}
 
-	remove() {
-		this.element.remove();
-	}
-
 	update(indicators, withRender = false, indicatorKeys = null) {
 		if (withRender) {
 			if (!indicatorKeys) {
@@ -62,6 +58,10 @@ export class IndicatorsInfoPanel extends BaseComponent {
 				element.css('color', color);
 			}
 		});
+	}
+
+	remove() {
+		this.element.remove();
 	}
 
 	#renderFields(indicatorKeys) {

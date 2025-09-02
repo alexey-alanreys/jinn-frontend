@@ -12,7 +12,6 @@ export class OpenButton extends BaseComponent {
 
 	constructor({ title }) {
 		super();
-
 		this.#title = title;
 	}
 

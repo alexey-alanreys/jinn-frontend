@@ -2,11 +2,11 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
-import styles from './checkbox-input.module.css';
-import templateHTML from './checkbox-input.template.html?raw';
+import styles from './date-input.module.css';
+import templateHTML from './date-input.template.html?raw';
 
-export class CheckboxInput extends BaseComponent {
-	static COMPONENT_NAME = 'CheckboxInput';
+export class DateInput extends BaseComponent {
+	static COMPONENT_NAME = 'DateInput';
 
 	#$element;
 	#$input;
@@ -14,7 +14,7 @@ export class CheckboxInput extends BaseComponent {
 	#value = null;
 
 	get value() {
-		return this.#$input.element.checked;
+		return this.#$input.element.value;
 	}
 
 	render() {
@@ -25,6 +25,18 @@ export class CheckboxInput extends BaseComponent {
 	update(value) {
 		this.#value = value;
 		this.#updateDOM();
+	}
+
+	isValid() {
+		const currentValue = this.value;
+		const regex = /^\d{4}-\d{2}-\d{2}$/;
+
+		if (!regex.test(currentValue)) return false;
+
+		const date = new Date(currentValue);
+		if (Number.isNaN(date.getTime())) return false;
+
+		return date.toISOString().slice(0, 10) === currentValue;
 	}
 
 	commit() {
@@ -43,6 +55,6 @@ export class CheckboxInput extends BaseComponent {
 	}
 
 	#updateDOM() {
-		this.#$input.element.checked = Boolean(this.#value);
+		this.#$input.element.value = this.#value;
 	}
 }

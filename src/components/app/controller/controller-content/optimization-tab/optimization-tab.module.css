@@ -1,5 +1,5 @@
 .optimization-tab {
-	display: none;
+	display: flex;
 	flex: 1;
 	flex-direction: column;
 	line-height: 22px;
@@ -19,6 +19,13 @@
 		flex: 1 1 auto;
 		flex-direction: column;
 		overflow-y: auto;
+
+		padding-left: 20px;
+		padding-top: 50px;
+		flex-direction: column;
+		gap: 50px;
+		align-items: start;
+		padding-right: 20px;
 	}
 
 	> .footer {

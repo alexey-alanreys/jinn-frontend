@@ -23,7 +23,6 @@ export class TrendlineToolButton extends BaseComponent {
 
 	constructor({ onActivate }) {
 		super();
-
 		this.onActivate = onActivate;
 	}
 

@@ -12,7 +12,6 @@ export class ToggleSortingButton extends BaseComponent {
 
 	constructor({ onClick }) {
 		super();
-
 		this.onClick = onClick;
 	}
 

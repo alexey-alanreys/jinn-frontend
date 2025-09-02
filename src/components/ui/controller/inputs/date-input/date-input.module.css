@@ -1,0 +1,33 @@
+.date-input {
+	position: relative;
+	display: flex;
+	align-items: center;
+
+	> input[type='text'] {
+		width: 130px;
+		height: 30px;
+		padding: 4px 8px;
+		font-size: 1.4rem;
+		color: inherit;
+		border: 1px solid var(--color-border-tertiary);
+		border-radius: 4px;
+
+		&::placeholder {
+			color: var(--color-text-tertiary);
+		}
+
+		&:focus {
+			padding-left: 7px;
+			border: 2px solid var(--color-accent-secondary);
+			outline: none;
+		}
+
+		&:hover {
+			border-color: var(--color-accent-secondary);
+		}
+	}
+
+	.invalid {
+		border-color: var(--color-error) !important;
+	}
+}

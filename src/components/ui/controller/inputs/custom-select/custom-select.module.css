@@ -1,0 +1,79 @@
+.custom-select {
+	position: relative;
+	width: 200px;
+
+	> select {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		cursor: pointer;
+		z-index: 2;
+		font-size: 1.4rem;
+
+		option {
+			font-size: 1.4rem;
+			padding: 8px 12px;
+		}
+	}
+
+	> .select-styled {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 30px;
+		padding: 4px 8px;
+		font-size: 1.4rem;
+		color: inherit;
+		border: 1px solid var(--color-border-tertiary);
+		border-radius: 4px;
+		pointer-events: none;
+
+		> .select-value {
+			flex: 1;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		> .select-arrow {
+			display: flex;
+			align-items: center;
+			margin-left: 8px;
+			color: var(--color-text-secondary);
+
+			svg {
+				width: 12px;
+				height: 8px;
+			}
+		}
+	}
+
+	&:hover .select-styled {
+		border-color: var(--color-accent-secondary);
+	}
+
+	&:hover .select-styled .select-arrow {
+		color: var(--color-accent-secondary);
+	}
+
+	&:focus-within .select-styled {
+		border: 2px solid var(--color-accent-secondary);
+	}
+
+	&:focus-within .select-styled .select-arrow {
+		color: var(--color-accent-secondary);
+	}
+
+	&.disabled {
+		> select {
+			cursor: not-allowed;
+		}
+
+		> .select-styled {
+			opacity: 0.5;
+		}
+	}
+}

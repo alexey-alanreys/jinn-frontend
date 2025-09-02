@@ -50,7 +50,7 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	#attachListeners() {
-		this.#$element.on('change', this.#handleInput.bind(this));
+		this.#$element.on('change', this.#handleChange.bind(this));
 
 		stateService.subscribe(
 			STATE_KEYS.CONTEXT,
@@ -58,29 +58,31 @@ export class ParamsTab extends BaseComponent {
 		);
 	}
 
-	async #handleInput(event) {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
-		const contextId = context.id;
-
-		const $root = $Q(event.target).closest('[data-param-id]');
-		const id = $root.data('param-id');
+	async #handleChange(event) {
+		const id = $Q(event.target).data('param-id');
 		const item = this.#items.get(id);
-		const value = item.value;
 
-		try {
-			await executionService.update(contextId, id, value);
+		if (item.isValid()) {
+			const context = stateService.get(STATE_KEYS.CONTEXT);
+			const contextId = context.id;
+			const value = item.value;
 
-			item.commit(value);
+			try {
+				await executionService.update(contextId, id, value);
 
-			stateService.set(STATE_KEYS.CONTEXT, {
-				...context,
-				params: {
-					...context.params,
-					[id]: value,
-				},
-			});
-		} catch (error) {
-			console.error('Failed to update strategy parameter.', error);
+				stateService.set(STATE_KEYS.CONTEXT, {
+					...context,
+					params: {
+						...context.params,
+						[id]: value,
+					},
+				});
+				item.commit();
+			} catch (error) {
+				console.error('Failed to update strategy parameter.', error);
+				item.rollback();
+			}
+		} else {
 			item.rollback();
 		}
 	}
@@ -100,7 +102,7 @@ export class ParamsTab extends BaseComponent {
 			Object.entries(context.params).forEach(([id, value]) => {
 				const item = new ParamsItem();
 				$items.append(item.render());
-				item.update({ id, value, title: labels[id] || id });
+				item.update(id, value, labels[id] || id);
 				this.#items.set(id, item);
 			});
 		}

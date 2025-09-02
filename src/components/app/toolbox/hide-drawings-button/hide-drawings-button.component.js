@@ -18,7 +18,6 @@ export class HideDrawingsButton extends BaseComponent {
 
 	constructor({ onActivate }) {
 		super();
-
 		this.onActivate = onActivate;
 	}
 

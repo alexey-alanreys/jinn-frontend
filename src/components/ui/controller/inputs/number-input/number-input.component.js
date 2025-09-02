@@ -30,8 +30,12 @@ export class NumberInput extends BaseComponent {
 		this.#updateDOM();
 	}
 
-	commit(newValue) {
-		this.#value = newValue;
+	isValid() {
+		return /^-?\d+(\.\d+)?$/.test(this.value);
+	}
+
+	commit() {
+		this.#value = this.value;
 	}
 
 	rollback() {

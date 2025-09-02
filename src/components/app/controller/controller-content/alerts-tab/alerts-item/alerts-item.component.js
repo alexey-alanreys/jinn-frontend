@@ -23,10 +23,6 @@ export class AlertsItem extends BaseComponent {
 		return this.element;
 	}
 
-	remove() {
-		this.element.remove();
-	}
-
 	update(alert) {
 		this.#dataFields.forEach(({ element }, key) => {
 			this.#$element.data('context-id', alert.contextId);
@@ -43,6 +39,10 @@ export class AlertsItem extends BaseComponent {
 				}
 			}
 		});
+	}
+
+	remove() {
+		this.element.remove();
 	}
 
 	#initDOM() {
