@@ -1,9 +1,8 @@
-.alerts-item {
+.config-item {
 	display: flex;
 	flex-direction: column;
-	cursor: pointer;
 
-	> .header {
+	> .config-header {
 		display: flex;
 		align-items: center;
 		gap: 6px;
@@ -11,8 +10,9 @@
 		height: 60px;
 		padding: 6px 16px;
 		border-bottom: 1px solid var(--color-border-primary);
+		cursor: pointer;
 
-		> .meta-info {
+		> .config-info {
 			display: flex;
 			flex: 1;
 			flex-direction: column;
@@ -27,64 +27,42 @@
 				text-overflow: ellipsis;
 			}
 
-			> .date-time {
+			> .strategy-meta {
 				font-size: 1.4rem;
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
 		}
 
-		> button {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			width: 24px;
-			height: 24px;
-			border-radius: 6px;
-			opacity: 0;
-
-			&:hover {
-				background-color: var(--color-bg-hover-secondary);
-			}
-		}
-
 		&:hover {
 			background-color: var(--color-bg-hover-primary);
 
-			> button {
+			button {
 				opacity: 1;
 			}
 		}
 	}
 
-	> .details {
+	> .config-content {
 		display: flex;
 		flex-direction: column;
 		border-bottom: 1px solid var(--color-border-primary);
 
-		> .field-row {
+		> .config-property {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			max-width: 320px;
 			padding: 8px 16px;
 			font-size: 1.4rem;
-
-			> .red {
-				color: var(--color-status-red);
-			}
-
-			> .green {
-				color: var(--color-status-green);
-			}
-
-			> .gray {
-				color: var(--color-text-secondary);
-			}
 		}
 	}
 
-	&[data-active='false'] > .details {
+	&[data-active='true'] > .config-header {
+		color: var(--color-accent-primary);
+	}
+
+	&[data-active='false'] > .config-content {
 		display: none;
 	}
 }

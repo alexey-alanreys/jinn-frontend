@@ -36,16 +36,12 @@ export class SelectInput extends BaseComponent {
 	}
 
 	update(value) {
-		this.#value = value;
-		this.#updateDOM();
-	}
+		const selected = this.#optionsData.find((item) => item === value);
 
-	commit() {
-		this.#value = this.value;
-	}
-
-	rollback() {
-		this.#updateDOM();
+		if (selected) {
+			this.#$value.data('value', selected).text(selected);
+			this.#value = value;
+		}
 	}
 
 	open() {
@@ -83,14 +79,6 @@ export class SelectInput extends BaseComponent {
 		if (this.#optionsData.length > 0) {
 			this.#value = this.#optionsData[0];
 			this.#$value.data('value', this.#value).text(this.#value);
-		}
-	}
-
-	#updateDOM() {
-		const selected = this.#optionsData.find((item) => item === this.#value);
-
-		if (selected) {
-			this.#$value.data('value', selected).text(selected);
 		}
 	}
 }

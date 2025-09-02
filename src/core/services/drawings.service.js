@@ -2,6 +2,7 @@ import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
+import { STORAGE_KEYS } from '@/constants/storage-keys.constants';
 
 import { executionService } from '@/api/services/execution.service';
 
@@ -12,7 +13,6 @@ import { executionService } from '@/api/services/execution.service';
  * persistence across contexts and chart API integration.
  */
 class DrawingsService {
-	#storageKey = 'drawings';
 	#isVisible = true;
 	#drawings = [];
 
@@ -73,7 +73,7 @@ class DrawingsService {
 		const contextId = this.#getContextId();
 		if (!contextId) return [];
 
-		const stored = storageService.getItem(this.#storageKey) || {};
+		const stored = storageService.getItem(STORAGE_KEYS.DRAWINGS) || {};
 		return stored[drawingType]?.[contextId] || [];
 	}
 
@@ -98,14 +98,14 @@ class DrawingsService {
 		const contextId = this.#getContextId();
 		if (!contextId) return;
 
-		const stored = storageService.getItem(this.#storageKey) || {};
+		const stored = storageService.getItem(STORAGE_KEYS.DRAWINGS) || {};
 
 		if (!stored[drawingType]) {
 			stored[drawingType] = {};
 		}
 
 		stored[drawingType][contextId] = drawings;
-		storageService.setItem(this.#storageKey, stored);
+		storageService.setItem(STORAGE_KEYS.DRAWINGS, stored);
 	}
 
 	/**
@@ -129,7 +129,7 @@ class DrawingsService {
 	 * @returns {string[]} Array of available drawing type names.
 	 */
 	getTypes() {
-		const stored = storageService.getItem(this.#storageKey) || {};
+		const stored = storageService.getItem(STORAGE_KEYS.DRAWINGS) || {};
 		return Object.keys(stored);
 	}
 
@@ -189,7 +189,7 @@ class DrawingsService {
 	 * @param {string} type Drawing type to clean up.
 	 */
 	#cleanupOrphanedDrawings(contextIds, type) {
-		const storedData = storageService.getItem(this.#storageKey) || {};
+		const storedData = storageService.getItem(STORAGE_KEYS.DRAWINGS) || {};
 		const typeData = storedData[type] || {};
 
 		const filteredTypeData = Object.fromEntries(
@@ -198,7 +198,7 @@ class DrawingsService {
 			),
 		);
 
-		storageService.setItem(this.#storageKey, {
+		storageService.setItem(STORAGE_KEYS.DRAWINGS, {
 			...storedData,
 			[type]: filteredTypeData,
 		});

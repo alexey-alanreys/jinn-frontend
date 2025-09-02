@@ -18,7 +18,9 @@ export class CheckboxInput extends BaseComponent {
 	}
 
 	render() {
-		this.#initDOM();
+		this.element = renderService.htmlToElement(templateHTML, [], styles);
+		this.#$element = $Q(this.element);
+		this.#$input = this.#$element.find('input');
 		return this.element;
 	}
 
@@ -33,13 +35,6 @@ export class CheckboxInput extends BaseComponent {
 
 	rollback() {
 		this.#updateDOM();
-	}
-
-	#initDOM() {
-		this.element = renderService.htmlToElement(templateHTML, [], styles);
-		this.#$element = $Q(this.element);
-		this.#$input = this.#$element.find('input');
-		return this.element;
 	}
 
 	#updateDOM() {

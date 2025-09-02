@@ -2,6 +2,7 @@ import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
+import { STORAGE_KEYS } from '@/constants/storage-keys.constants';
 
 /**
  * @module themeService
@@ -12,7 +13,6 @@ import { STATE_KEYS } from '@/constants/state-keys.constants';
  */
 class ThemeService {
 	#attribute = 'data-theme';
-	#storageKey = 'theme';
 	#lightTheme = 'light';
 	#darkTheme = 'dark';
 	#autoTheme = 'auto';
@@ -53,7 +53,7 @@ class ThemeService {
 	 */
 	init() {
 		const savedTheme =
-			storageService.getItem(this.#storageKey) || this.#lightTheme;
+			storageService.getItem(STORAGE_KEYS.THEME) || this.#lightTheme;
 		this.#applyTheme(savedTheme);
 		return savedTheme;
 	}
@@ -109,7 +109,7 @@ class ThemeService {
 	 */
 	#applyTheme(theme) {
 		document.documentElement.setAttribute(this.#attribute, theme);
-		storageService.setItem(this.#storageKey, theme);
+		storageService.setItem(STORAGE_KEYS.THEME, theme);
 		stateService.set(STATE_KEYS.THEME, theme);
 	}
 }

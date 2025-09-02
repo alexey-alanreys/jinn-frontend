@@ -46,7 +46,6 @@ export class NumberInput extends BaseComponent {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);
 		this.#$element = $Q(this.element);
 		this.#$input = this.#$element.find('input');
-		return this.element;
 	}
 
 	#setupInitialState() {

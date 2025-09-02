@@ -1,25 +1,27 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
-import { stateService } from '@/core/services/state.service';
+import { storageService } from '@/core/services/storage.service';
 
 import { AddConfigButton } from '@/components/ui/controller/buttons/configs/add-config-button/add-config-button.component';
 import { CloneConfigsButton } from '@/components/ui/controller/buttons/configs/clone-configs-button/clone-configs-button.component';
 import { DeleteConfigsButton } from '@/components/ui/controller/buttons/configs/delete-configs-button/delete-configs-button.component';
 import { RunConfigsButton } from '@/components/ui/controller/buttons/configs/run-configs-button/run-configs-button.component';
-import { DateInput } from '@/components/ui/controller/inputs/date-input/date-input.component';
-import { SelectInput } from '@/components/ui/controller/inputs/select-input/select-input.component';
-import { TextInput } from '@/components/ui/controller/inputs/text-input/text-input.component';
 
-import { STATE_KEYS } from '@/constants/state-keys.constants';
+import { STORAGE_KEYS } from '@/constants/storage-keys.constants';
 
 import styles from './optimization-tab.module.css';
 import templateHTML from './optimization-tab.template.html?raw';
+
+import { ConfigItem } from './config-item/config-item.component';
 
 export class OptimizationTab extends BaseComponent {
 	static COMPONENT_NAME = 'OptimizationTab';
 
 	#$element;
+	#$items;
+
+	#items = new Map();
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -60,29 +62,25 @@ export class OptimizationTab extends BaseComponent {
 			styles,
 		);
 		this.#$element = $Q(this.element);
+		this.#$items = this.#$element.find('[data-ref="configItems"]');
 	}
 
 	#setupInitialState() {
 		this.#renderInitialItems();
 		this.#attachListeners();
-
-		console.log(stateService.get(STATE_KEYS.EXCHANGES));
-		console.log(stateService.get(STATE_KEYS.INTERVALS));
 	}
 
 	#renderInitialItems() {
-		const $configItems = this.#$element.find('[data-ref="configItems"]');
+		const stored =
+			storageService.getItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS) || {};
+		if (!Object.keys(stored).length) return;
 
-		const inputText = new TextInput({ placeholder: 'BTCUSDT' });
-		$configItems.append(inputText.render());
-
-		this.dateInput = new DateInput();
-		$configItems.append(this.dateInput.render());
-
-		this.selectInput = new SelectInput({
-			options: ['BINANCE', 'BYBIT'],
+		Object.entries(stored).forEach(([configId, config]) => {
+			const item = new ConfigItem({ configId });
+			this.#$items.append(item.render());
+			this.#items.set(configId, item);
+			item.update(config);
 		});
-		$configItems.append(this.selectInput.render());
 	}
 
 	#attachListeners() {
@@ -90,31 +88,74 @@ export class OptimizationTab extends BaseComponent {
 		this.#$element.click(this.#handleClick.bind(this));
 	}
 
-	#handleChange(event) {
-		const $dateInput = $Q(event.target).closest('[data-ref="dateInput"]');
-		if (!$dateInput) return;
+	#handleChange(event) {}
 
-		if (this.dateInput.isValid()) {
-			this.dateInput.commit(this.dateInput.value);
-		} else {
-			this.dateInput.rollback();
+	async #handleClick(event) {
+		const $target = $Q(event.target).closest('[data-ref]');
+		if (!$target) return;
+
+		const ref = $target.data('ref');
+		if (ref === 'configItems') return;
+
+		switch (ref) {
+			case 'addConfigButton':
+				this.#handleAddConfig();
+				break;
+			case 'runConfigsButton':
+				this.#handleRunConfigs();
+				break;
+			case 'cloneConfigsButton':
+				this.#handleCloneConfigs();
+				break;
+			case 'deleteConfigsButton':
+				this.#handleDeleteConfigs();
+				break;
+		}
+
+		const configItem = $target.closest('[data-ref="configItem"]');
+		const configId = configItem.data('config-id');
+		const item = this.#items.get(configId);
+
+		switch (ref) {
+			case 'configHeader':
+				item.toggle();
+				break;
+			case 'deleteButton':
+				this.#handleDeleteConfig();
+				break;
+			default:
+				item.handleClick(event);
 		}
 	}
 
-	async #handleClick(event) {
-		const $target = $Q(event.target);
-		const $selectInput = $target.closest('[data-ref="selectInput"]');
+	#handleAddConfig() {
+		const configId = crypto.randomUUID();
+		const item = new ConfigItem({ configId });
 
-		if ($selectInput) {
-			this.selectInput.toggle();
+		this.#$items.append(item.render());
+		this.#items.set(configId, item);
 
-			const ref = $target.data('ref');
+		const stored =
+			storageService.getItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS) || {};
+		storageService.setItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS, {
+			...stored,
+			[configId]: item.config,
+		});
+	}
 
-			if (ref === 'option') {
-				this.selectInput.update($target.data('value'));
-			}
-		} else {
-			this.selectInput.close();
-		}
+	#handleRunConfigs() {
+		console.log('handleRunConfigs');
+	}
+
+	#handleCloneConfigs() {
+		console.log('handleCloneConfigs');
+	}
+
+	#handleDeleteConfigs() {
+		console.log('handleDeleteConfigs');
+	}
+
+	#handleDeleteConfig() {
+		console.log('handleDeleteConfig');
 	}
 }
