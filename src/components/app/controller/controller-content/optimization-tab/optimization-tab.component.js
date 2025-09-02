@@ -1,6 +1,7 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
+import { stateService } from '@/core/services/state.service';
 
 import { AddConfigButton } from '@/components/ui/controller/buttons/configs/add-config-button/add-config-button.component';
 import { CloneConfigsButton } from '@/components/ui/controller/buttons/configs/clone-configs-button/clone-configs-button.component';
@@ -9,6 +10,8 @@ import { RunConfigsButton } from '@/components/ui/controller/buttons/configs/run
 import { DateInput } from '@/components/ui/controller/inputs/date-input/date-input.component';
 import { SelectInput } from '@/components/ui/controller/inputs/select-input/select-input.component';
 import { TextInput } from '@/components/ui/controller/inputs/text-input/text-input.component';
+
+import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import styles from './optimization-tab.module.css';
 import templateHTML from './optimization-tab.template.html?raw';
@@ -62,6 +65,9 @@ export class OptimizationTab extends BaseComponent {
 	#setupInitialState() {
 		this.#renderInitialItems();
 		this.#attachListeners();
+
+		console.log(stateService.get(STATE_KEYS.EXCHANGES));
+		console.log(stateService.get(STATE_KEYS.INTERVALS));
 	}
 
 	#renderInitialItems() {
