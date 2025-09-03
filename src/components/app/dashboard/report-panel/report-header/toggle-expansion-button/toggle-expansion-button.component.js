@@ -22,7 +22,6 @@ export class ToggleExpansionButton extends BaseComponent {
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 

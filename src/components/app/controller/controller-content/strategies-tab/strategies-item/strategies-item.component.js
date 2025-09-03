@@ -16,7 +16,6 @@ export class StrategiesItem extends BaseComponent {
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 

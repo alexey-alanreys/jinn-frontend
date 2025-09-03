@@ -18,7 +18,6 @@ export class ControllerSidebar extends BaseComponent {
 	render() {
 		this.#initComponents();
 		this.#initDOM();
-
 		return this.element;
 	}
 

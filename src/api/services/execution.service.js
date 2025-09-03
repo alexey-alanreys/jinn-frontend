@@ -61,10 +61,17 @@ class ExecutionService extends BaseService {
 	async add(configs) {
 		this._validateRequired({ configs }, 'configs is required');
 
+		const snakeCaseConfigs = Object.fromEntries(
+			Object.entries(configs).map(([contextId, contextConfig]) => [
+				contextId,
+				toSnakeCaseParams(contextConfig),
+			]),
+		);
+
 		return this._executeRequest({
 			path: '/contexts/execution',
 			method: 'POST',
-			body: configs,
+			body: snakeCaseConfigs,
 			errorMessage: 'Failed to add execution contexts',
 		});
 	}

@@ -22,7 +22,6 @@ export class ToggleVisibilityButton extends BaseComponent {
 	render() {
 		this.#initComponents();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 

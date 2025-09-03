@@ -32,7 +32,6 @@ export class TradesTab extends BaseComponent {
 		this.#initComponents();
 		this.#initDOM();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 

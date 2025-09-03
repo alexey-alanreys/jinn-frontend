@@ -14,7 +14,6 @@ export class MetricsItem extends BaseComponent {
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 

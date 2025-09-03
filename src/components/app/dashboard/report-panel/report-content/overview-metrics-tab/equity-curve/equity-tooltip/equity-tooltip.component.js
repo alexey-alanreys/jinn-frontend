@@ -1,11 +1,11 @@
-import {
-	DATE_FMT,
-	TOOLTIP_OFFSET_X,
-} from '@/constants/equity-tooltip.constants';
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 
+import {
+	DATE_FMT,
+	TOOLTIP_OFFSET_X,
+} from '@/constants/equity-tooltip.constants';
 
 import styles from './equity-tooltip.module.css';
 import templateHTML from './equity-tooltip.template.html?raw';
@@ -37,7 +37,6 @@ export class EquityTooltip extends BaseComponent {
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 

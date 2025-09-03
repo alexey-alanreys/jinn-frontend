@@ -26,7 +26,6 @@ export class ReportHeader extends BaseComponent {
 	render() {
 		this.#initComponents();
 		this.#initDOM();
-
 		return this.element;
 	}
 

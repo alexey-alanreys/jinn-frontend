@@ -72,7 +72,6 @@ export class ChartPanel extends BaseComponent {
 		this.#initComponents();
 		this.#initDOM();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 

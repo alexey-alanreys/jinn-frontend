@@ -17,7 +17,6 @@ export class ScreenshotButton extends BaseComponent {
 	render() {
 		this.#initDOM();
 		this.#setupInitialState();
-
 		return this.element;
 	}
 
