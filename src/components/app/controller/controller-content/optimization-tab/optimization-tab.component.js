@@ -171,7 +171,7 @@ export class OptimizationTab extends BaseComponent {
 
 					if (status === CONTEXT_STATUS.FAILED) {
 						this.#applyStatus(id, CONTEXT_STATUS.FAILED);
-						optimizationService.delete(id).catch(() => {});
+						this.#deleteContext(id);
 					}
 				}),
 			);
@@ -198,7 +198,7 @@ export class OptimizationTab extends BaseComponent {
 
 				if (status === CONTEXT_STATUS.FAILED) {
 					this.#applyStatus(id, CONTEXT_STATUS.FAILED);
-					optimizationService.delete(id).catch(() => {});
+					this.#deleteContext(id);
 				}
 			});
 
@@ -214,18 +214,17 @@ export class OptimizationTab extends BaseComponent {
 
 	async #handleReadyContext(contextId) {
 		try {
-			const contexts = await optimizationService.get(contextId);
+			const response = await optimizationService.get(contextId);
+			const context = Object.values(response)[0];
 
-			Object.values(contexts).forEach((context) => {
-				context.params.forEach((paramSet) => {
-					const newId = crypto.randomUUID();
-					const newContext = { ...context, params: paramSet };
-					this.#storeResult(newId, newContext);
-				});
+			context.params.forEach((paramSet) => {
+				const newId = crypto.randomUUID();
+				const newContext = { ...context, params: paramSet };
+				this.#storeResult(newId, newContext);
 			});
 
 			this.#applyStatus(contextId, CONTEXT_STATUS.READY);
-			await this.#cleanupBackendContext(contextId);
+			this.#deleteContext(contextId);
 		} catch (e) {
 			console.error(`Failed to handle ready context ${contextId}.`, e);
 		}
@@ -250,27 +249,22 @@ export class OptimizationTab extends BaseComponent {
 		storageService.setItem(STORAGE_KEYS.TRADING_CONFIGS, tradingConfigs);
 	}
 
-	async #cleanupBackendContext(contextId) {
-		try {
-			await optimizationService.delete(contextId);
-		} catch (e) {
-			console.warn(`Failed to cleanup context ${contextId}.`, e);
-		}
-	}
-
-	#runConfig(configId) {
+	async #runConfig(configId) {
 		const item = this.#configItems.get(configId);
 		if (!item) return;
 
-		optimizationService
-			.add({ [configId]: item.config })
-			.then(({ added }) => {
-				if (added.includes(configId)) {
-					this.#applyStatus(configId, CONTEXT_STATUS.QUEUED);
-					this.#startPolling();
-				}
-			})
-			.catch((e) => console.error('Failed to run config.', e));
+		try {
+			const { added } = await optimizationService.add({
+				[configId]: item.config,
+			});
+
+			if (added.includes(configId)) {
+				this.#applyStatus(configId, CONTEXT_STATUS.QUEUED);
+				this.#startPolling();
+			}
+		} catch (e) {
+			console.error('Failed to run config.', e);
+		}
 	}
 
 	#createConfigItem(configId, config = null) {
@@ -303,6 +297,7 @@ export class OptimizationTab extends BaseComponent {
 
 	#startPolling() {
 		if (this.#pollingIntervalId) return;
+
 		this.#pollingIntervalId = setInterval(
 			() => this.#pollStatuses(),
 			POLLING_INTERVAL_LONG,
@@ -348,18 +343,26 @@ export class OptimizationTab extends BaseComponent {
 		storageService.setItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS, storedConfigs);
 	}
 
-	#deleteConfig(configId) {
+	async #deleteConfig(configId) {
 		const item = this.#configItems.get(configId);
+		if (!item) return;
 
-		if (item) {
-			item.remove();
-			this.#configItems.delete(configId);
-			this.#removeConfigFromStorage(configId);
-			optimizationService.delete(configId).catch(() => {});
-		}
+		this.#deleteContext(configId);
+
+		item.remove();
+		this.#configItems.delete(configId);
+		this.#removeConfigFromStorage(configId);
 
 		if (this.#configItems.size === 0) {
 			this.#stopPolling();
+		}
+	}
+
+	async #deleteContext(contextId) {
+		const allContexts = await optimizationService.getAll();
+
+		if (allContexts[contextId]) {
+			await optimizationService.delete(contextId);
 		}
 	}
 }

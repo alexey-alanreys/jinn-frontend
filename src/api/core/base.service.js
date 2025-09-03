@@ -94,7 +94,7 @@ export class BaseService {
 	 */
 	#handleError(message) {
 		try {
-			notificationService.show('error', message);
+			if (message) notificationService.show('error', message);
 		} catch (err) {
 			console.error('Notification display failed:', err);
 		}

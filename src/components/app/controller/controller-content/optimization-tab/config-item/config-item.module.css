@@ -72,17 +72,29 @@
 	}
 
 	&[data-status='processing'] > .config-header {
-		background-color: var(--color-status-warning-bg);
-		border-left: 4px solid var(--color-status-warning);
+		background-color: rgba(var(--color-status-warning-rgb), 0.2);
+		border-left: 4px solid rgba(var(--color-status-warning-rgb), 0.8);
+
+		button:hover {
+			background-color: rgba(var(--color-status-warning-rgb), 0.25);
+		}
 	}
 
 	&[data-status='success'] > .config-header {
-		background-color: var(--color-status-success-bg);
-		border-left: 4px solid var(--color-status-success);
+		background-color: rgba(var(--color-status-success-rgb), 0.2);
+		border-left: 4px solid rgba(var(--color-status-success-rgb), 0.8);
+
+		button:hover {
+			background-color: rgba(var(--color-status-success-rgb), 0.25);
+		}
 	}
 
 	&[data-status='error'] > .config-header {
-		background-color: var(--color-status-error-bg);
-		border-left: 4px solid var(--color-status-error);
+		background-color: rgba(var(--color-status-error-rgb), 0.2);
+		border-left: 4px solid rgba(var(--color-status-error-rgb), 0.8);
+
+		button:hover {
+			background-color: rgba(var(--color-status-error-rgb), 0.25);
+		}
 	}
 }
