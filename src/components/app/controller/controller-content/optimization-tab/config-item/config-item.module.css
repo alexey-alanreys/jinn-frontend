@@ -70,4 +70,19 @@
 	&[data-active='false'] > .config-content {
 		display: none;
 	}
+
+	&[data-status='processing'] > .config-header {
+		background-color: var(--color-status-warning-bg);
+		border-left: 4px solid var(--color-status-warning);
+	}
+
+	&[data-status='success'] > .config-header {
+		background-color: var(--color-status-success-bg);
+		border-left: 4px solid var(--color-status-success);
+	}
+
+	&[data-status='error'] > .config-header {
+		background-color: var(--color-status-error-bg);
+		border-left: 4px solid var(--color-status-error);
+	}
 }

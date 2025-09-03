@@ -16,9 +16,9 @@ export class IndicatorsInfoPanel extends BaseComponent {
 		this.#$element = $Q(this.element);
 
 		if (isPrimary) {
-			this.#$element.addClass(styles['primary']);
+			this.#$element.addClass(styles.primary);
 		} else {
-			this.#$element.addClass(styles['secondary']);
+			this.#$element.addClass(styles.secondary);
 		}
 
 		return this.element;

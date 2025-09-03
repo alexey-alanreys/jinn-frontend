@@ -134,7 +134,22 @@ export class OptimizationTab extends BaseComponent {
 
 	#handleRunConfigs() {
 		// TODO: Implement run logic
-		console.log('handleRunConfigs');
+
+		setTimeout(() => {
+			this.#configItems.forEach((item) => item.setProcessing());
+		}, 1000);
+
+		setTimeout(() => {
+			this.#configItems.forEach((item) => item.setSuccess());
+		}, 3000);
+
+		setTimeout(() => {
+			this.#configItems.forEach((item) => item.setError());
+		}, 5000);
+
+		setTimeout(() => {
+			this.#configItems.forEach((item) => item.clearStatus());
+		}, 7000);
 	}
 
 	#handleCloneConfigs() {

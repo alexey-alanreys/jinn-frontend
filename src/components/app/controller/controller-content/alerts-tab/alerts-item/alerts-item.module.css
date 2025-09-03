@@ -84,6 +84,10 @@
 		}
 	}
 
+	&[data-active='true'] > .header {
+		color: var(--color-accent-primary);
+	}
+
 	&[data-active='false'] > .details {
 		display: none;
 	}

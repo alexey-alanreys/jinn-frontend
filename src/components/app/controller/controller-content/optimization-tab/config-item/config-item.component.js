@@ -116,6 +116,22 @@ export class ConfigItem extends BaseComponent {
 		}
 	}
 
+	setProcessing() {
+		this.#$element.data('status', 'processing');
+	}
+
+	setSuccess() {
+		this.#$element.data('status', 'success');
+	}
+
+	setError() {
+		this.#$element.data('status', 'error');
+	}
+
+	clearStatus() {
+		this.#$element.data('status', '');
+	}
+
 	#initComponents() {
 		const appState = {
 			strategies: stateService.get(STATE_KEYS.STRATEGIES),
