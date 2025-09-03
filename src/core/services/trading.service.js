@@ -1,6 +1,7 @@
 import { stateService } from '@/core/services/state.service.js';
 
 import { ALERTS_FETCH_LIMIT } from '@/constants/alerts.constants';
+import { POLLING_INTERVAL_LONG } from '@/constants/polling.constants';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { alertsService } from '@/api/services/alerts.service.js';
@@ -15,8 +16,6 @@ import { executionService } from '@/api/services/execution.service.js';
  * - Polls for alerts when at least one context is live
  */
 class TradingService {
-	static POLLING_INTERVAL = 5000;
-
 	#contextIntervalId = null;
 	#alertsIntervalId = null;
 
@@ -95,7 +94,7 @@ class TradingService {
 			} catch (error) {
 				console.error('Failed to fetch updated context.', error);
 			}
-		}, TradingService.POLLING_INTERVAL);
+		}, POLLING_INTERVAL_LONG);
 	}
 
 	/** Stops polling ExecutionService for context updates. */
@@ -127,7 +126,7 @@ class TradingService {
 			} catch (error) {
 				console.error('Failed to fetch alerts.', error);
 			}
-		}, TradingService.POLLING_INTERVAL);
+		}, POLLING_INTERVAL_LONG);
 	}
 
 	/** Stops polling alertsService for new alerts. */
