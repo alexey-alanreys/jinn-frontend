@@ -21,7 +21,8 @@ export class OptimizationTab extends BaseComponent {
 	#$element;
 	#$items;
 
-	#items = new Map();
+	#configItems = new Map();
+	#controlButtons = {};
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -44,21 +45,18 @@ export class OptimizationTab extends BaseComponent {
 	}
 
 	#initComponents() {
-		this.deleteConfigsButton = new DeleteConfigsButton();
-		this.cloneConfigsButton = new CloneConfigsButton();
-		this.addConfigButton = new AddConfigButton();
-		this.runConfigsButton = new RunConfigsButton();
+		this.#controlButtons = {
+			delete: new DeleteConfigsButton(),
+			clone: new CloneConfigsButton(),
+			add: new AddConfigButton(),
+			run: new RunConfigsButton(),
+		};
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[
-				this.deleteConfigsButton,
-				this.cloneConfigsButton,
-				this.addConfigButton,
-				this.runConfigsButton,
-			],
+			Object.values(this.#controlButtons),
 			styles,
 		);
 		this.#$element = $Q(this.element);
@@ -66,29 +64,31 @@ export class OptimizationTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		this.#renderInitialItems();
-		this.#attachListeners();
+		this.#loadStoredConfigs();
+		this.#attachEventListeners();
 	}
 
-	#renderInitialItems() {
-		const stored =
-			storageService.getItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS) || {};
-		if (!Object.keys(stored).length) return;
+	#loadStoredConfigs() {
+		const storedConfigs = this.#getStoredConfigs();
 
-		Object.entries(stored).forEach(([configId, config]) => {
-			const item = new ConfigItem({ configId });
-			this.#$items.append(item.render());
-			this.#items.set(configId, item);
-			item.update(config);
+		Object.entries(storedConfigs).forEach(([configId, config]) => {
+			this.#createConfigItem(configId, config);
 		});
 	}
 
-	#attachListeners() {
+	#attachEventListeners() {
 		this.#$element.on('change', this.#handleChange.bind(this));
-		this.#$element.click(this.#handleClick.bind(this));
+		this.#$element.on('click', this.#handleClick.bind(this));
 	}
 
-	#handleChange(event) {}
+	#handleChange(event) {
+		const configItem = this.#getConfigItemFromEvent(event);
+
+		if (configItem) {
+			configItem.handleChange(event);
+			this.#saveConfigToStorage(configItem.configId, configItem.config);
+		}
+	}
 
 	async #handleClick(event) {
 		const $target = $Q(event.target).closest('[data-ref]');
@@ -97,65 +97,112 @@ export class OptimizationTab extends BaseComponent {
 		const ref = $target.data('ref');
 		if (ref === 'configItems') return;
 
-		switch (ref) {
-			case 'addConfigButton':
-				this.#handleAddConfig();
-				break;
-			case 'runConfigsButton':
-				this.#handleRunConfigs();
-				break;
-			case 'cloneConfigsButton':
-				this.#handleCloneConfigs();
-				break;
-			case 'deleteConfigsButton':
-				this.#handleDeleteConfigs();
-				break;
+		const controlHandlers = {
+			addConfigButton: () => this.#handleAddConfig(),
+			runConfigsButton: () => this.#handleRunConfigs(),
+			cloneConfigsButton: () => this.#handleCloneConfigs(),
+			deleteConfigsButton: () => this.#handleDeleteConfigs(),
+		};
+
+		if (controlHandlers[ref]) {
+			controlHandlers[ref]();
+			return;
 		}
 
-		const configItem = $target.closest('[data-ref="configItem"]');
-		const configId = configItem.data('config-id');
-		const item = this.#items.get(configId);
+		const configItem = this.#getConfigItemFromEvent(event);
+		if (!configItem) return;
 
-		switch (ref) {
-			case 'configHeader':
-				item.toggle();
-				break;
-			case 'deleteButton':
-				this.#handleDeleteConfig();
-				break;
-			default:
-				item.handleClick(event);
+		const itemHandlers = {
+			configHeader: () => configItem.toggle(),
+			runButton: () => this.#runConfig(configItem.configId),
+			deleteButton: () => this.#deleteConfig(configItem.configId),
+		};
+
+		if (itemHandlers[ref]) {
+			itemHandlers[ref]();
+		} else {
+			configItem.handleClick(event);
+			this.#saveConfigToStorage(configItem.configId, configItem.config);
 		}
 	}
 
 	#handleAddConfig() {
 		const configId = crypto.randomUUID();
-		const item = new ConfigItem({ configId });
-
-		this.#$items.append(item.render());
-		this.#items.set(configId, item);
-
-		const stored =
-			storageService.getItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS) || {};
-		storageService.setItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS, {
-			...stored,
-			[configId]: item.config,
-		});
+		const newItem = this.#createConfigItem(configId);
+		this.#saveConfigToStorage(configId, newItem.config);
 	}
 
 	#handleRunConfigs() {
+		// TODO: Implement run logic
 		console.log('handleRunConfigs');
 	}
 
 	#handleCloneConfigs() {
-		console.log('handleCloneConfigs');
+		const itemsToClone = Array.from(this.#configItems.values());
+
+		itemsToClone.forEach((configItem) => {
+			const newConfigId = crypto.randomUUID();
+			const clonedConfig = { ...configItem.config };
+
+			this.#createConfigItem(newConfigId, clonedConfig);
+			this.#saveConfigToStorage(newConfigId, clonedConfig);
+		});
 	}
 
 	#handleDeleteConfigs() {
-		console.log('handleDeleteConfigs');
+		const allConfigIds = Array.from(this.#configItems.keys());
+		allConfigIds.forEach((configId) => this.#deleteConfig(configId));
 	}
 
-	#handleDeleteConfig() {
-		console.log('handleDeleteConfig');
+	#createConfigItem(configId, config = null) {
+		const item = new ConfigItem({ configId });
+
+		this.#$items.append(item.render());
+		this.#configItems.set(configId, item);
+
+		if (config) {
+			item.update(config);
+		}
+
+		return item;
+	}
+
+	#runConfig(configId) {
+		// TODO: Implement run logic
+		console.log(`runConfig ${configId}`);
+	}
+
+	#deleteConfig(configId) {
+		const item = this.#configItems.get(configId);
+
+		if (item) {
+			item.remove();
+			this.#configItems.delete(configId);
+			this.#removeConfigFromStorage(configId);
+		}
+	}
+
+	#getConfigItemFromEvent(event) {
+		const $config = $Q(event.target).closest('[data-ref="configItem"]');
+		if (!$config) return null;
+
+		const configId = $config.data('config-id');
+		return this.#configItems.get(configId);
+	}
+
+	#getStoredConfigs() {
+		return storageService.getItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS) || {};
+	}
+
+	#saveConfigToStorage(configId, config) {
+		const storedConfigs = this.#getStoredConfigs();
+		storedConfigs[configId] = config;
+		storageService.setItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS, storedConfigs);
+	}
+
+	#removeConfigFromStorage(configId) {
+		const storedConfigs = this.#getStoredConfigs();
+		delete storedConfigs[configId];
+		storageService.setItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS, storedConfigs);
 	}
 }

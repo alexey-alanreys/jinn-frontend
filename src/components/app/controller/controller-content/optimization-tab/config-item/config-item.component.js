@@ -4,6 +4,7 @@ import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
 import { DeleteButton } from '@/components/ui/controller/buttons/common/delete-button/delete-button.component';
+import { RunButton } from '@/components/ui/controller/buttons/common/run-button/run-button.component';
 import { DateInput } from '@/components/ui/controller/inputs/date-input/date-input.component';
 import { SelectInput } from '@/components/ui/controller/inputs/select-input/select-input.component';
 import { TextInput } from '@/components/ui/controller/inputs/text-input/text-input.component';
@@ -15,23 +16,28 @@ import templateHTML from './config-item.template.html?raw';
 
 export class ConfigItem extends BaseComponent {
 	static COMPONENT_NAME = 'ConfigItem';
-	static PLACEHOLDER = 'BTCUSDT';
+	static DEFAULT_SYMBOL = 'BTCUSDT';
 
 	#$element;
+	#configId;
 
-	#configId = null;
 	#config = {
 		strategy: null,
-		exchange: null,
-		interval: null,
 		symbol: null,
+		interval: null,
+		exchange: null,
 		start: null,
 		end: null,
 	};
-	#dataFields = new Map();
+	#inputs = {};
+	#headerFields = new Map();
+
+	get configId() {
+		return this.#configId;
+	}
 
 	get config() {
-		return this.#config;
+		return { ...this.#config };
 	}
 
 	constructor({ configId }) {
@@ -48,9 +54,10 @@ export class ConfigItem extends BaseComponent {
 	}
 
 	update(config) {
-		this.#config = config;
-		this.#updateDOM();
-		this.#syncConfigHeader();
+		this.#config = { ...config };
+
+		this.#updateInputValues();
+		this.#updateHeaderDisplay();
 	}
 
 	remove() {
@@ -58,35 +65,41 @@ export class ConfigItem extends BaseComponent {
 	}
 
 	toggle() {
-		const isActive = this.#$element.is('data-active');
+		const isActive = this.#$element.data('active') === 'true';
 		this.#$element.data('active', String(!isActive));
+	}
+
+	handleChange(event) {
+		const inputKey = this.#getInputKeyFromEvent(event);
+		if (!inputKey) return;
+
+		const input = this.#inputs[inputKey];
+		const newValue = input.value;
+
+		if (this.#isValidInput(inputKey)) {
+			input.commit(newValue);
+
+			this.#updateConfigProperty(inputKey, newValue);
+			this.#updateHeaderDisplay();
+		} else {
+			input.rollback();
+		}
 	}
 
 	handleClick(event) {
 		const $selectInput = $Q(event.target).closest('[data-ref="selectInput"]');
+
 		if (!$selectInput) {
-			this.strategyInput.close();
-			this.exchangeInput.close();
-			this.intervalInput.close();
+			this.#closeAllSelectInputs();
 			return;
 		}
 
-		const key = $selectInput.closest('[data-key]').data('key');
-		let targetInput = null;
+		const inputKey = this.#getInputKeyFromEvent(event);
+		const targetInput = this.#inputs[inputKey];
+		if (!targetInput) return;
 
-		switch (key) {
-			case 'strategyInput':
-				targetInput = this.strategyInput;
-				break;
-			case 'exchangeInput':
-				targetInput = this.exchangeInput;
-				break;
-			case 'intervalInput':
-				targetInput = this.intervalInput;
-		}
-
-		const ref = $Q(event.target).closest('[data-ref]').data('ref');
-		console.log(ref);
+		const $clickedElement = $Q(event.target).closest('[data-ref]');
+		const ref = $clickedElement.data('ref');
 
 		if (ref === 'value' || ref === 'trigger') {
 			targetInput.toggle();
@@ -94,35 +107,39 @@ export class ConfigItem extends BaseComponent {
 		}
 
 		if (ref === 'option') {
-			const value = $Q(event.target).closest('[data-ref]').data('value');
-			targetInput.update(value);
+			const selectedValue = $clickedElement.data('value');
+			targetInput.update(selectedValue);
 			targetInput.close();
+
+			this.#updateConfigProperty(inputKey, selectedValue);
+			this.#updateHeaderDisplay();
 		}
 	}
 
 	#initComponents() {
-		const strategies = stateService.get(STATE_KEYS.STRATEGIES);
-		const exchanges = stateService.get(STATE_KEYS.EXCHANGES);
-		const intervals = stateService.get(STATE_KEYS.INTERVALS);
+		const appState = {
+			strategies: stateService.get(STATE_KEYS.STRATEGIES),
+			exchanges: stateService.get(STATE_KEYS.EXCHANGES),
+			intervals: stateService.get(STATE_KEYS.INTERVALS),
+		};
 
-		this.strategyInput = new SelectInput({
-			options: Object.keys(strategies),
-		});
-		this.exchangeInput = new SelectInput({
-			options: exchanges,
-		});
-		this.intervalInput = new SelectInput({
-			options: intervals,
-		});
-		this.symbolInput = new TextInput({ placeholder: ConfigItem.PLACEHOLDER });
-		this.startInput = new DateInput();
-		this.endInput = new DateInput();
+		this.#inputs = {
+			strategy: new SelectInput({ options: Object.keys(appState.strategies) }),
+			symbol: new TextInput({ placeholder: ConfigItem.DEFAULT_SYMBOL }),
+			interval: new SelectInput({ options: appState.intervals }),
+			exchange: new SelectInput({ options: appState.exchanges }),
+			start: new DateInput(),
+			end: new DateInput(),
+		};
 	}
 
 	#initDOM() {
 		this.element = renderService.htmlToElement(
 			templateHTML,
-			[new DeleteButton({ title: 'Delete Setting' })],
+			[
+				new RunButton({ title: 'Run Setting' }),
+				new DeleteButton({ title: 'Delete Setting' }),
+			],
 			styles,
 		);
 		this.#$element = $Q(this.element);
@@ -131,59 +148,79 @@ export class ConfigItem extends BaseComponent {
 	#setupInitialState() {
 		this.#$element.data('config-id', this.#configId);
 
+		this.#mapHeaderFields();
+		this.#renderInputComponents();
+		this.#syncConfigFromInputs();
+		this.#updateHeaderDisplay();
+	}
+
+	#mapHeaderFields() {
 		this.#$element.findAll('[data-field]').forEach((el) => {
-			const key = el.data('field');
-			this.#dataFields.set(key, { element: el });
+			const fieldKey = el.data('field');
+			this.#headerFields.set(fieldKey, el);
 		});
-
-		this.#renderInitialItems();
-		this.#syncConfig();
-		this.#syncConfigHeader();
 	}
 
-	#renderInitialItems() {
-		const $strategyInput = this.#$element.find('[data-ref="strategyInput"]');
-		const $exchangeInput = this.#$element.find('[data-ref="exchangeInput"]');
-		const $intervalInput = this.#$element.find('[data-ref="intervalInput"]');
-		const $symbolInput = this.#$element.find('[data-ref="symbolInput"]');
-		const $startInput = this.#$element.find('[data-ref="startInput"]');
-		const $endInput = this.#$element.find('[data-ref="endInput"]');
-
-		$strategyInput.append(this.strategyInput.render());
-		$exchangeInput.append(this.exchangeInput.render());
-		$intervalInput.append(this.intervalInput.render());
-		$symbolInput.append(this.symbolInput.render());
-		$startInput.append(this.startInput.render());
-		$endInput.append(this.endInput.render());
-
-		$strategyInput.data('key', 'strategyInput');
-		$exchangeInput.data('key', 'exchangeInput');
-		$intervalInput.data('key', 'intervalInput');
-	}
-
-	#updateDOM() {
-		this.strategyInput.update(this.#config.strategy);
-		this.exchangeInput.update(this.#config.exchange);
-		this.intervalInput.update(this.#config.interval);
-		this.symbolInput.update(this.#config.symbol);
-		this.startInput.update(this.#config.start);
-		this.endInput.update(this.#config.end);
-	}
-
-	#syncConfig() {
-		this.#config = {
-			strategy: this.strategyInput.value,
-			exchange: this.exchangeInput.value,
-			interval: this.intervalInput.value,
-			symbol: this.symbolInput.value || ConfigItem.PLACEHOLDER,
-			start: this.startInput.value,
-			end: this.endInput.value,
+	#renderInputComponents() {
+		const inputContainers = {
+			strategy: this.#$element.find('[data-ref="strategyInput"]'),
+			symbol: this.#$element.find('[data-ref="symbolInput"]'),
+			interval: this.#$element.find('[data-ref="intervalInput"]'),
+			exchange: this.#$element.find('[data-ref="exchangeInput"]'),
+			start: this.#$element.find('[data-ref="startInput"]'),
+			end: this.#$element.find('[data-ref="endInput"]'),
 		};
+
+		Object.entries(inputContainers).forEach(([key, $container]) => {
+			$container.append(this.#inputs[key].render());
+			$container.data('key', key);
+		});
 	}
 
-	#syncConfigHeader() {
-		this.#dataFields.forEach(({ element }, key) => {
-			element.text(this.#config[key]);
+	#syncConfigFromInputs() {
+		Object.keys(this.#config).forEach((key) => {
+			this.#config[key] = this.#inputs[key]?.value ?? null;
+		});
+	}
+
+	#updateHeaderDisplay() {
+		this.#headerFields.forEach((element, fieldKey) => {
+			const value = this.#config[fieldKey];
+
+			if (fieldKey === 'symbol' && (!value || value === '')) {
+				element.text('[No Symbol]');
+			} else if (value) {
+				element.text(value);
+			}
+		});
+	}
+
+	#updateInputValues() {
+		Object.entries(this.#config).forEach(([key, value]) => {
+			const input = this.#inputs[key];
+
+			if (input && value !== null) {
+				input.update(value);
+			}
+		});
+	}
+
+	#updateConfigProperty(key, value) {
+		this.#config[key] = value ?? null;
+	}
+
+	#getInputKeyFromEvent(event) {
+		const $container = $Q(event.target).closest('[data-key]');
+		return $container?.data('key') ?? null;
+	}
+
+	#isValidInput(inputKey) {
+		return this.#inputs[inputKey].isValid?.() ?? true;
+	}
+
+	#closeAllSelectInputs() {
+		['strategy', 'exchange', 'interval'].forEach((key) => {
+			this.#inputs[key].close();
 		});
 	}
 }
