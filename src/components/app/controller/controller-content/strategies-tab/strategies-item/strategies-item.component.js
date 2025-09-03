@@ -21,9 +21,9 @@ export class StrategiesItem extends BaseComponent {
 	}
 
 	update(contextId, context) {
-		this.#dataFields.forEach(({ element }, key) => {
+		this.#dataFields.forEach((element, fieldKey) => {
 			this.#$element.data('context-id', contextId);
-			element.text(context[key]);
+			element.text(context[fieldKey]);
 
 			if (context.isLive) {
 				const $statusDot = this.#$element.find('[data-ref="statusDot"]');
@@ -55,8 +55,8 @@ export class StrategiesItem extends BaseComponent {
 
 	#setupInitialState() {
 		this.#$element.findAll('[data-field]').forEach((el) => {
-			const key = el.data('field');
-			this.#dataFields.set(key, { element: el });
+			const fieldKey = el.data('field');
+			this.#dataFields.set(fieldKey, el);
 		});
 	}
 }

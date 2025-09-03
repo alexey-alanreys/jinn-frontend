@@ -48,21 +48,21 @@ export class MainInfoPanel extends BaseComponent {
 			.findAll('[data-field]');
 
 		$metaFields.forEach((el) => {
-			const key = el.data('field');
-			this.#metaFields.set(key, { element: el });
+			const fieldKey = el.data('field');
+			this.#metaFields.set(fieldKey, el);
 		});
 
 		$candlestickFields.forEach((el) => {
-			const key = el.data('field');
-			this.#candleFields.set(key, { element: el });
+			const fieldKey = el.data('field');
+			this.#candleFields.set(fieldKey, el);
 		});
 	}
 
 	#updateMeta() {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
 
-		this.#metaFields.forEach(({ element }, key) => {
-			element.text(context[key]);
+		this.#metaFields.forEach((element, fieldKey) => {
+			element.text(context[fieldKey]);
 		});
 	}
 
@@ -71,9 +71,9 @@ export class MainInfoPanel extends BaseComponent {
 		const classToAdd = isBullish ? styles.green : styles.red;
 		const classToRemove = isBullish ? styles.red : styles.green;
 
-		this.#candleFields.forEach(({ element }, key) => {
+		this.#candleFields.forEach((element, fieldKey) => {
 			const currentValue = element.text();
-			const newValue = candlestick[key];
+			const newValue = candlestick[fieldKey];
 
 			if (currentValue !== String(newValue)) {
 				element.text(newValue);

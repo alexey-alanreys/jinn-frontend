@@ -36,8 +36,8 @@ export class IndicatorsInfoPanel extends BaseComponent {
 			this.#renderFields(indicatorKeys);
 		}
 
-		this.#dataFields.forEach(({ element }, key) => {
-			const data = indicators[key];
+		this.#dataFields.forEach((element, fieldKey) => {
+			const data = indicators[fieldKey];
 			if (!data) return;
 
 			let { value, color } = data;
@@ -69,8 +69,8 @@ export class IndicatorsInfoPanel extends BaseComponent {
 		this.#$element.html(html);
 
 		this.#$element.findAll('[data-field]').forEach((el) => {
-			const key = el.data('field');
-			this.#dataFields.set(key, { element: el });
+			const fieldKey = el.data('field');
+			this.#dataFields.set(fieldKey, el);
 		});
 	}
 

@@ -207,13 +207,12 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#applyIndicatorOptions(context) {
-		if (!context.indicatorOptions) return;
-
-		const { indicatorOptions } = context;
 		const lineOptions = getLineOptions();
+		const strategies = stateService.get(STATE_KEYS.STRATEGIES);
+		const allOptions = strategies[context.strategy].indicatorOptions;
 
 		this.#series.indicators.forEach((series, key) => {
-			const options = indicatorOptions[key];
+			const options = allOptions[key];
 			if (options) {
 				series.applyOptions({ ...lineOptions, ...options });
 			}
@@ -464,9 +463,10 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#createIndicatorSeries(context) {
-		const indicatorOptions = context.indicatorOptions || {};
+		const strategies = stateService.get(STATE_KEYS.STRATEGIES);
+		const allOptions = strategies[context.strategy].indicatorOptions;
 
-		Object.entries(indicatorOptions).forEach(([name, options]) => {
+		Object.entries(allOptions).forEach(([name, options]) => {
 			const indicatorTypes = ChartPanel.INDICATOR_TYPES;
 			const typeKey = options.type ?? 'line';
 			const indicatorType = indicatorTypes[typeKey] ?? indicatorTypes.line;
@@ -497,17 +497,18 @@ export class ChartPanel extends BaseComponent {
 	#createPanels() {
 		requestAnimationFrame(() => {
 			const context = stateService.get(STATE_KEYS.CONTEXT);
-			const indicatorOptions = context.indicatorOptions || {};
+			const strategies = stateService.get(STATE_KEYS.STRATEGIES);
+			const allOptions = strategies[context.strategy].indicatorOptions;
 
-			this.#initIndicatorPanels(indicatorOptions);
+			this.#initIndicatorPanels(allOptions);
 			const $panes = this.#getPaneContainers();
 
 			this.#renderIndicatorPanels($panes);
 		});
 	}
 
-	#initIndicatorPanels(indicatorOptions) {
-		Object.values(indicatorOptions).forEach((options) => {
+	#initIndicatorPanels(allOptions) {
+		Object.values(allOptions).forEach((options) => {
 			const paneIndex = options.pane ?? 0;
 
 			if (!this.#indicatorPanels.has(paneIndex)) {
@@ -597,7 +598,8 @@ export class ChartPanel extends BaseComponent {
 
 	#resetIndicatorInfoPanels() {
 		const context = stateService.get(STATE_KEYS.CONTEXT);
-		const indicatorOptions = context.indicatorOptions || {};
+		const strategies = stateService.get(STATE_KEYS.STRATEGIES);
+		const allOptions = strategies[context.strategy].indicatorOptions;
 
 		const indicatorValues = Object.fromEntries(
 			Array.from(this.#series.indicators, ([key, series]) => {
@@ -607,7 +609,7 @@ export class ChartPanel extends BaseComponent {
 		);
 
 		this.#indicatorPanels.forEach((panel, paneIndex) => {
-			const indicatorKeys = Object.entries(indicatorOptions)
+			const indicatorKeys = Object.entries(allOptions)
 				.filter(([_, options]) => {
 					return (options.pane ?? 0) === paneIndex;
 				})

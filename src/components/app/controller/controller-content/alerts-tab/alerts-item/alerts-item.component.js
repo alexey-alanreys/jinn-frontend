@@ -24,15 +24,15 @@ export class AlertsItem extends BaseComponent {
 	}
 
 	update(alert) {
-		this.#dataFields.forEach(({ element }, key) => {
+		this.#dataFields.forEach((element, fieldKey) => {
 			this.#$element.data('context-id', alert.contextId);
 			this.#$element.data('alert-id', alert.alertId);
 
-			const value = alert[key];
+			const value = alert[fieldKey];
 			element.text(value);
 
-			if (ALERT_COLORS[key]) {
-				const colorClass = styles[ALERT_COLORS[key][value]];
+			if (ALERT_COLORS[fieldKey]) {
+				const colorClass = styles[ALERT_COLORS[fieldKey][value]];
 
 				if (colorClass) {
 					element.addClass(colorClass);
@@ -59,8 +59,8 @@ export class AlertsItem extends BaseComponent {
 
 	#setupInitialState() {
 		this.#$element.findAll('[data-field]').forEach((el) => {
-			const key = el.data('field');
-			this.#dataFields.set(key, { element: el });
+			const fieldKey = el.data('field');
+			this.#dataFields.set(fieldKey, el);
 		});
 	}
 }

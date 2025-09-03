@@ -76,8 +76,8 @@ export class RulerTool extends BaseComponent {
 		this.#chartClickHandler = this.#handleChartClick.bind(this);
 
 		this.#$element.findAll('[data-field]').forEach((el) => {
-			const key = el.data('field');
-			this.#dataFields.set(key, { element: el });
+			const fieldKey = el.data('field');
+			this.#dataFields.set(fieldKey, el);
 		});
 
 		stateService.subscribe(STATE_KEYS.CONTEXT, this.#finish.bind(this));
@@ -146,8 +146,8 @@ export class RulerTool extends BaseComponent {
 			'bar-distance': this.#formatBarDistance(this.#startParams.chartX),
 		};
 
-		this.#dataFields.forEach(({ element }, key) => {
-			element.text(initialValues[key]);
+		this.#dataFields.forEach((element, fieldKey) => {
+			element.text(initialValues[fieldKey]);
 		});
 
 		this.#$element.data('trend', 'up');
@@ -206,8 +206,8 @@ export class RulerTool extends BaseComponent {
 			'bar-distance': this.#formatBarDistance(chartX),
 		};
 
-		this.#dataFields.forEach(({ element }, key) => {
-			element.text(newValues[key]);
+		this.#dataFields.forEach((element, fieldKey) => {
+			element.text(newValues[fieldKey]);
 		});
 	}
 
