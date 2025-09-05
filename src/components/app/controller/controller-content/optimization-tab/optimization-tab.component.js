@@ -1,16 +1,22 @@
 import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
+import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
 import { storageService } from '@/core/services/storage.service';
 
 import { AddConfigButton } from '@/components/ui/controller/buttons/configs/add-config-button/add-config-button.component';
 import { CloneConfigsButton } from '@/components/ui/controller/buttons/configs/clone-configs-button/clone-configs-button.component';
 import { DeleteConfigsButton } from '@/components/ui/controller/buttons/configs/delete-configs-button/delete-configs-button.component';
+import { ExportConfigsButton } from '@/components/ui/controller/buttons/configs/export-configs-button/export-configs-button.component';
+import { ImportConfigsButton } from '@/components/ui/controller/buttons/configs/import-configs-button/import-configs-button.component';
 import { RunConfigsButton } from '@/components/ui/controller/buttons/configs/run-configs-button/run-configs-button.component';
 
 import { CONTEXT_STATUS } from '@/constants/context-status.constants';
 import { POLLING_INTERVAL_LONG } from '@/constants/polling.constants';
 import { STORAGE_KEYS } from '@/constants/storage-keys.constants';
+
+import { exportConfigs } from '@/utils/export-configs.util';
+import { validateConfig } from '@/utils/validate-config.util';
 
 import { optimizationService } from '@/api/services/optimization.service';
 
@@ -21,6 +27,14 @@ import { ConfigItem } from './config-item/config-item.component';
 
 export class OptimizationTab extends BaseComponent {
 	static COMPONENT_NAME = 'OptimizationTab';
+	static REQUIRED_KEYS = [
+		'strategy',
+		'symbol',
+		'interval',
+		'exchange',
+		'start',
+		'end',
+	];
 
 	#$element;
 	#$items;
@@ -51,8 +65,10 @@ export class OptimizationTab extends BaseComponent {
 	#initComponents() {
 		this.#controlButtons = {
 			delete: new DeleteConfigsButton(),
-			clone: new CloneConfigsButton(),
+			import: new ImportConfigsButton(),
+			export: new ExportConfigsButton(),
 			add: new AddConfigButton(),
+			clone: new CloneConfigsButton(),
 			run: new RunConfigsButton(),
 		};
 	}
@@ -79,7 +95,15 @@ export class OptimizationTab extends BaseComponent {
 	}
 
 	#handleChange(event) {
+		const $target = $Q(event.target).closest('[data-ref]');
+
+		if ($target.data('ref') === 'fileInput') {
+			this.#importConfigs(event.target.files);
+			return;
+		}
+
 		const configItem = this.#getConfigItemFromEvent(event);
+
 		if (configItem) {
 			configItem.handleChange(event);
 			this.#saveConfigToStorage(configItem.configId, configItem.config);
@@ -94,9 +118,11 @@ export class OptimizationTab extends BaseComponent {
 		if (ref === 'configItems') return;
 
 		const controlHandlers = {
-			addConfigButton: () => this.#handleAddConfig(),
 			runConfigsButton: () => this.#handleRunConfigs(),
 			cloneConfigsButton: () => this.#handleCloneConfigs(),
+			addConfigButton: () => this.#handleAddConfig(),
+			exportConfigsButton: () => this.#handleExportConfigs(),
+			importConfigsButton: () => this.#handleImportConfigs(),
 			deleteConfigsButton: () => this.#handleDeleteConfigs(),
 		};
 
@@ -120,12 +146,6 @@ export class OptimizationTab extends BaseComponent {
 			configItem.handleClick(event);
 			this.#saveConfigToStorage(configItem.configId, configItem.config);
 		}
-	}
-
-	#handleAddConfig() {
-		const configId = crypto.randomUUID();
-		const newItem = this.#createConfigItem(configId);
-		this.#saveConfigToStorage(configId, newItem.config);
 	}
 
 	async #handleRunConfigs(configIds = null) {
@@ -157,11 +177,54 @@ export class OptimizationTab extends BaseComponent {
 		});
 	}
 
+	#handleAddConfig() {
+		const configId = crypto.randomUUID();
+		const newItem = this.#createConfigItem(configId);
+		this.#saveConfigToStorage(configId, newItem.config);
+	}
+
+	#handleExportConfigs() {
+		const storedConfigs = this.#getStoredConfigs();
+
+		if (!storedConfigs || !Object.keys(storedConfigs).length) {
+			notificationService.show('info', 'No configs available to export');
+			return;
+		}
+
+		const date = new Date().toISOString().split('T')[0];
+		const fileName = `optimization-configs_${date}.json`;
+		exportConfigs(storedConfigs, fileName);
+
+		notificationService.show('success', 'Settings exported successfully');
+	}
+
+	#handleImportConfigs() {
+		this.#controlButtons.import.clickOnInput();
+	}
+
 	#handleDeleteConfigs(configIds = null) {
 		const ids = configIds || Array.from(this.#configItems.keys());
 		if (ids.length === 0) return;
 
 		ids.forEach((configId) => this.#deleteConfig(configId));
+	}
+
+	async #handleReadyContext(contextId) {
+		try {
+			const response = await optimizationService.get(contextId);
+			const context = Object.values(response)[0];
+
+			context.params.forEach((paramSet) => {
+				const newId = crypto.randomUUID();
+				const newContext = { ...context, params: paramSet };
+				this.#storeResult(newId, newContext);
+			});
+
+			this.#applyStatus(contextId, CONTEXT_STATUS.READY);
+			this.#deleteContext(contextId);
+		} catch (error) {
+			console.error(`Failed to handle ready context ${contextId}.`, error);
+		}
 	}
 
 	async #syncStatusesWithBackend() {
@@ -219,68 +282,6 @@ export class OptimizationTab extends BaseComponent {
 		}
 	}
 
-	async #handleReadyContext(contextId) {
-		try {
-			const response = await optimizationService.get(contextId);
-			const context = Object.values(response)[0];
-
-			context.params.forEach((paramSet) => {
-				const newId = crypto.randomUUID();
-				const newContext = { ...context, params: paramSet };
-				this.#storeResult(newId, newContext);
-			});
-
-			this.#applyStatus(contextId, CONTEXT_STATUS.READY);
-			this.#deleteContext(contextId);
-		} catch (error) {
-			console.error(`Failed to handle ready context ${contextId}.`, error);
-		}
-	}
-
-	#storeResult(newId, newContext) {
-		const backtestingConfigs =
-			storageService.getItem(STORAGE_KEYS.BACKTESTING_CONFIGS) || {};
-		backtestingConfigs[newId] = newContext;
-		storageService.setItem(
-			STORAGE_KEYS.BACKTESTING_CONFIGS,
-			backtestingConfigs,
-		);
-
-		const tradingConfigs =
-			storageService.getItem(STORAGE_KEYS.TRADING_CONFIGS) || {};
-		const { start: _start, end: _end, ...rest } = newContext;
-		tradingConfigs[newId] = rest;
-		storageService.setItem(STORAGE_KEYS.TRADING_CONFIGS, tradingConfigs);
-	}
-
-	#createConfigItem(configId, config = null) {
-		const item = new ConfigItem({ configId });
-
-		this.#$items.append(item.render());
-		this.#configItems.set(configId, item);
-
-		if (config) {
-			item.update(config);
-		}
-
-		return item;
-	}
-
-	#applyStatus(configId, status) {
-		const item = this.#configItems.get(configId);
-		if (!item) return;
-
-		item.clearStatus();
-
-		if ([CONTEXT_STATUS.QUEUED, CONTEXT_STATUS.CREATING].includes(status)) {
-			item.setProcessing();
-		} else if (status === CONTEXT_STATUS.READY) {
-			item.setSuccess();
-		} else if (status === CONTEXT_STATUS.FAILED) {
-			item.setError();
-		}
-	}
-
 	#startPolling() {
 		if (this.#pollingIntervalId) return;
 
@@ -295,6 +296,19 @@ export class OptimizationTab extends BaseComponent {
 			clearInterval(this.#pollingIntervalId);
 			this.#pollingIntervalId = null;
 		}
+	}
+
+	#createConfigItem(configId, config = null) {
+		const item = new ConfigItem({ configId });
+
+		this.#$items.append(item.render());
+		this.#configItems.set(configId, item);
+
+		if (config) {
+			item.update(config);
+		}
+
+		return item;
 	}
 
 	#getConfigItemFromEvent(event) {
@@ -313,8 +327,42 @@ export class OptimizationTab extends BaseComponent {
 		});
 	}
 
-	#getStoredConfigs() {
-		return storageService.getItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS) || {};
+	#importConfigs(files) {
+		if (!files || files.length === 0) return;
+
+		const file = files[0];
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			try {
+				const json = JSON.parse(e.target.result);
+				this.#applyImportedConfig(json);
+				this.#controlButtons.import.resetInput();
+
+				notificationService.show('success', 'Settings imported successfully');
+			} catch {
+				notificationService.show(
+					'error',
+					'The file you selected is not a valid JSON settings file',
+				);
+			}
+		};
+		reader.readAsText(file);
+	}
+
+	#applyImportedConfig(json) {
+		if (!json || typeof json !== 'object') return;
+
+		const storedConfigs = this.#getStoredConfigs();
+
+		Object.entries(json).forEach(([configId, newConfig]) => {
+			if (!validateConfig(newConfig, OptimizationTab.REQUIRED_KEYS)) return;
+
+			const existingConfig = storedConfigs[configId] || {};
+			const mergedConfig = { ...existingConfig, ...newConfig };
+
+			storedConfigs[configId] = mergedConfig;
+			this.#saveConfigToStorage(configId, mergedConfig);
+		});
 	}
 
 	#saveConfigToStorage(configId, config) {
@@ -354,5 +402,40 @@ export class OptimizationTab extends BaseComponent {
 		} catch (error) {
 			console.error(`Failed to delete context ${contextId}.`, error);
 		}
+	}
+
+	#storeResult(newId, newContext) {
+		const backtestingConfigs =
+			storageService.getItem(STORAGE_KEYS.BACKTESTING_CONFIGS) || {};
+		backtestingConfigs[newId] = newContext;
+		storageService.setItem(
+			STORAGE_KEYS.BACKTESTING_CONFIGS,
+			backtestingConfigs,
+		);
+
+		const tradingConfigs =
+			storageService.getItem(STORAGE_KEYS.TRADING_CONFIGS) || {};
+		const { start: _start, end: _end, ...rest } = newContext;
+		tradingConfigs[newId] = rest;
+		storageService.setItem(STORAGE_KEYS.TRADING_CONFIGS, tradingConfigs);
+	}
+
+	#applyStatus(configId, status) {
+		const item = this.#configItems.get(configId);
+		if (!item) return;
+
+		item.clearStatus();
+
+		if ([CONTEXT_STATUS.QUEUED, CONTEXT_STATUS.CREATING].includes(status)) {
+			item.setProcessing();
+		} else if (status === CONTEXT_STATUS.READY) {
+			item.setSuccess();
+		} else if (status === CONTEXT_STATUS.FAILED) {
+			item.setError();
+		}
+	}
+
+	#getStoredConfigs() {
+		return storageService.getItem(STORAGE_KEYS.OPTIMIZATION_CONFIGS) || {};
 	}
 }
