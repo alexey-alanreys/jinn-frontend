@@ -23,8 +23,8 @@ class StorageService {
 
 		try {
 			return JSON.parse(value);
-		} catch (e) {
-			console.error(`Failed to parse localStorage item: "${key}"`, e);
+		} catch (error) {
+			console.error(`Failed to parse localStorage item: "${key}"`, error);
 			return null;
 		}
 	}

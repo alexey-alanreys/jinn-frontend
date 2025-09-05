@@ -110,8 +110,8 @@ export class OptimizationTab extends BaseComponent {
 
 		const itemHandlers = {
 			configHeader: () => configItem.toggle(),
-			runButton: () => this.#runConfig(configItem.configId),
-			deleteButton: () => this.#deleteConfig(configItem.configId),
+			runButton: () => this.#handleRunConfigs([configItem.configId]),
+			deleteButton: () => this.#handleDeleteConfigs([configItem.configId]),
 		};
 
 		if (itemHandlers[ref]) {
@@ -128,16 +128,21 @@ export class OptimizationTab extends BaseComponent {
 		this.#saveConfigToStorage(configId, newItem.config);
 	}
 
-	async #handleRunConfigs() {
+	async #handleRunConfigs(configIds = null) {
+		const ids = configIds || Array.from(this.#configItems.keys());
+		if (ids.length === 0) return;
+
 		const configs = {};
-		this.#configItems.forEach((item, id) => (configs[id] = item.config));
+		ids.forEach((id) => (configs[id] = this.#configItems.get(id).config));
 
-		if (Object.keys(configs).length === 0) return;
+		try {
+			const { added } = await optimizationService.add(configs);
 
-		const { added } = await optimizationService.add(configs);
-		added.forEach((id) => this.#applyStatus(id, CONTEXT_STATUS.QUEUED));
-
-		if (added.length > 0) this.#startPolling();
+			added.forEach((id) => this.#applyStatus(id, CONTEXT_STATUS.QUEUED));
+			if (added.length > 0) this.#startPolling();
+		} catch (error) {
+			console.error('Failed to run configs.', error);
+		}
 	}
 
 	#handleCloneConfigs() {
@@ -152,9 +157,11 @@ export class OptimizationTab extends BaseComponent {
 		});
 	}
 
-	#handleDeleteConfigs() {
-		const allConfigIds = Array.from(this.#configItems.keys());
-		allConfigIds.forEach((configId) => this.#deleteConfig(configId));
+	#handleDeleteConfigs(configIds = null) {
+		const ids = configIds || Array.from(this.#configItems.keys());
+		if (ids.length === 0) return;
+
+		ids.forEach((configId) => this.#deleteConfig(configId));
 	}
 
 	async #syncStatusesWithBackend() {
@@ -180,8 +187,8 @@ export class OptimizationTab extends BaseComponent {
 				[CONTEXT_STATUS.QUEUED, CONTEXT_STATUS.CREATING].includes(s),
 			);
 			if (hasProcessing) this.#startPolling();
-		} catch (e) {
-			console.error('Failed to sync statuses.', e);
+		} catch (error) {
+			console.error('Failed to sync statuses.', error);
 		}
 	}
 
@@ -206,8 +213,8 @@ export class OptimizationTab extends BaseComponent {
 				[CONTEXT_STATUS.QUEUED, CONTEXT_STATUS.CREATING].includes(s),
 			);
 			if (!stillProcessing) this.#stopPolling();
-		} catch (e) {
-			console.error('Polling failed.', e);
+		} catch (error) {
+			console.error('Polling failed.', error);
 			this.#stopPolling();
 		}
 	}
@@ -225,8 +232,8 @@ export class OptimizationTab extends BaseComponent {
 
 			this.#applyStatus(contextId, CONTEXT_STATUS.READY);
 			this.#deleteContext(contextId);
-		} catch (e) {
-			console.error(`Failed to handle ready context ${contextId}.`, e);
+		} catch (error) {
+			console.error(`Failed to handle ready context ${contextId}.`, error);
 		}
 	}
 
@@ -242,29 +249,8 @@ export class OptimizationTab extends BaseComponent {
 		const tradingConfigs =
 			storageService.getItem(STORAGE_KEYS.TRADING_CONFIGS) || {};
 		const { start: _start, end: _end, ...rest } = newContext;
-		tradingConfigs[newId] = {
-			...rest,
-			isLive: true,
-		};
+		tradingConfigs[newId] = rest;
 		storageService.setItem(STORAGE_KEYS.TRADING_CONFIGS, tradingConfigs);
-	}
-
-	async #runConfig(configId) {
-		const item = this.#configItems.get(configId);
-		if (!item) return;
-
-		try {
-			const { added } = await optimizationService.add({
-				[configId]: item.config,
-			});
-
-			if (added.includes(configId)) {
-				this.#applyStatus(configId, CONTEXT_STATUS.QUEUED);
-				this.#startPolling();
-			}
-		} catch (e) {
-			console.error('Failed to run config.', e);
-		}
 	}
 
 	#createConfigItem(configId, config = null) {
@@ -359,10 +345,14 @@ export class OptimizationTab extends BaseComponent {
 	}
 
 	async #deleteContext(contextId) {
-		const allContexts = await optimizationService.getAll();
+		try {
+			const allContexts = await optimizationService.getAll();
 
-		if (allContexts[contextId]) {
-			await optimizationService.delete(contextId);
+			if (allContexts[contextId]) {
+				await optimizationService.delete(contextId);
+			}
+		} catch (error) {
+			console.error(`Failed to delete context ${contextId}.`, error);
 		}
 	}
 }
