@@ -3,14 +3,14 @@ import { $Q } from '@/core/libs/query.lib';
 import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
+import { ParamsItem } from '@/components/ui/controller/params-item/params-item.component';
+
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
 import { executionService } from '@/api/services/execution.service';
 
 import styles from './params-tab.module.css';
 import templateHTML from './params-tab.template.html?raw';
-
-import { ParamsItem } from './params-item/params-item.component';
 
 export class ParamsTab extends BaseComponent {
 	static COMPONENT_NAME = 'ParamsTab';
