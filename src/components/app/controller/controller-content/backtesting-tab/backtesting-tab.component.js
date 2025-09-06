@@ -176,8 +176,10 @@ export class BacktestingTab extends BaseComponent {
 			}
 		});
 
-		Object.keys(contexts).forEach((contextId) => {
-			this.#knownContextIds.execution.add(contextId);
+		Object.entries(contexts).forEach(([contextId, context]) => {
+			if (!context.isLive) {
+				this.#knownContextIds.execution.add(contextId);
+			}
 		});
 	}
 

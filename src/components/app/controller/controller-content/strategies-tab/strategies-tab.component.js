@@ -117,6 +117,13 @@ export class StrategiesTab extends BaseComponent {
 	#handleContextsUpdate(contexts) {
 		const $items = this.#$element.find('[data-ref="strategiesItems"]');
 
+		this.#items.forEach((item, id) => {
+			if (!contexts[id]) {
+				item.remove();
+				this.#items.delete(id);
+			}
+		});
+
 		Object.entries(contexts).forEach(([id, context]) => {
 			if (!this.#items.has(id)) {
 				const item = new StrategiesItem();
@@ -136,33 +143,29 @@ export class StrategiesTab extends BaseComponent {
 		try {
 			await executionService.delete(contextId);
 
-			drawingsService.removeAll();
-			drawingsService.clear();
-
 			const contexts = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS);
 			const { [contextId]: _, ...remaining } = contexts;
-
 			stateService.set(STATE_KEYS.EXECUTION_CONTEXTS, remaining);
 
 			if (contextId === this.#contextId) {
-				const remainingKeys = Object.keys(remaining);
+				const keys = Object.keys(remaining);
 
-				if (remainingKeys.length) {
-					this.#setContext(remainingKeys[0]);
+				if (keys.length) {
+					this.#setContext(keys[0]);
 				} else {
 					this.#setEmptyContext();
 				}
 			}
 
-			if (this.#items.has(contextId)) {
-				this.#items.get(contextId).remove();
-				this.#items.delete(contextId);
+			if (contextId === this.#contextId) {
+				drawingsService.removeAll();
+				drawingsService.clear();
 			}
 
 			notificationService.show('success', 'Strategy deleted successfully');
 		} catch (error) {
-			console.error('Failed to remove strategy context.', error);
 			notificationService.show('error', 'Failed to delete strategy');
+			console.error(`Failed to delete context ${contextId}.`, error);
 		}
 	}
 
