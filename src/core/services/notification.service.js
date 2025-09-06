@@ -17,7 +17,7 @@ class NotificationService {
 	 * @private
 	 */
 	#showNext() {
-		if (this.#queue.length === 0 || this.#isShowing) return;
+		if (!this.#queue.length || this.#isShowing) return;
 
 		const $notification = $Q('[data-ref="notification"]');
 		const { type, message } = this.#queue.shift();

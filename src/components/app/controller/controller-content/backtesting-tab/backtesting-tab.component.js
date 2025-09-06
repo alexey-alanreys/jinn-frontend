@@ -43,8 +43,13 @@ export class BacktestingTab extends BaseComponent {
 	#$items;
 
 	#controlButtons = {};
-	#configItems = new Map();
 	#pollingIntervalId = null;
+	#configItems = new Map();
+	#runningContextIds = new Set();
+	#knownContextIds = {
+		optimization: new Set(),
+		execution: new Set(),
+	};
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -97,8 +102,12 @@ export class BacktestingTab extends BaseComponent {
 		this.#$element.on('click', this.#handleClick.bind(this));
 
 		stateService.subscribe(
-			STATE_KEYS.CONTEXTS,
-			this.#handleContextsUpdate.bind(this),
+			STATE_KEYS.EXECUTION_CONTEXTS,
+			this.#handleExecutionContextsUpdate.bind(this),
+		);
+		stateService.subscribe(
+			STATE_KEYS.OPTIMIZATION_CONTEXTS,
+			this.#handleOptimizationContextsUpdate.bind(this),
 		);
 	}
 
@@ -157,19 +166,47 @@ export class BacktestingTab extends BaseComponent {
 		}
 	}
 
-	#handleContextsUpdate(contexts) {
-		const activeContextIds = new Set(Object.keys(contexts));
-
-		this.#configItems.forEach((item, configId) => {
-			if (!activeContextIds.has(configId)) {
-				item.clearStatus();
+	#handleExecutionContextsUpdate(contexts) {
+		Array.from(this.#knownContextIds.execution).forEach((contextId) => {
+			if (!(contextId in contexts)) {
+				const item = this.#configItems.get(contextId);
+				if (item) item.clearStatus();
+				this.#knownContextIds.execution.delete(contextId);
 			}
+		});
+
+		Object.keys(contexts).forEach((contextId) => {
+			this.#knownContextIds.execution.add(contextId);
 		});
 	}
 
-	async #handleRunConfigs(configIds = null) {
+	#handleOptimizationContextsUpdate(contexts) {
+		const backtestingConfigs =
+			storageService.getItem(STORAGE_KEYS.BACKTESTING_CONFIGS) || {};
+
+		Object.entries(contexts).forEach(([contextId, context]) => {
+			if (this.#knownContextIds.optimization.has(contextId)) return;
+
+			context.params.forEach((paramSet) => {
+				const newId = crypto.randomUUID();
+				const newConfig = { ...context, params: paramSet };
+
+				backtestingConfigs[newId] = newConfig;
+				this.#createConfigItem(newId, newConfig);
+			});
+
+			this.#knownContextIds.optimization.add(contextId);
+		});
+
+		storageService.setItem(
+			STORAGE_KEYS.BACKTESTING_CONFIGS,
+			backtestingConfigs,
+		);
+	}
+
+	async #handleRunConfigs(configIds) {
 		const ids = configIds || Array.from(this.#configItems.keys());
-		if (ids.length === 0) return;
+		if (!ids.length) return;
 
 		const configs = {};
 		ids.forEach((id) => (configs[id] = this.#configItems.get(id).config));
@@ -177,8 +214,12 @@ export class BacktestingTab extends BaseComponent {
 		try {
 			const { added } = await executionService.add(configs);
 
-			added.forEach((id) => this.#applyStatus(id, CONTEXT_STATUS.QUEUED));
-			if (added.length > 0) this.#startPolling();
+			added.forEach((id) => {
+				this.#applyStatus(id, CONTEXT_STATUS.QUEUED);
+				this.#runningContextIds.add(id);
+			});
+
+			if (added.length) this.#startPolling();
 		} catch (error) {
 			console.error('Failed to run configs.', error);
 		}
@@ -221,19 +262,21 @@ export class BacktestingTab extends BaseComponent {
 		this.#controlButtons.import.clickOnInput();
 	}
 
-	#handleDeleteConfigs(configIds = null) {
+	#handleDeleteConfigs(configIds) {
 		const ids = configIds || Array.from(this.#configItems.keys());
-		if (ids.length === 0) return;
+		if (!ids.length) return;
 
 		ids.forEach((configId) => this.#deleteConfig(configId));
 	}
 
 	async #handleReadyContext(contextId) {
 		try {
-			const contexts = stateService.get(STATE_KEYS.CONTEXTS);
-			const context = await executionService.get(contextId);
+			const currentContexts = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS);
+			const newContext = await executionService.get(contextId);
 
-			stateService.set(STATE_KEYS.CONTEXTS, { ...contexts, ...context });
+			const updatedContexts = { ...currentContexts, ...newContext };
+			stateService.set(STATE_KEYS.EXECUTION_CONTEXTS, updatedContexts);
+
 			this.#applyStatus(contextId, CONTEXT_STATUS.READY);
 		} catch (error) {
 			console.error(`Failed to handle ready context ${contextId}.`, error);
@@ -241,7 +284,7 @@ export class BacktestingTab extends BaseComponent {
 	}
 
 	#handleChangeContext(contextId) {
-		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
+		const contexts = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS);
 
 		if (!contexts[contextId]) {
 			notificationService.show(
@@ -251,11 +294,14 @@ export class BacktestingTab extends BaseComponent {
 			return;
 		}
 
-		const currentContext = stateService.get(STATE_KEYS.CONTEXT);
+		const currentContext = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 		if (currentContext.id === contextId) return;
 
 		const newContext = contexts[contextId];
-		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXT, {
+			id: contextId,
+			...newContext,
+		});
 	}
 
 	async #syncStatusesWithBackend() {
@@ -279,24 +325,24 @@ export class BacktestingTab extends BaseComponent {
 
 	async #pollStatuses() {
 		try {
-			const statuses = await executionService.getAllStatuses();
+			if (!this.#runningContextIds.size) {
+				this.#stopPolling();
+				return;
+			}
 
-			Object.entries(statuses).forEach(([id, status]) => {
-				this.#applyStatus(id, status);
+			for (const contextId of Array.from(this.#runningContextIds)) {
+				const { status } = await executionService.getStatus(contextId);
 
 				if (status === CONTEXT_STATUS.READY) {
-					this.#handleReadyContext(id);
+					await this.#handleReadyContext(contextId);
+					this.#runningContextIds.delete(contextId);
+				} else if (status === CONTEXT_STATUS.FAILED) {
+					this.#applyStatus(contextId, CONTEXT_STATUS.FAILED);
+					this.#runningContextIds.delete(contextId);
 				}
+			}
 
-				if (status === CONTEXT_STATUS.FAILED) {
-					this.#applyStatus(id, CONTEXT_STATUS.FAILED);
-				}
-			});
-
-			const stillProcessing = Object.values(statuses).some((s) =>
-				[CONTEXT_STATUS.QUEUED, CONTEXT_STATUS.CREATING].includes(s),
-			);
-			if (!stillProcessing) this.#stopPolling();
+			if (!this.#runningContextIds.size) this.#stopPolling();
 		} catch (error) {
 			console.error('Polling failed.', error);
 			this.#stopPolling();
@@ -349,7 +395,7 @@ export class BacktestingTab extends BaseComponent {
 	}
 
 	#importConfigs(files) {
-		if (!files || files.length === 0) return;
+		if (!files || !files.length) return;
 
 		const file = files[0];
 		const reader = new FileReader();
@@ -381,8 +427,14 @@ export class BacktestingTab extends BaseComponent {
 
 			const existingConfig = storedConfigs[configId] || {};
 			const mergedConfig = { ...existingConfig, ...newConfig };
+			const existingItem = this.#configItems.get(configId);
 
-			storedConfigs[configId] = mergedConfig;
+			if (existingItem) {
+				existingItem.update(mergedConfig);
+			} else {
+				this.#createConfigItem(configId, mergedConfig);
+			}
+
 			this.#saveConfigToStorage(configId, mergedConfig);
 		});
 	}
@@ -407,7 +459,7 @@ export class BacktestingTab extends BaseComponent {
 		this.#configItems.delete(configId);
 		this.#removeConfigFromStorage(configId);
 
-		if (this.#configItems.size === 0) {
+		if (!this.#configItems.size) {
 			this.#stopPolling();
 		}
 	}
@@ -430,14 +482,4 @@ export class BacktestingTab extends BaseComponent {
 	#getStoredConfigs() {
 		return storageService.getItem(STORAGE_KEYS.BACKTESTING_CONFIGS) || {};
 	}
-
-	// #setContext(contextId) {
-	// 	if (this.#contextId === contextId) return;
-
-	// 	const contexts = stateService.get(STATE_KEYS.CONTEXTS);
-	// 	if (!contexts[contextId]) return;
-
-	// 	const newContext = contexts[contextId];
-	// 	stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
-	// }
 }

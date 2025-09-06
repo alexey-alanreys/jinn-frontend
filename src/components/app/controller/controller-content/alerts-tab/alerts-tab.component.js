@@ -51,7 +51,7 @@ export class AlertsTab extends BaseComponent {
 	}
 
 	#renderInitialAlerts() {
-		const alerts = stateService.get(STATE_KEYS.ALERTS) || [];
+		const alerts = stateService.get(STATE_KEYS.EXECUTION_ALERTS) || [];
 
 		alerts.forEach((alert) => {
 			this.#createAlertItem(alert.alertId, alert);
@@ -62,7 +62,7 @@ export class AlertsTab extends BaseComponent {
 		this.#$element.click(this.#handleClick.bind(this));
 
 		stateService.subscribe(
-			STATE_KEYS.ALERTS,
+			STATE_KEYS.EXECUTION_ALERTS,
 			this.#handleAlertsUpdate.bind(this),
 		);
 	}
@@ -87,14 +87,17 @@ export class AlertsTab extends BaseComponent {
 	}
 
 	#handleChangeContext(contextId) {
-		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
+		const contexts = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS);
 		if (!contexts[contextId]) return;
 
-		const currentContext = stateService.get(STATE_KEYS.CONTEXT);
+		const currentContext = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 		if (currentContext.id === contextId) return;
 
 		const newContext = contexts[contextId];
-		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXT, {
+			id: contextId,
+			...newContext,
+		});
 	}
 
 	#handleAlertsUpdate(alerts) {
@@ -119,11 +122,12 @@ export class AlertsTab extends BaseComponent {
 		try {
 			await alertsService.delete(alertId);
 
-			const currentAlerts = stateService.get(STATE_KEYS.ALERTS) || [];
+			const currentAlerts =
+				stateService.get(STATE_KEYS.EXECUTION_ALERTS) || [];
 			const filteredAlerts = currentAlerts.filter(
 				(alert) => alert.alertId !== alertId,
 			);
-			stateService.set(STATE_KEYS.ALERTS, filteredAlerts);
+			stateService.set(STATE_KEYS.EXECUTION_ALERTS, filteredAlerts);
 
 			const item = this.#items.get(alertId);
 			if (item) {

@@ -79,7 +79,10 @@ export class RulerTool extends BaseComponent {
 			this.#dataFields.set(fieldKey, el);
 		});
 
-		stateService.subscribe(STATE_KEYS.CONTEXT, this.#finish.bind(this));
+		stateService.subscribe(
+			STATE_KEYS.EXECUTION_CONTEXT,
+			this.#finish.bind(this),
+		);
 	}
 
 	#activate() {
@@ -122,7 +125,9 @@ export class RulerTool extends BaseComponent {
 	}
 
 	#prepare({ logical, point, sourceEvent, candlestickSeries }) {
-		const { minMove, precision } = stateService.get(STATE_KEYS.CONTEXT);
+		const { minMove, precision } = stateService.get(
+			STATE_KEYS.EXECUTION_CONTEXT,
+		);
 		this.#minMove = minMove;
 		this.#precision = precision;
 

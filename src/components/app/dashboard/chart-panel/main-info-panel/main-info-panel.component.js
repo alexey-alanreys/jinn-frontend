@@ -58,7 +58,7 @@ export class MainInfoPanel extends BaseComponent {
 	}
 
 	#updateMeta() {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
+		const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 
 		this.#metaFields.forEach((element, fieldKey) => {
 			element.text(context[fieldKey]);

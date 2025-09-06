@@ -39,10 +39,10 @@ export class TradeMetricsTab extends BaseComponent {
 
 	#setupInitialState() {
 		stateService.subscribe(
-			STATE_KEYS.CONTEXT,
+			STATE_KEYS.EXECUTION_CONTEXT,
 			this.#handleContextUpdate.bind(this),
 		);
-		this.#handleContextUpdate(stateService.get(STATE_KEYS.CONTEXT));
+		this.#handleContextUpdate(stateService.get(STATE_KEYS.EXECUTION_CONTEXT));
 	}
 
 	async #handleContextUpdate(context) {

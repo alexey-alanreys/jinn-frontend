@@ -69,13 +69,13 @@ export class TradesTab extends BaseComponent {
 
 	#setupInitialState() {
 		this.#attachListeners();
-		this.#handleContextUpdate(stateService.get(STATE_KEYS.CONTEXT));
+		this.#handleContextUpdate(stateService.get(STATE_KEYS.EXECUTION_CONTEXT));
 	}
 
 	#attachListeners() {
 		this.#$element.on('scroll', this.#handleScroll.bind(this));
 		stateService.subscribe(
-			STATE_KEYS.CONTEXT,
+			STATE_KEYS.EXECUTION_CONTEXT,
 			this.#handleContextUpdate.bind(this),
 		);
 	}

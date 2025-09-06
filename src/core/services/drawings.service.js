@@ -167,7 +167,7 @@ class DrawingsService {
 	 * @returns {string|null} Current context ID or null if not available.
 	 */
 	#getContextId() {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
+		const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 		return context.id || null;
 	}
 

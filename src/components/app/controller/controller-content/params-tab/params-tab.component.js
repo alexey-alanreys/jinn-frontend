@@ -45,14 +45,14 @@ export class ParamsTab extends BaseComponent {
 
 	#setupInitialState() {
 		this.#attachListeners();
-		this.#handleContextUpdate(stateService.get(STATE_KEYS.CONTEXT));
+		this.#handleContextUpdate(stateService.get(STATE_KEYS.EXECUTION_CONTEXT));
 	}
 
 	#attachListeners() {
 		this.#$element.on('change', this.#handleChange.bind(this));
 
 		stateService.subscribe(
-			STATE_KEYS.CONTEXT,
+			STATE_KEYS.EXECUTION_CONTEXT,
 			this.#handleContextUpdate.bind(this),
 		);
 	}
@@ -62,14 +62,14 @@ export class ParamsTab extends BaseComponent {
 		const item = this.#items.get(id);
 
 		if (item.isValid()) {
-			const context = stateService.get(STATE_KEYS.CONTEXT);
+			const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 			const contextId = context.id;
 			const value = item.value;
 
 			try {
 				await executionService.update(contextId, id, value);
 
-				stateService.set(STATE_KEYS.CONTEXT, {
+				stateService.set(STATE_KEYS.EXECUTION_CONTEXT, {
 					...context,
 					params: {
 						...context.params,

@@ -50,8 +50,8 @@ class AppInitializer {
 		stateService.set(STATE_KEYS.STRATEGIES, strategies);
 		stateService.set(STATE_KEYS.EXCHANGES, exchanges);
 		stateService.set(STATE_KEYS.INTERVALS, intervals);
-		stateService.set(STATE_KEYS.CONTEXTS, contexts);
-		stateService.set(STATE_KEYS.CONTEXT, context);
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXTS, contexts);
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXT, context);
 	}
 
 	static initServices() {

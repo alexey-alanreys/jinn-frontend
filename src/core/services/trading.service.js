@@ -25,16 +25,18 @@ class TradingService {
 	 */
 	init() {
 		stateService.subscribe(
-			STATE_KEYS.CONTEXT,
+			STATE_KEYS.EXECUTION_CONTEXT,
 			this.#handleContextChange.bind(this),
 		);
 		stateService.subscribe(
-			STATE_KEYS.CONTEXTS,
+			STATE_KEYS.EXECUTION_CONTEXTS,
 			this.#handleContextsChange.bind(this),
 		);
 
-		this.#handleContextChange(stateService.get(STATE_KEYS.CONTEXT));
-		this.#handleContextsChange(stateService.get(STATE_KEYS.CONTEXTS));
+		this.#handleContextChange(stateService.get(STATE_KEYS.EXECUTION_CONTEXT));
+		this.#handleContextsChange(
+			stateService.get(STATE_KEYS.EXECUTION_CONTEXTS),
+		);
 	}
 
 	/**
@@ -79,7 +81,7 @@ class TradingService {
 		this.#contextIntervalId = setInterval(async () => {
 			try {
 				const candlestickSeries = stateService.get(STATE_KEYS.CANDLE_SERIES);
-				const context = stateService.get(STATE_KEYS.CONTEXT);
+				const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 				if (!context.id || !candlestickSeries) return;
 
 				const updatedContext = await executionService.get(
@@ -89,7 +91,7 @@ class TradingService {
 
 				if (Object.keys(updatedContext).length) {
 					const [[id, data]] = Object.entries(updatedContext);
-					stateService.set(STATE_KEYS.CONTEXT, { id, ...data });
+					stateService.set(STATE_KEYS.EXECUTION_CONTEXT, { id, ...data });
 				}
 			} catch (error) {
 				console.error('Failed to fetch updated context.', error);
@@ -111,7 +113,8 @@ class TradingService {
 
 		this.#alertsIntervalId = setInterval(async () => {
 			try {
-				const currentAlerts = stateService.get(STATE_KEYS.ALERTS) || [];
+				const currentAlerts =
+					stateService.get(STATE_KEYS.EXECUTION_ALERTS) || [];
 				const lastAlertId = currentAlerts.length
 					? currentAlerts.at(-1).alertId
 					: null;
@@ -121,7 +124,7 @@ class TradingService {
 					: await alertsService.get({ limit: ALERTS_FETCH_LIMIT });
 
 				if (newAlerts.length) {
-					stateService.set(STATE_KEYS.ALERTS, newAlerts);
+					stateService.set(STATE_KEYS.EXECUTION_ALERTS, newAlerts);
 				}
 			} catch (error) {
 				console.error('Failed to fetch alerts.', error);

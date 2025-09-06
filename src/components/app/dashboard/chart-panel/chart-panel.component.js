@@ -116,7 +116,7 @@ export class ChartPanel extends BaseComponent {
 
 	#attachListeners() {
 		stateService.subscribe(
-			STATE_KEYS.CONTEXT,
+			STATE_KEYS.EXECUTION_CONTEXT,
 			this.#handleContextUpdate.bind(this),
 		);
 		stateService.subscribe(STATE_KEYS.THEME, this.#applyOptions.bind(this));
@@ -142,7 +142,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#applyContext() {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
+		const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 		this.#handleContextUpdate(context);
 	}
 
@@ -178,7 +178,7 @@ export class ChartPanel extends BaseComponent {
 		this.#applyChartOptions();
 
 		if (this.#hasValidData()) {
-			const context = stateService.get(STATE_KEYS.CONTEXT);
+			const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 			this.#applyCandlestickOptions(context);
 			this.#applyIndicatorOptions(context);
 		}
@@ -447,7 +447,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#createSeries() {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
+		const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 
 		this.#createCandlestickSeries();
 		this.#createIndicatorSeries(context);
@@ -495,7 +495,7 @@ export class ChartPanel extends BaseComponent {
 
 	#createPanels() {
 		requestAnimationFrame(() => {
-			const context = stateService.get(STATE_KEYS.CONTEXT);
+			const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 			const strategies = stateService.get(STATE_KEYS.STRATEGIES);
 			const allOptions = strategies[context.strategy].indicatorOptions;
 
@@ -596,7 +596,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#resetIndicatorInfoPanels() {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
+		const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 		const strategies = stateService.get(STATE_KEYS.STRATEGIES);
 		const allOptions = strategies[context.strategy].indicatorOptions;
 

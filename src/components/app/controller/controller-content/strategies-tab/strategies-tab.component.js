@@ -46,7 +46,7 @@ export class StrategiesTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
+		const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
 		this.#contextId = context.id ?? null;
 
 		this.#renderInitialItems();
@@ -54,7 +54,7 @@ export class StrategiesTab extends BaseComponent {
 	}
 
 	#renderInitialItems() {
-		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
+		const contexts = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS);
 		const $items = this.#$element.find('[data-ref="strategiesItems"]');
 
 		if (!Object.keys(contexts).length) {
@@ -77,11 +77,11 @@ export class StrategiesTab extends BaseComponent {
 		this.#$element.click(this.#handleClick.bind(this));
 
 		stateService.subscribe(
-			STATE_KEYS.CONTEXT,
+			STATE_KEYS.EXECUTION_CONTEXT,
 			this.#handleContextUpdate.bind(this),
 		);
 		stateService.subscribe(
-			STATE_KEYS.CONTEXTS,
+			STATE_KEYS.EXECUTION_CONTEXTS,
 			this.#handleContextsUpdate.bind(this),
 		);
 	}
@@ -140,9 +140,9 @@ export class StrategiesTab extends BaseComponent {
 			drawingsService.removeAll();
 			drawingsService.clear();
 
-			const contexts = stateService.get(STATE_KEYS.CONTEXTS);
+			const contexts = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS);
 			const { [contextId]: _, ...remaining } = contexts;
-			stateService.set(STATE_KEYS.CONTEXTS, remaining);
+			stateService.set(STATE_KEYS.EXECUTION_CONTEXTS, remaining);
 
 			if (contextId === this.#contextId) {
 				const remainingKeys = Object.keys(remaining);
@@ -170,12 +170,17 @@ export class StrategiesTab extends BaseComponent {
 	#setContext(contextId) {
 		if (this.#contextId === contextId) return;
 
-		const newContext = stateService.get(STATE_KEYS.CONTEXTS)[contextId];
-		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
+		const newContext = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS)[
+			contextId
+		];
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXT, {
+			id: contextId,
+			...newContext,
+		});
 	}
 
 	#setEmptyContext() {
-		stateService.set(STATE_KEYS.CONTEXT, {});
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXT, {});
 		this.#contextId = null;
 	}
 }

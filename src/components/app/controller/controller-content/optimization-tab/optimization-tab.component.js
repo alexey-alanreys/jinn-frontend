@@ -2,6 +2,7 @@ import { BaseComponent } from '@/core/component/base.component';
 import { $Q } from '@/core/libs/query.lib';
 import { notificationService } from '@/core/services/notification.service';
 import { renderService } from '@/core/services/render.service';
+import { stateService } from '@/core/services/state.service';
 import { storageService } from '@/core/services/storage.service';
 
 import { AddConfigButton } from '@/components/ui/controller/buttons/configs/add-config-button/add-config-button.component';
@@ -13,6 +14,7 @@ import { RunConfigsButton } from '@/components/ui/controller/buttons/configs/run
 
 import { CONTEXT_STATUS } from '@/constants/context-status.constants';
 import { POLLING_INTERVAL_LONG } from '@/constants/polling.constants';
+import { STATE_KEYS } from '@/constants/state-keys.constants';
 import { STORAGE_KEYS } from '@/constants/storage-keys.constants';
 
 import { exportConfigs } from '@/utils/export-configs.util';
@@ -150,7 +152,7 @@ export class OptimizationTab extends BaseComponent {
 
 	async #handleRunConfigs(configIds = null) {
 		const ids = configIds || Array.from(this.#configItems.keys());
-		if (ids.length === 0) return;
+		if (!ids.length) return;
 
 		const configs = {};
 		ids.forEach((id) => (configs[id] = this.#configItems.get(id).config));
@@ -204,7 +206,7 @@ export class OptimizationTab extends BaseComponent {
 
 	#handleDeleteConfigs(configIds = null) {
 		const ids = configIds || Array.from(this.#configItems.keys());
-		if (ids.length === 0) return;
+		if (!ids.length) return;
 
 		ids.forEach((configId) => this.#deleteConfig(configId));
 	}
@@ -214,11 +216,14 @@ export class OptimizationTab extends BaseComponent {
 			const response = await optimizationService.get(contextId);
 			const context = Object.values(response)[0];
 
-			context.params.forEach((paramSet) => {
-				const newId = crypto.randomUUID();
-				const newContext = { ...context, params: paramSet };
-				this.#storeResult(newId, newContext);
-			});
+			const contexts =
+				stateService.get(STATE_KEYS.OPTIMIZATION_CONTEXTS) || {};
+			const newContexts = {
+				...contexts,
+				[contextId]: context,
+			};
+
+			stateService.set(STATE_KEYS.OPTIMIZATION_CONTEXTS, newContexts);
 
 			this.#applyStatus(contextId, CONTEXT_STATUS.READY);
 			this.#deleteContext(contextId);
@@ -258,18 +263,16 @@ export class OptimizationTab extends BaseComponent {
 		try {
 			const statuses = await optimizationService.getAllStatuses();
 
-			Object.entries(statuses).forEach(([id, status]) => {
-				this.#applyStatus(id, status);
-
+			for (const [id, status] of Object.entries(statuses)) {
 				if (status === CONTEXT_STATUS.READY) {
-					this.#handleReadyContext(id);
+					await this.#handleReadyContext(id);
 				}
 
 				if (status === CONTEXT_STATUS.FAILED) {
 					this.#applyStatus(id, CONTEXT_STATUS.FAILED);
 					this.#deleteContext(id);
 				}
-			});
+			}
 
 			const stillProcessing = Object.values(statuses).some((s) =>
 				[CONTEXT_STATUS.QUEUED, CONTEXT_STATUS.CREATING].includes(s),
@@ -327,7 +330,7 @@ export class OptimizationTab extends BaseComponent {
 	}
 
 	#importConfigs(files) {
-		if (!files || files.length === 0) return;
+		if (!files || !files.length) return;
 
 		const file = files[0];
 		const reader = new FileReader();
@@ -359,8 +362,13 @@ export class OptimizationTab extends BaseComponent {
 
 			const existingConfig = storedConfigs[configId] || {};
 			const mergedConfig = { ...existingConfig, ...newConfig };
+			const existingItem = this.#configItems.get(configId);
 
-			storedConfigs[configId] = mergedConfig;
+			if (existingItem) {
+				existingItem.update(mergedConfig);
+			} else {
+				this.#createConfigItem(configId, mergedConfig);
+			}
 			this.#saveConfigToStorage(configId, mergedConfig);
 		});
 	}
@@ -387,7 +395,7 @@ export class OptimizationTab extends BaseComponent {
 		this.#configItems.delete(configId);
 		this.#removeConfigFromStorage(configId);
 
-		if (this.#configItems.size === 0) {
+		if (!this.#configItems.size) {
 			this.#stopPolling();
 		}
 	}
@@ -402,22 +410,6 @@ export class OptimizationTab extends BaseComponent {
 		} catch (error) {
 			console.error(`Failed to delete context ${contextId}.`, error);
 		}
-	}
-
-	#storeResult(newId, newContext) {
-		const backtestingConfigs =
-			storageService.getItem(STORAGE_KEYS.BACKTESTING_CONFIGS) || {};
-		backtestingConfigs[newId] = newContext;
-		storageService.setItem(
-			STORAGE_KEYS.BACKTESTING_CONFIGS,
-			backtestingConfigs,
-		);
-
-		const tradingConfigs =
-			storageService.getItem(STORAGE_KEYS.TRADING_CONFIGS) || {};
-		const { start: _start, end: _end, ...rest } = newContext;
-		tradingConfigs[newId] = rest;
-		storageService.setItem(STORAGE_KEYS.TRADING_CONFIGS, tradingConfigs);
 	}
 
 	#applyStatus(configId, status) {
