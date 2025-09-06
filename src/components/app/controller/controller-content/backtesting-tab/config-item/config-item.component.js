@@ -21,32 +21,32 @@ export class ConfigItem extends BaseComponent {
 	static DEFAULT_SYMBOL = 'BTCUSDT';
 
 	#$element = null;
-	#configId;
-
-	#config = {
-		strategy: null,
-		symbol: null,
-		interval: null,
-		exchange: null,
-		start: null,
-		end: null,
-		params: {},
-	};
-	#inputs = {};
+	#inputs = null;
 	#paramsItems = new Map();
 	#headerFields = new Map();
+
+	#config = {
+		strategy: undefined,
+		symbol: undefined,
+		interval: undefined,
+		exchange: undefined,
+		start: undefined,
+		end: undefined,
+		params: null,
+	};
+	#configId;
 
 	constructor({ configId }) {
 		super();
 		this.#configId = configId;
 	}
 
-	get configId() {
-		return this.#configId;
-	}
-
 	get config() {
 		return { ...this.#config, params: { ...this.#config.params } };
+	}
+
+	get configId() {
+		return this.#configId;
 	}
 
 	render() {
