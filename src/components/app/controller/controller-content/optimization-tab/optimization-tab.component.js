@@ -38,12 +38,13 @@ export class OptimizationTab extends BaseComponent {
 		'end',
 	];
 
-	#$element;
-	#$items;
+	#$element = null;
+	#$items = null;
+	#controlButtons = null;
 
-	#controlButtons = {};
 	#configItems = new Map();
-	#pollingIntervalId = null;
+
+	#pollingIntervalId;
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -161,7 +162,7 @@ export class OptimizationTab extends BaseComponent {
 			const { added } = await optimizationService.add(configs);
 
 			added.forEach((id) => this.#applyStatus(id, CONTEXT_STATUS.QUEUED));
-			if (added.length > 0) this.#startPolling();
+			if (added.length) this.#startPolling();
 		} catch (error) {
 			console.error('Failed to run configs.', error);
 		}

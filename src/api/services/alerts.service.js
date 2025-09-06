@@ -27,10 +27,9 @@ class AlertsService extends BaseService {
 		if (limit) queryParams.limit = limit;
 		if (sinceId) queryParams.sinceId = sinceId;
 
-		const finalQueryParams =
-			Object.keys(queryParams).length > 0
-				? toSnakeCaseParams(queryParams)
-				: undefined;
+		const finalQueryParams = Object.keys(queryParams).length
+			? toSnakeCaseParams(queryParams)
+			: undefined;
 
 		return this._executeRequest({
 			path: '/alerts',

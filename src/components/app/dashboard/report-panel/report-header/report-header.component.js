@@ -10,7 +10,7 @@ import { ReportTabButton } from './report-tab-button/report-tab-button.component
 export class ReportHeader extends BaseComponent {
 	static COMPONENT_NAME = 'ReportHeader';
 
-	#$element;
+	#$element = null;
 
 	constructor({ toggleVisibilityButton, toggleExpansionButton }) {
 		super();

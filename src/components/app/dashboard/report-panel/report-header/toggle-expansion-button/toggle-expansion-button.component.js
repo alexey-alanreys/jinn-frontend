@@ -8,7 +8,7 @@ import templateHTML from './toggle-expansion-button.template.html?raw';
 export class ToggleExpansionButton extends BaseComponent {
 	static COMPONENT_NAME = 'ToggleExpansionButton';
 
-	#$element;
+	#$element = null;
 
 	constructor({ onClick }) {
 		super();

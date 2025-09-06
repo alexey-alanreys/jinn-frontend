@@ -8,7 +8,7 @@ import templateHTML from './backtesting-tab-button.template.html?raw';
 export class BacktestingTabButton extends BaseComponent {
 	static COMPONENT_NAME = 'BacktestingTabButton';
 
-	#$element;
+	#$element = null;
 
 	get isActive() {
 		return this.#$element.is('data-active');

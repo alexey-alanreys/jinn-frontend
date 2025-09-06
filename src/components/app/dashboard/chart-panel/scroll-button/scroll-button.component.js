@@ -13,7 +13,7 @@ import templateHTML from './scroll-button.template.html?raw';
 export class ScrollButton extends BaseComponent {
 	static COMPONENT_NAME = 'ScrollButton';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.#initDOM();

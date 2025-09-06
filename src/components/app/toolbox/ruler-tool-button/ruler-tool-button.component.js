@@ -12,7 +12,7 @@ import templateHTML from './ruler-tool-button.template.html?raw';
 export class RulerToolButton extends BaseComponent {
 	static COMPONENT_NAME = 'RulerToolButton';
 
-	#$element;
+	#$element = null;
 
 	constructor({ onActivate }) {
 		super();

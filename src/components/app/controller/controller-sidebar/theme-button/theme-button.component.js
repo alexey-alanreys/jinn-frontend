@@ -9,7 +9,7 @@ import templateHTML from './theme-button.template.html?raw';
 export class ThemeButton extends BaseComponent {
 	static COMPONENT_NAME = 'ThemeButton';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.#initDOM();

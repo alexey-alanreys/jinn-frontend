@@ -20,7 +20,7 @@ import { OverviewMetrics } from './overview-metrics/overview-metrics.component';
 export class OverviewMetricsTab extends BaseComponent {
 	static COMPONENT_NAME = 'OverviewMetricsTab';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.#initComponents();

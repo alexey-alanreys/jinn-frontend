@@ -8,7 +8,7 @@ import templateHTML from './toggle-visibility-button.template.html?raw';
 export class ToggleVisibilityButton extends BaseComponent {
 	static COMPONENT_NAME = 'ToggleVisibilityButton';
 
-	#$element;
+	#$element = null;
 
 	constructor({ onClick }) {
 		super();

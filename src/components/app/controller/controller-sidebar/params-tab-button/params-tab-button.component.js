@@ -8,7 +8,7 @@ import templateHTML from './params-tab-button.template.html?raw';
 export class ParamsTabButton extends BaseComponent {
 	static COMPONENT_NAME = 'ParamsTabButton';
 
-	#$element;
+	#$element = null;
 
 	get isActive() {
 		return this.#$element.is('data-active');

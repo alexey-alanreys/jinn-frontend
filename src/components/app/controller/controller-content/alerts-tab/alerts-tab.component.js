@@ -15,8 +15,8 @@ import { AlertsItem } from './alerts-item/alerts-item.component';
 export class AlertsTab extends BaseComponent {
 	static COMPONENT_NAME = 'AlertsTab';
 
-	#$element;
-	#$alertsItems;
+	#$element = null;
+	#$alertsItems = null;
 
 	#items = new Map();
 

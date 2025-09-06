@@ -8,7 +8,7 @@ import templateHTML from './full-screen-button.template.html?raw';
 export class FullScreenButton extends BaseComponent {
 	static COMPONENT_NAME = 'FullScreenButton';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.#initDOM();

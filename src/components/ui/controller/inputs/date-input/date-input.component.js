@@ -8,10 +8,10 @@ import templateHTML from './date-input.template.html?raw';
 export class DateInput extends BaseComponent {
 	static COMPONENT_NAME = 'DateInput';
 
-	#$element;
-	#$input;
+	#$element = null;
+	#$input = null;
 
-	#value = null;
+	#value;
 
 	get value() {
 		return this.#$input.element.value;

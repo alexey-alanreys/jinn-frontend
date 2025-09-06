@@ -8,7 +8,7 @@ import templateHTML from './metrics-item.template.html?raw';
 export class MetricsItem extends BaseComponent {
 	static COMPONENT_NAME = 'MetricsItem';
 
-	#$element;
+	#$element = null;
 	#dataFields = new Map();
 
 	render() {

@@ -17,10 +17,10 @@ import { StrategiesItem } from './strategies-item/strategies-item.component';
 export class StrategiesTab extends BaseComponent {
 	static COMPONENT_NAME = 'StrategiesTab';
 
-	#$element;
-
-	#contextId = null;
+	#$element = null;
 	#items = new Map();
+
+	#contextId;
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -47,7 +47,7 @@ export class StrategiesTab extends BaseComponent {
 
 	#setupInitialState() {
 		const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
-		this.#contextId = context.id ?? null;
+		this.#contextId = context.id;
 
 		this.#renderInitialItems();
 		this.#attachListeners();
@@ -101,18 +101,17 @@ export class StrategiesTab extends BaseComponent {
 	}
 
 	#handleContextUpdate(context) {
-		const newContextId = context.id ?? null;
-		if (this.#contextId === newContextId) return;
+		if (this.#contextId === context.id) return;
 
 		if (this.#contextId && this.#items.has(this.#contextId)) {
 			this.#items.get(this.#contextId).deactivate();
 		}
 
-		if (newContextId && this.#items.has(newContextId)) {
-			this.#items.get(newContextId).activate();
+		if (context.id && this.#items.has(context.id)) {
+			this.#items.get(context.id).activate();
 		}
 
-		this.#contextId = newContextId;
+		this.#contextId = context.id;
 	}
 
 	#handleContextsUpdate(contexts) {
@@ -127,7 +126,7 @@ export class StrategiesTab extends BaseComponent {
 			}
 		});
 
-		if (this.#contextId === null && Object.keys(contexts).length) {
+		if (!this.#contextId && Object.keys(contexts).length) {
 			const firstContextId = Object.keys(contexts)[0];
 			this.#setContext(firstContextId);
 		}
@@ -142,14 +141,14 @@ export class StrategiesTab extends BaseComponent {
 
 			const contexts = stateService.get(STATE_KEYS.EXECUTION_CONTEXTS);
 			const { [contextId]: _, ...remaining } = contexts;
+
 			stateService.set(STATE_KEYS.EXECUTION_CONTEXTS, remaining);
 
 			if (contextId === this.#contextId) {
 				const remainingKeys = Object.keys(remaining);
 
-				if (remainingKeys.length > 0) {
-					const newContextId = remainingKeys[0];
-					this.#setContext(newContextId);
+				if (remainingKeys.length) {
+					this.#setContext(remainingKeys[0]);
 				} else {
 					this.#setEmptyContext();
 				}
@@ -181,6 +180,6 @@ export class StrategiesTab extends BaseComponent {
 
 	#setEmptyContext() {
 		stateService.set(STATE_KEYS.EXECUTION_CONTEXT, {});
-		this.#contextId = null;
+		this.#contextId = undefined;
 	}
 }

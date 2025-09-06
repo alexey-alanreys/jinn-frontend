@@ -8,7 +8,7 @@ import templateHTML from './spinner.template.html?raw';
 export class Spinner extends BaseComponent {
 	static COMPONENT_NAME = 'Spinner';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);

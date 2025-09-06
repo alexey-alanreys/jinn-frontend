@@ -15,7 +15,7 @@ import templateHTML from './trade-metrics-tab.template.html?raw';
 export class TradeMetricsTab extends BaseComponent {
 	static COMPONENT_NAME = 'TradeMetricsTab';
 
-	#$element;
+	#$element = null;
 	#items = new Map();
 
 	render() {

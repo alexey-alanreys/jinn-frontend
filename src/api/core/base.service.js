@@ -53,7 +53,7 @@ export class BaseService {
 			.filter(([_, value]) => !value)
 			.map(([key]) => key);
 
-		if (missing.length > 0) {
+		if (missing.length) {
 			throw new Error(
 				message || `Missing required parameters: ${missing.join(', ')}`,
 			);

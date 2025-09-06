@@ -8,12 +8,12 @@ import templateHTML from './select-input.template.html?raw';
 export class SelectInput extends BaseComponent {
 	static COMPONENT_NAME = 'SelectInput';
 
-	#$element;
-	#$options;
-	#$value;
+	#$element = null;
+	#$options = null;
+	#$value = null;
+	#optionsData = null;
 
-	#optionsData = [];
-	#value = null;
+	#value;
 
 	constructor({ options = [] } = {}) {
 		super();
@@ -75,7 +75,7 @@ export class SelectInput extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		if (this.#optionsData.length > 0) {
+		if (this.#optionsData.length) {
 			this.#value = this.#optionsData[0];
 			this.#$value.data('value', this.#value).text(this.#value);
 		}

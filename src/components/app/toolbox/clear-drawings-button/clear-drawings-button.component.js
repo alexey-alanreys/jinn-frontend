@@ -13,7 +13,7 @@ import templateHTML from './clear-drawings-button.template.html?raw';
 export class ClearDrawingsButton extends BaseComponent {
 	static COMPONENT_NAME = 'ClearDrawingsButton';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.#initDOM();

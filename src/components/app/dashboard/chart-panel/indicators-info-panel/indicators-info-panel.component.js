@@ -8,7 +8,7 @@ import templateHTML from './indicators-info-panel.template.html?raw';
 export class IndicatorsInfoPanel extends BaseComponent {
 	static COMPONENT_NAME = 'IndicatorsInfoPanel';
 
-	#$element;
+	#$element = null;
 	#dataFields = new Map();
 
 	render(isPrimary) {

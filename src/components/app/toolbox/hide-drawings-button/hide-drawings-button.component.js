@@ -14,7 +14,7 @@ import templateHTML from './hide-drawings-button.template.html?raw';
 export class HideDrawingsButton extends BaseComponent {
 	static COMPONENT_NAME = 'HideDrawingsButton';
 
-	#$element;
+	#$element = null;
 
 	constructor({ onActivate }) {
 		super();

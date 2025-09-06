@@ -9,7 +9,7 @@ export class OverviewMetrics extends BaseComponent {
 	static COMPONENT_NAME = 'OverviewMetrics';
 	static #PROFIT_FIELDS = [0, 1, 5, 6];
 
-	#$element;
+	#$element = null;
 	#dataFields = new Map();
 
 	render() {

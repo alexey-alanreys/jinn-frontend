@@ -20,7 +20,7 @@ export class ConfigItem extends BaseComponent {
 	static COMPONENT_NAME = 'ConfigItem';
 	static DEFAULT_SYMBOL = 'BTCUSDT';
 
-	#$element;
+	#$element = null;
 	#configId;
 
 	#config = {
@@ -275,7 +275,7 @@ export class ConfigItem extends BaseComponent {
 		const strategy = strategies[this.#config.strategy];
 		const labels = strategy?.paramLabels || {};
 
-		if (Object.keys(params).length > 0) {
+		if (Object.keys(params).length) {
 			const $paramsContainer = this.#$element.find('[data-ref="paramsItems"]');
 
 			Object.entries(params).forEach(([id, value]) => {

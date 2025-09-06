@@ -10,7 +10,7 @@ import { ReportContent } from './report-content/report-content.component';
 export class ReportPanel extends BaseComponent {
 	static COMPONENT_NAME = 'ReportPanel';
 
-	#$element;
+	#$element = null;
 
 	constructor({ reportHeader, onMousedown }) {
 		super();

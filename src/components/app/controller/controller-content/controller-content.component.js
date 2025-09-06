@@ -15,7 +15,7 @@ import { TradingTab } from './trading-tab/trading-tab.component';
 export class ControllerContent extends BaseComponent {
 	static COMPONENT_NAME = 'ControllerContent';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.#initComponents();

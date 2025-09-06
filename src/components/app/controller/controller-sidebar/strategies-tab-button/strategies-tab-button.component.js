@@ -8,7 +8,7 @@ import templateHTML from './strategies-tab-button.template.html?raw';
 export class StrategiesTabButton extends BaseComponent {
 	static COMPONENT_NAME = 'StrategiesTabButton';
 
-	#$element;
+	#$element = null;
 
 	get isActive() {
 		return this.#$element.is('data-active');

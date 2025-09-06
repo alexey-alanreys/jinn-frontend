@@ -9,7 +9,7 @@ export class TradesItem extends BaseComponent {
 	static COMPONENT_NAME = 'TradesItem';
 	static #PROFIT_FIELDS = [10, 11, 12, 13];
 
-	#$element;
+	#$element = null;
 	#dataFields = new Map();
 
 	render() {

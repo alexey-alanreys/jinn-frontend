@@ -8,7 +8,7 @@ import templateHTML from './trading-tab-button.template.html?raw';
 export class TradingTabButton extends BaseComponent {
 	static COMPONENT_NAME = 'TradingTabButton';
 
-	#$element;
+	#$element = null;
 
 	get isActive() {
 		return this.#$element.is('data-active');

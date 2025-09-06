@@ -46,11 +46,9 @@ export class ChartPanel extends BaseComponent {
 		histogram: HistogramSeries,
 	};
 
-	#$element;
-	#chartApi;
+	#$element = null;
+	#chartApi = null;
 
-	#contextId = null;
-	#firstLoadDone = false;
 	#data = {
 		candlesticks: null,
 		indicators: null,
@@ -62,7 +60,10 @@ export class ChartPanel extends BaseComponent {
 		deals: null,
 	};
 	#indicatorPanels = new Map();
+
 	#visibleRange = DATA_BATCH_SIZE;
+
+	#contextId;
 
 	set height(height) {
 		this.#$element.css('bottom', `${height}px`);
@@ -167,11 +168,6 @@ export class ChartPanel extends BaseComponent {
 		}
 
 		this.#updateDisplayState();
-
-		if (!this.#firstLoadDone) {
-			this.#firstLoadDone = true;
-			this.spinner.hide();
-		}
 	}
 
 	#applyOptions() {
@@ -307,7 +303,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#handleEmptyContext() {
-		this.#contextId = null;
+		this.#contextId = undefined;
 
 		this.#clearAllData();
 		this.#removePanels();
@@ -315,11 +311,6 @@ export class ChartPanel extends BaseComponent {
 
 		this.noData.show();
 		stateService.set(STATE_KEYS.CANDLE_SERIES, null);
-
-		if (!this.#firstLoadDone) {
-			this.#firstLoadDone = true;
-			this.spinner.hide();
-		}
 	}
 
 	#updateDisplayState() {
@@ -443,7 +434,7 @@ export class ChartPanel extends BaseComponent {
 	}
 
 	#hasValidData() {
-		return this.#data.candlesticks && this.#data.candlesticks.length > 0;
+		return this.#data.candlesticks && this.#data.candlesticks.length;
 	}
 
 	#createSeries() {
@@ -603,7 +594,7 @@ export class ChartPanel extends BaseComponent {
 		const indicatorValues = Object.fromEntries(
 			Array.from(this.#series.indicators, ([key, series]) => {
 				const data = series.data();
-				return [key, data.length > 0 ? data.at(-1) : null];
+				return [key, data.length ? data.at(-1) : null];
 			}),
 		);
 

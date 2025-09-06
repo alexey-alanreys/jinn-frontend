@@ -8,7 +8,7 @@ import templateHTML from './no-data.template.html?raw';
 export class NoData extends BaseComponent {
 	static COMPONENT_NAME = 'NoData';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);

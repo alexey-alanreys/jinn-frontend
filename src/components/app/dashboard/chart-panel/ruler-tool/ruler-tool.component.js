@@ -11,22 +11,24 @@ import templateHTML from './ruler-tool.template.html?raw';
 export class RulerTool extends BaseComponent {
 	static COMPONENT_NAME = 'RulerTool';
 
-	#$element;
-	#$lineX;
-	#$lineY;
-	#chartClickHandler;
-
-	#minMove = null;
-	#precision = null;
-	#isMeasuring = false;
+	#$element = null;
+	#$lineX = null;
+	#$lineY = null;
+	#chartClickHandler = null;
 
 	#dataFields = new Map();
+
 	#startParams = {
-		chartX: null,
-		chartY: null,
-		localX: null,
-		localY: null,
+		chartX: undefined,
+		chartY: undefined,
+		localX: undefined,
+		localY: undefined,
 	};
+
+	#isMeasuring = false;
+
+	#minMove;
+	#precision;
 
 	render() {
 		this.#initDOM();

@@ -22,11 +22,11 @@ import { EquityTooltip } from './equity-tooltip/equity-tooltip.component';
 export class EquityCurve extends BaseComponent {
 	static COMPONENT_NAME = 'EquityCurve';
 
-	#$element;
-	#chartApi;
-	#series;
+	#$element = null;
+	#chartApi = null;
+	#series = null;
+	#viewportMetrics = null;
 
-	#viewportMetrics = {};
 	#markersVisible = false;
 
 	render() {

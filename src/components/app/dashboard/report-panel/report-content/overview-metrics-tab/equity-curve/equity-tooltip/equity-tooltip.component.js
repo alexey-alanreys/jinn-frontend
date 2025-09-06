@@ -13,10 +13,10 @@ import templateHTML from './equity-tooltip.template.html?raw';
 export class EquityTooltip extends BaseComponent {
 	static COMPONENT_NAME = 'EquityTooltip';
 
-	#$element;
+	#$element = null;
 
-	#active = false;
 	#dataFields = new Map();
+	#active = false;
 
 	get width() {
 		return parseInt(this.#$element.css('width'));

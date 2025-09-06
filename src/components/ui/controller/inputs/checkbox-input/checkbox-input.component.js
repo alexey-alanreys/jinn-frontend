@@ -8,10 +8,10 @@ import templateHTML from './checkbox-input.template.html?raw';
 export class CheckboxInput extends BaseComponent {
 	static COMPONENT_NAME = 'CheckboxInput';
 
-	#$element;
-	#$input;
+	#$element = null;
+	#$input = null;
 
-	#value = null;
+	#value;
 
 	get value() {
 		return this.#$input.element.checked;

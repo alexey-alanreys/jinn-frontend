@@ -8,7 +8,7 @@ import templateHTML from './toggle-sorting-button.template.html?raw';
 export class ToggleSortingButton extends BaseComponent {
 	static COMPONENT_NAME = 'ToggleSortingButton';
 
-	#$element;
+	#$element = null;
 
 	constructor({ onClick }) {
 		super();

@@ -13,7 +13,7 @@ import templateHTML from './trading-tab.template.html?raw';
 export class TradingTab extends BaseComponent {
 	static COMPONENT_NAME = 'TradingTab';
 
-	#$element;
+	#$element = null;
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';

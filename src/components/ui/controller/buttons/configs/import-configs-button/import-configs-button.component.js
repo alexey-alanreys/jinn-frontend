@@ -8,8 +8,8 @@ import templateHTML from './import-configs-button.template.html?raw';
 export class ImportConfigsButton extends BaseComponent {
 	static COMPONENT_NAME = 'ImportConfigsButton';
 
-	#$element;
-	#$input;
+	#$element = null;
+	#$input = null;
 
 	render() {
 		this.element = renderService.htmlToElement(templateHTML, [], styles);

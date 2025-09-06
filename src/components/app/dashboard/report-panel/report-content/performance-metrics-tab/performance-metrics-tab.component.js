@@ -15,7 +15,7 @@ import templateHTML from './performance-metrics-tab.template.html?raw';
 export class PerformanceMetricsTab extends BaseComponent {
 	static COMPONENT_NAME = 'PerformanceMetricsTab';
 
-	#$element;
+	#$element = null;
 	#items = new Map();
 
 	render() {

@@ -8,7 +8,7 @@ import templateHTML from './report-tab-button.template.html?raw';
 export class ReportTabButton extends BaseComponent {
 	static COMPONENT_NAME = 'ReportTabButton';
 
-	#$element;
+	#$element = null;
 	#title;
 
 	constructor({ title }) {

@@ -12,7 +12,7 @@ import templateHTML from './screenshot-button.template.html?raw';
 export class ScreenshotButton extends BaseComponent {
 	static COMPONENT_NAME = 'ScreenshotButton';
 
-	#$element;
+	#$element = null;
 
 	render() {
 		this.#initDOM();

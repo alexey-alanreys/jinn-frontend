@@ -15,10 +15,10 @@ import templateHTML from './params-tab.template.html?raw';
 export class ParamsTab extends BaseComponent {
 	static COMPONENT_NAME = 'ParamsTab';
 
-	#$element;
-
-	#contextId = null;
+	#$element = null;
 	#items = new Map();
+
+	#contextId;
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -87,12 +87,11 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	#handleContextUpdate(context) {
-		const newContextId = context.id ?? null;
-		if (this.#contextId === newContextId) return;
+		if (this.#contextId === context.id) return;
 
 		this.#clear();
 
-		if (newContextId) {
+		if (context.id) {
 			const $items = this.#$element.find('[data-ref="paramsItems"]');
 			const strategies = stateService.get(STATE_KEYS.STRATEGIES);
 			const strategy = strategies[context.strategy];
@@ -106,7 +105,7 @@ export class ParamsTab extends BaseComponent {
 			});
 		}
 
-		this.#contextId = newContextId;
+		this.#contextId = context.id;
 	}
 
 	#clear() {

@@ -11,7 +11,7 @@ import templateHTML from './params-item.template.html?raw';
 export class ParamsItem extends BaseComponent {
 	static COMPONENT_NAME = 'ParamsItem';
 
-	#$element;
+	#$element = null;
 	#input = null;
 
 	get value() {

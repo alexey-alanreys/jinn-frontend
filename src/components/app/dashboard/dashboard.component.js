@@ -14,7 +14,8 @@ import { ReportPanel } from './report-panel/report-panel.component';
 export class Dashboard extends BaseComponent {
 	static COMPONENT_NAME = 'Dashboard';
 
-	#$element;
+	#$element = null;
+
 	#reportHeight;
 	#reportMinHeight;
 	#reportMaxHeight;

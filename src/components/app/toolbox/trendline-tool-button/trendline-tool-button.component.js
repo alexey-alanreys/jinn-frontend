@@ -16,8 +16,8 @@ import templateHTML from './trendline-tool-button.template.html?raw';
 export class TrendlineToolButton extends BaseComponent {
 	static COMPONENT_NAME = 'TrendlineToolButton';
 
-	#$element;
-	#chartClickHandler;
+	#$element = null;
+	#chartClickHandler = null;
 
 	#selectedPoints = [];
 

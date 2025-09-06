@@ -8,10 +8,10 @@ import templateHTML from './text-input.template.html?raw';
 export class TextInput extends BaseComponent {
 	static COMPONENT_NAME = 'TextInput';
 
-	#$element;
-	#$input;
-
+	#$element = null;
+	#$input = null;
 	#value = null;
+
 	#placeholder;
 
 	constructor({ placeholder = '' } = {}) {

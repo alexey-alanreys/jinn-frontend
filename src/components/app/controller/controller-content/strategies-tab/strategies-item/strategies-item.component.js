@@ -10,7 +10,7 @@ import templateHTML from './strategies-item.template.html?raw';
 export class StrategiesItem extends BaseComponent {
 	static COMPONENT_NAME = 'StrategiesItem';
 
-	#$element;
+	#$element = null;
 	#dataFields = new Map();
 
 	render() {

@@ -13,7 +13,7 @@ import templateHTML from './alerts-item.template.html?raw';
 export class AlertsItem extends BaseComponent {
 	static COMPONENT_NAME = 'AlertsItem';
 
-	#$element;
+	#$element = null;
 	#dataFields = new Map();
 
 	render() {

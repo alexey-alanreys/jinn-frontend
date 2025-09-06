@@ -39,17 +39,18 @@ export class BacktestingTab extends BaseComponent {
 		'end',
 	];
 
-	#$element;
-	#$items;
+	#$element = null;
+	#$items = null;
+	#controlButtons = null;
 
-	#controlButtons = {};
-	#pollingIntervalId = null;
 	#configItems = new Map();
 	#runningContextIds = new Set();
 	#knownContextIds = {
 		optimization: new Set(),
 		execution: new Set(),
 	};
+
+	#pollingIntervalId;
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -361,20 +362,17 @@ export class BacktestingTab extends BaseComponent {
 	#stopPolling() {
 		if (this.#pollingIntervalId) {
 			clearInterval(this.#pollingIntervalId);
-			this.#pollingIntervalId = null;
+			this.#pollingIntervalId = undefined;
 		}
 	}
 
-	#createConfigItem(configId, config = null) {
+	#createConfigItem(configId, config) {
 		const item = new ConfigItem({ configId });
 
 		this.#$items.append(item.render());
 		this.#configItems.set(configId, item);
 
-		if (config) {
-			item.update(config);
-		}
-
+		if (config) item.update(config);
 		return item;
 	}
 

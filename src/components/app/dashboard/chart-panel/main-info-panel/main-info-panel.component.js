@@ -11,7 +11,7 @@ import templateHTML from './main-info-panel.template.html?raw';
 export class MainInfoPanel extends BaseComponent {
 	static COMPONENT_NAME = 'MainInfoPanel';
 
-	#$element;
+	#$element = null;
 
 	#metaFields = new Map();
 	#candleFields = new Map();

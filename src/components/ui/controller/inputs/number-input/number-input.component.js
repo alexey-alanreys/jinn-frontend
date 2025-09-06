@@ -10,10 +10,10 @@ import templateHTML from './number-input.template.html?raw';
 export class NumberInput extends BaseComponent {
 	static COMPONENT_NAME = 'NumberInput';
 
-	#$element;
-	#$input;
+	#$element = null;
+	#$input = null;
 
-	#value = null;
+	#value;
 
 	get value() {
 		return this.#$input.element.valueAsNumber;

@@ -8,7 +8,7 @@ import templateHTML from './optimization-tab-button.template.html?raw';
 export class OptimizationTabButton extends BaseComponent {
 	static COMPONENT_NAME = 'OptimizationTabButton';
 
-	#$element;
+	#$element = null;
 
 	get isActive() {
 		return this.#$element.is('data-active');

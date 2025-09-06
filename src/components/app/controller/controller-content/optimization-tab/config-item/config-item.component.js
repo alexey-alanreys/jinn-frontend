@@ -18,7 +18,7 @@ export class ConfigItem extends BaseComponent {
 	static COMPONENT_NAME = 'ConfigItem';
 	static DEFAULT_SYMBOL = 'BTCUSDT';
 
-	#$element;
+	#$element = null;
 	#configId;
 
 	#config = {

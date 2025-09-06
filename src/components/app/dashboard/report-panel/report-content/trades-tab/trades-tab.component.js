@@ -16,14 +16,17 @@ import { TradesItem } from './trades-item/trades-item.component';
 export class TradesTab extends BaseComponent {
 	static COMPONENT_NAME = 'TradesTab';
 
-	#$element;
+	#$element = null;
 
 	#cachedTrades = [];
 	#renderedItems = new Map();
+
 	#visibleStartIndex = 0;
 	#visibleEndIndex = 0;
+
 	#itemHeight = 100;
 	#minVisibleItems = 10;
+
 	#scrollTop = 0;
 	#lastScrollTime = 0;
 	#scrollThrottleDelay = 30;
@@ -36,7 +39,7 @@ export class TradesTab extends BaseComponent {
 	}
 
 	handleSortingToggle() {
-		if (this.#cachedTrades.length > 0) {
+		if (this.#cachedTrades.length) {
 			this.#clearRenderedItems();
 			this.#applySorting();
 			this.#calculateVisibleRange();

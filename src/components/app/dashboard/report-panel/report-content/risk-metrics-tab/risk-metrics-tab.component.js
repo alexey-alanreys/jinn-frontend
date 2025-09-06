@@ -15,7 +15,7 @@ import templateHTML from './risk-metrics-tab.template.html?raw';
 export class RiskMetricsTab extends BaseComponent {
 	static COMPONENT_NAME = 'RiskMetricsTab';
 
-	#$element;
+	#$element = null;
 	#items = new Map();
 
 	render() {
