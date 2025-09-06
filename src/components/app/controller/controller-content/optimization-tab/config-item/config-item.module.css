@@ -72,29 +72,29 @@
 	}
 
 	&[data-status='processing'] > .config-header {
-		background-color: rgba(var(--color-status-warning-rgb), 0.2);
-		border-left: 4px solid rgba(var(--color-status-warning-rgb), 0.8);
+		background-color: rgb(var(--color-status-warning-rgb), 0.2);
+		border-left: 4px solid rgb(var(--color-status-warning-rgb), 0.8);
 
 		button:hover {
-			background-color: rgba(var(--color-status-warning-rgb), 0.25);
+			background-color: rgb(var(--color-status-warning-rgb), 0.25);
 		}
 	}
 
 	&[data-status='success'] > .config-header {
-		background-color: rgba(var(--color-status-success-rgb), 0.2);
-		border-left: 4px solid rgba(var(--color-status-success-rgb), 0.8);
+		background-color: rgb(var(--color-status-success-rgb), 0.2);
+		border-left: 4px solid rgb(var(--color-status-success-rgb), 0.8);
 
 		button:hover {
-			background-color: rgba(var(--color-status-success-rgb), 0.25);
+			background-color: rgb(var(--color-status-success-rgb), 0.25);
 		}
 	}
 
 	&[data-status='error'] > .config-header {
-		background-color: rgba(var(--color-status-error-rgb), 0.2);
-		border-left: 4px solid rgba(var(--color-status-error-rgb), 0.8);
+		background-color: rgb(var(--color-status-error-rgb), 0.2);
+		border-left: 4px solid rgb(var(--color-status-error-rgb), 0.8);
 
 		button:hover {
-			background-color: rgba(var(--color-status-error-rgb), 0.25);
+			background-color: rgb(var(--color-status-error-rgb), 0.25);
 		}
 	}
 }

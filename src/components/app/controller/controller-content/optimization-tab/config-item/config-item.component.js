@@ -32,17 +32,17 @@ export class ConfigItem extends BaseComponent {
 	#inputs = {};
 	#headerFields = new Map();
 
+	constructor({ configId }) {
+		super();
+		this.#configId = configId;
+	}
+
 	get configId() {
 		return this.#configId;
 	}
 
 	get config() {
 		return { ...this.#config };
-	}
-
-	constructor({ configId }) {
-		super();
-		this.#configId = configId;
 	}
 
 	render() {
@@ -66,6 +66,22 @@ export class ConfigItem extends BaseComponent {
 	toggle() {
 		const isActive = this.#$element.data('active') === 'true';
 		this.#$element.data('active', String(!isActive));
+	}
+
+	setProcessing() {
+		this.#$element.data('status', 'processing');
+	}
+
+	setSuccess() {
+		this.#$element.data('status', 'success');
+	}
+
+	setError() {
+		this.#$element.data('status', 'error');
+	}
+
+	clearStatus() {
+		this.#$element.data('status', '');
 	}
 
 	handleChange(event) {
@@ -115,22 +131,6 @@ export class ConfigItem extends BaseComponent {
 		}
 	}
 
-	setProcessing() {
-		this.#$element.data('status', 'processing');
-	}
-
-	setSuccess() {
-		this.#$element.data('status', 'success');
-	}
-
-	setError() {
-		this.#$element.data('status', 'error');
-	}
-
-	clearStatus() {
-		this.#$element.data('status', '');
-	}
-
 	#initComponents() {
 		const appState = {
 			strategies: stateService.get(STATE_KEYS.STRATEGIES),
@@ -169,6 +169,38 @@ export class ConfigItem extends BaseComponent {
 		this.#updateHeaderDisplay();
 	}
 
+	#syncConfigFromInputs() {
+		Object.keys(this.#config).forEach((key) => {
+			this.#config[key] = this.#inputs[key]?.value ?? null;
+		});
+	}
+
+	#updateConfigProperty(key, value) {
+		this.#config[key] = value ?? null;
+	}
+
+	#updateInputValues() {
+		Object.entries(this.#config).forEach(([key, value]) => {
+			const input = this.#inputs[key];
+
+			if (input && value !== null) {
+				input.update(value);
+			}
+		});
+	}
+
+	#updateHeaderDisplay() {
+		this.#headerFields.forEach((element, fieldKey) => {
+			const value = this.#config[fieldKey];
+
+			if (fieldKey === 'symbol' && (!value || value === '')) {
+				element.text('[No Symbol]');
+			} else if (value) {
+				element.text(value);
+			}
+		});
+	}
+
 	#mapHeaderFields() {
 		this.#$element.findAll('[data-field]').forEach((el) => {
 			const fieldKey = el.data('field');
@@ -190,38 +222,6 @@ export class ConfigItem extends BaseComponent {
 			$container.append(this.#inputs[key].render());
 			$container.data('key', key);
 		});
-	}
-
-	#syncConfigFromInputs() {
-		Object.keys(this.#config).forEach((key) => {
-			this.#config[key] = this.#inputs[key]?.value ?? null;
-		});
-	}
-
-	#updateHeaderDisplay() {
-		this.#headerFields.forEach((element, fieldKey) => {
-			const value = this.#config[fieldKey];
-
-			if (fieldKey === 'symbol' && (!value || value === '')) {
-				element.text('[No Symbol]');
-			} else if (value) {
-				element.text(value);
-			}
-		});
-	}
-
-	#updateInputValues() {
-		Object.entries(this.#config).forEach(([key, value]) => {
-			const input = this.#inputs[key];
-
-			if (input && value !== null) {
-				input.update(value);
-			}
-		});
-	}
-
-	#updateConfigProperty(key, value) {
-		this.#config[key] = value ?? null;
 	}
 
 	#getInputKeyFromEvent(event) {

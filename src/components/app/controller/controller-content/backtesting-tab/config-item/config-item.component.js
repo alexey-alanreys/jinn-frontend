@@ -8,6 +8,7 @@ import { RunButton } from '@/components/ui/controller/buttons/common/run-button/
 import { DateInput } from '@/components/ui/controller/inputs/date-input/date-input.component';
 import { SelectInput } from '@/components/ui/controller/inputs/select-input/select-input.component';
 import { TextInput } from '@/components/ui/controller/inputs/text-input/text-input.component';
+import { ParamsItem } from '@/components/ui/controller/params-item/params-item.component';
 
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 
@@ -28,21 +29,23 @@ export class ConfigItem extends BaseComponent {
 		exchange: null,
 		start: null,
 		end: null,
+		params: {},
 	};
 	#inputs = {};
+	#paramsItems = new Map();
 	#headerFields = new Map();
+
+	constructor({ configId }) {
+		super();
+		this.#configId = configId;
+	}
 
 	get configId() {
 		return this.#configId;
 	}
 
 	get config() {
-		return { ...this.#config };
-	}
-
-	constructor({ configId }) {
-		super();
-		this.#configId = configId;
+		return { ...this.#config, params: { ...this.#config.params } };
 	}
 
 	render() {
@@ -53,13 +56,18 @@ export class ConfigItem extends BaseComponent {
 	}
 
 	update(config) {
-		this.#config = { ...config };
+		this.#config = {
+			...config,
+			params: { ...(config.params || {}) },
+		};
 
 		this.#updateInputValues();
+		this.#updateParamsItems();
 		this.#updateHeaderDisplay();
 	}
 
 	remove() {
+		this.#clearParamsItems();
 		this.element.remove();
 	}
 
@@ -68,8 +76,31 @@ export class ConfigItem extends BaseComponent {
 		this.#$element.data('active', String(!isActive));
 	}
 
+	setProcessing() {
+		this.#$element.data('status', 'processing');
+	}
+
+	setSuccess() {
+		this.#$element.data('status', 'success');
+	}
+
+	setError() {
+		this.#$element.data('status', 'error');
+	}
+
+	clearStatus() {
+		this.#$element.data('status', '');
+	}
+
 	handleChange(event) {
 		const inputKey = this.#getInputKeyFromEvent(event);
+		const paramId = $Q(event.target).data('param-id');
+
+		if (paramId) {
+			this.#handleParamChange(paramId, event);
+			return;
+		}
+
 		if (!inputKey) return;
 
 		const input = this.#inputs[inputKey];
@@ -115,22 +146,6 @@ export class ConfigItem extends BaseComponent {
 		}
 	}
 
-	setProcessing() {
-		this.#$element.data('status', 'processing');
-	}
-
-	setSuccess() {
-		this.#$element.data('status', 'success');
-	}
-
-	setError() {
-		this.#$element.data('status', 'error');
-	}
-
-	clearStatus() {
-		this.#$element.data('status', '');
-	}
-
 	#initComponents() {
 		const appState = {
 			strategies: stateService.get(STATE_KEYS.STRATEGIES),
@@ -166,7 +181,65 @@ export class ConfigItem extends BaseComponent {
 		this.#mapHeaderFields();
 		this.#renderInputComponents();
 		this.#syncConfigFromInputs();
+		this.#updateParamsItems();
 		this.#updateHeaderDisplay();
+	}
+
+	#syncConfigFromInputs() {
+		Object.keys(this.#config).forEach((key) => {
+			if (key !== 'params') {
+				this.#config[key] = this.#inputs[key]?.value ?? null;
+			}
+		});
+
+		this.#initializeStrategyParams();
+	}
+
+	#initializeStrategyParams() {
+		const strategyName = this.#config.strategy;
+		if (!strategyName) return;
+
+		const strategies = stateService.get(STATE_KEYS.STRATEGIES);
+		const strategy = strategies[strategyName];
+
+		if (strategy && strategy.params) {
+			this.#config.params = { ...strategy.params };
+		} else {
+			this.#config.params = {};
+		}
+	}
+
+	#updateConfigProperty(key, value) {
+		this.#config[key] = value ?? null;
+
+		if (key === 'strategy') {
+			this.#initializeStrategyParams();
+			this.#updateParamsItems();
+		}
+	}
+
+	#updateInputValues() {
+		Object.entries(this.#config).forEach(([key, value]) => {
+			if (key === 'params') return;
+
+			const input = this.#inputs[key];
+
+			if (input && value !== null) {
+				input.update(value);
+			}
+		});
+	}
+
+	#updateHeaderDisplay() {
+		this.#headerFields.forEach((element, fieldKey) => {
+			const value = this.#config[fieldKey];
+
+			if (fieldKey === 'symbol' && (!value || value === '')) {
+				element.text('[No Symbol]');
+			} else if (value) {
+				element.text(value);
+			}
+		});
 	}
 
 	#mapHeaderFields() {
@@ -192,36 +265,46 @@ export class ConfigItem extends BaseComponent {
 		});
 	}
 
-	#syncConfigFromInputs() {
-		Object.keys(this.#config).forEach((key) => {
-			this.#config[key] = this.#inputs[key]?.value ?? null;
-		});
+	#updateParamsItems() {
+		this.#clearParamsItems();
+
+		const params = this.#config.params || {};
+		const strategies = stateService.get(STATE_KEYS.STRATEGIES);
+		const strategy = strategies[this.#config.strategy];
+		const labels = strategy?.paramLabels || {};
+
+		if (Object.keys(params).length > 0) {
+			const $paramsContainer = this.#$element.find('[data-ref="paramsItems"]');
+
+			Object.entries(params).forEach(([id, value]) => {
+				const item = new ParamsItem();
+				const element = item.render();
+
+				$paramsContainer.append(element);
+				item.update(id, value, labels[id] || id);
+
+				this.#paramsItems.set(id, item);
+			});
+		}
 	}
 
-	#updateHeaderDisplay() {
-		this.#headerFields.forEach((element, fieldKey) => {
-			const value = this.#config[fieldKey];
-
-			if (fieldKey === 'symbol' && (!value || value === '')) {
-				element.text('[No Symbol]');
-			} else if (value) {
-				element.text(value);
-			}
-		});
+	#clearParamsItems() {
+		this.#paramsItems.forEach((item) => item.remove());
+		this.#paramsItems.clear();
 	}
 
-	#updateInputValues() {
-		Object.entries(this.#config).forEach(([key, value]) => {
-			const input = this.#inputs[key];
+	#handleParamChange(paramId) {
+		const item = this.#paramsItems.get(paramId);
+		if (!item) return;
 
-			if (input && value !== null) {
-				input.update(value);
-			}
-		});
-	}
+		if (item.isValid()) {
+			const newValue = item.value;
 
-	#updateConfigProperty(key, value) {
-		this.#config[key] = value ?? null;
+			this.#config.params[paramId] = newValue;
+			item.commit();
+		} else {
+			item.rollback();
+		}
 	}
 
 	#getInputKeyFromEvent(event) {
