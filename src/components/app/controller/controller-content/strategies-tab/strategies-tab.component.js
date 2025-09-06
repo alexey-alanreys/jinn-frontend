@@ -75,9 +75,14 @@ export class StrategiesTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
+
 		stateService.subscribe(
 			STATE_KEYS.CONTEXT,
 			this.#handleContextUpdate.bind(this),
+		);
+		stateService.subscribe(
+			STATE_KEYS.CONTEXTS,
+			this.#handleContextsUpdate.bind(this),
 		);
 	}
 
@@ -92,6 +97,39 @@ export class StrategiesTab extends BaseComponent {
 			this.#handleDelete(contextId);
 		} else {
 			this.#setContext(contextId);
+		}
+	}
+
+	#handleContextUpdate(context) {
+		const newContextId = context.id ?? null;
+		if (this.#contextId === newContextId) return;
+
+		if (this.#contextId && this.#items.has(this.#contextId)) {
+			this.#items.get(this.#contextId).deactivate();
+		}
+
+		if (newContextId && this.#items.has(newContextId)) {
+			this.#items.get(newContextId).activate();
+		}
+
+		this.#contextId = newContextId;
+	}
+
+	#handleContextsUpdate(contexts) {
+		const $items = this.#$element.find('[data-ref="strategiesItems"]');
+
+		Object.entries(contexts).forEach(([id, context]) => {
+			if (!this.#items.has(id)) {
+				const item = new StrategiesItem();
+				this.#items.set(id, item);
+				$items.append(item.render());
+				item.update(id, context);
+			}
+		});
+
+		if (this.#contextId === null && Object.keys(contexts).length) {
+			const firstContextId = Object.keys(contexts)[0];
+			this.#setContext(firstContextId);
 		}
 	}
 
@@ -139,20 +177,5 @@ export class StrategiesTab extends BaseComponent {
 	#setEmptyContext() {
 		stateService.set(STATE_KEYS.CONTEXT, {});
 		this.#contextId = null;
-	}
-
-	#handleContextUpdate(context) {
-		const newContextId = context.id ?? null;
-		if (this.#contextId === newContextId) return;
-
-		if (this.#contextId && this.#items.has(this.#contextId)) {
-			this.#items.get(this.#contextId).deactivate();
-		}
-
-		if (newContextId && this.#items.has(newContextId)) {
-			this.#items.get(newContextId).activate();
-		}
-
-		this.#contextId = newContextId;
 	}
 }

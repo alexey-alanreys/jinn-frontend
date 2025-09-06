@@ -331,9 +331,10 @@ export class OptimizationTab extends BaseComponent {
 
 		const file = files[0];
 		const reader = new FileReader();
-		reader.onload = (e) => {
+
+		reader.onload = (event) => {
 			try {
-				const json = JSON.parse(e.target.result);
+				const json = JSON.parse(event.target.result);
 				this.#applyImportedConfig(json);
 				this.#controlButtons.import.resetInput();
 

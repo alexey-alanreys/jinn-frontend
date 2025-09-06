@@ -4,6 +4,7 @@ import { renderService } from '@/core/services/render.service';
 import { stateService } from '@/core/services/state.service';
 
 import { DeleteButton } from '@/components/ui/controller/buttons/common/delete-button/delete-button.component';
+import { OpenButton } from '@/components/ui/controller/buttons/common/open-button/open-button.component';
 import { RunButton } from '@/components/ui/controller/buttons/common/run-button/run-button.component';
 import { DateInput } from '@/components/ui/controller/inputs/date-input/date-input.component';
 import { SelectInput } from '@/components/ui/controller/inputs/select-input/select-input.component';
@@ -168,6 +169,7 @@ export class ConfigItem extends BaseComponent {
 			templateHTML,
 			[
 				new RunButton({ title: 'Run Setting' }),
+				new OpenButton({ title: 'Open Strategy' }),
 				new DeleteButton({ title: 'Delete Setting' }),
 			],
 			styles,

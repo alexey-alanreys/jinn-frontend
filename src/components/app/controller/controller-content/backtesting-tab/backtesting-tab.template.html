@@ -2,9 +2,15 @@
 	<div class="header"><span>Backtesting Settings</span></div>
 	<div class="items" data-ref="configItems"></div>
 	<div class="footer">
-		<component-delete-configs-button></component-delete-configs-button>
-		<component-clone-configs-button></component-clone-configs-button>
-		<component-add-config-button></component-add-config-button>
-		<component-run-configs-button></component-run-configs-button>
+		<div class="left-buttons">
+			<component-delete-configs-button></component-delete-configs-button>
+			<component-import-configs-button></component-import-configs-button>
+			<component-export-configs-button></component-export-configs-button>
+		</div>
+		<div class="right-buttons">
+			<component-add-config-button></component-add-config-button>
+			<component-clone-configs-button></component-clone-configs-button>
+			<component-run-configs-button></component-run-configs-button>
+		</div>
 	</div>
 </div>

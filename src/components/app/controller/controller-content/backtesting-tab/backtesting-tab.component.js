@@ -13,7 +13,7 @@ import { ImportConfigsButton } from '@/components/ui/controller/buttons/configs/
 import { RunConfigsButton } from '@/components/ui/controller/buttons/configs/run-configs-button/run-configs-button.component';
 
 import { CONTEXT_STATUS } from '@/constants/context-status.constants';
-import { POLLING_INTERVAL_LONG } from '@/constants/polling.constants';
+import { POLLING_INTERVAL_SHORT } from '@/constants/polling.constants';
 import { STATE_KEYS } from '@/constants/state-keys.constants';
 import { STORAGE_KEYS } from '@/constants/storage-keys.constants';
 
@@ -42,7 +42,6 @@ export class BacktestingTab extends BaseComponent {
 	#$element;
 	#$items;
 
-	// #contextId = null;
 	#controlButtons = {};
 	#configItems = new Map();
 	#pollingIntervalId = null;
@@ -89,13 +88,18 @@ export class BacktestingTab extends BaseComponent {
 
 	async #setupInitialState() {
 		this.#loadStoredConfigs();
-		this.#attachEventListeners();
+		this.#attachListeners();
 		await this.#syncStatusesWithBackend();
 	}
 
-	#attachEventListeners() {
+	#attachListeners() {
 		this.#$element.on('change', this.#handleChange.bind(this));
 		this.#$element.on('click', this.#handleClick.bind(this));
+
+		stateService.subscribe(
+			STATE_KEYS.CONTEXTS,
+			this.#handleContextsUpdate.bind(this),
+		);
 	}
 
 	#handleChange(event) {
@@ -141,6 +145,7 @@ export class BacktestingTab extends BaseComponent {
 		const itemHandlers = {
 			configHeader: () => configItem.toggle(),
 			runButton: () => this.#handleRunConfigs([configItem.configId]),
+			openButton: () => this.#handleChangeContext(configItem.configId),
 			deleteButton: () => this.#handleDeleteConfigs([configItem.configId]),
 		};
 
@@ -150,6 +155,16 @@ export class BacktestingTab extends BaseComponent {
 			configItem.handleClick(event);
 			this.#saveConfigToStorage(configItem.configId, configItem.config);
 		}
+	}
+
+	#handleContextsUpdate(contexts) {
+		const activeContextIds = new Set(Object.keys(contexts));
+
+		this.#configItems.forEach((item, configId) => {
+			if (!activeContextIds.has(configId)) {
+				item.clearStatus();
+			}
+		});
 	}
 
 	async #handleRunConfigs(configIds = null) {
@@ -196,7 +211,7 @@ export class BacktestingTab extends BaseComponent {
 		}
 
 		const date = new Date().toISOString().split('T')[0];
-		const fileName = `optimization-configs_${date}.json`;
+		const fileName = `backtesting-configs_${date}.json`;
 		exportConfigs(storedConfigs, fileName);
 
 		notificationService.show('success', 'Settings exported successfully');
@@ -223,6 +238,24 @@ export class BacktestingTab extends BaseComponent {
 		} catch (error) {
 			console.error(`Failed to handle ready context ${contextId}.`, error);
 		}
+	}
+
+	#handleChangeContext(contextId) {
+		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
+
+		if (!contexts[contextId]) {
+			notificationService.show(
+				'warning',
+				'Strategy not created or was deleted',
+			);
+			return;
+		}
+
+		const currentContext = stateService.get(STATE_KEYS.CONTEXT);
+		if (currentContext.id === contextId) return;
+
+		const newContext = contexts[contextId];
+		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
 	}
 
 	async #syncStatusesWithBackend() {
@@ -275,7 +308,7 @@ export class BacktestingTab extends BaseComponent {
 
 		this.#pollingIntervalId = setInterval(
 			() => this.#pollStatuses(),
-			POLLING_INTERVAL_LONG,
+			POLLING_INTERVAL_SHORT,
 		);
 	}
 
@@ -320,9 +353,10 @@ export class BacktestingTab extends BaseComponent {
 
 		const file = files[0];
 		const reader = new FileReader();
-		reader.onload = (e) => {
+
+		reader.onload = (event) => {
 			try {
-				const json = JSON.parse(e.target.result);
+				const json = JSON.parse(event.target.result);
 				this.#applyImportedConfig(json);
 				this.#controlButtons.import.resetInput();
 

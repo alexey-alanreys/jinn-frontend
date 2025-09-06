@@ -18,7 +18,6 @@ export class AlertsTab extends BaseComponent {
 	#$element;
 	#$alertsItems;
 
-	#contextId = null;
 	#items = new Map();
 
 	get isActive() {
@@ -47,9 +46,6 @@ export class AlertsTab extends BaseComponent {
 	}
 
 	#setupInitialState() {
-		const context = stateService.get(STATE_KEYS.CONTEXT);
-		this.#contextId = context.id ?? null;
-
 		this.#renderInitialAlerts();
 		this.#attachListeners();
 	}
@@ -64,10 +60,7 @@ export class AlertsTab extends BaseComponent {
 
 	#attachListeners() {
 		this.#$element.click(this.#handleClick.bind(this));
-		stateService.subscribe(
-			STATE_KEYS.CONTEXT,
-			this.#handleContextUpdate.bind(this),
-		);
+
 		stateService.subscribe(
 			STATE_KEYS.ALERTS,
 			this.#handleAlertsUpdate.bind(this),
@@ -80,7 +73,7 @@ export class AlertsTab extends BaseComponent {
 		if (!$item) return;
 
 		if ($target.closest('[data-ref="openButton"]')) {
-			this.#setContext($item.data('context-id'));
+			this.#handleChangeContext($item.data('context-id'));
 			return;
 		}
 
@@ -93,21 +86,15 @@ export class AlertsTab extends BaseComponent {
 		$item.data('active', String(!isActive));
 	}
 
-	#setContext(contextId) {
-		if (this.#contextId === contextId) return;
-
+	#handleChangeContext(contextId) {
 		const contexts = stateService.get(STATE_KEYS.CONTEXTS);
 		if (!contexts[contextId]) return;
 
+		const currentContext = stateService.get(STATE_KEYS.CONTEXT);
+		if (currentContext.id === contextId) return;
+
 		const newContext = contexts[contextId];
 		stateService.set(STATE_KEYS.CONTEXT, { id: contextId, ...newContext });
-	}
-
-	#handleContextUpdate(context) {
-		const newContextId = context.id ?? null;
-		if (this.#contextId === newContextId) return;
-
-		this.#contextId = newContextId;
 	}
 
 	#handleAlertsUpdate(alerts) {
