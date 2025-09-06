@@ -233,14 +233,13 @@ export class OptimizationTab extends BaseComponent {
 
 			await Promise.all(
 				Object.entries(statuses).map(async ([id, status]) => {
-					this.#applyStatus(id, status);
+					if (status !== CONTEXT_STATUS.READY) {
+						this.#applyStatus(id, status);
+					}
 
 					if (status === CONTEXT_STATUS.READY) {
 						await this.#handleReadyContext(id);
-					}
-
-					if (status === CONTEXT_STATUS.FAILED) {
-						this.#applyStatus(id, CONTEXT_STATUS.FAILED);
+					} else if (status === CONTEXT_STATUS.FAILED) {
 						this.#deleteContext(id);
 					}
 				}),
