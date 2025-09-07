@@ -40,11 +40,12 @@ export class BacktestingTab extends BaseComponent {
 	];
 
 	#$element = null;
-	#$items = null;
+	#$configItems = null;
 	#controlButtons = null;
 
 	#configItems = new Map();
 	#runningContextIds = new Set();
+
 	#knownContextIds = {
 		optimization: new Set(),
 		execution: new Set(),
@@ -89,7 +90,7 @@ export class BacktestingTab extends BaseComponent {
 			styles,
 		);
 		this.#$element = $Q(this.element);
-		this.#$items = this.#$element.find('[data-ref="configItems"]');
+		this.#$configItems = this.#$element.find('[data-ref="configItems"]');
 	}
 
 	async #setupInitialState() {
@@ -371,7 +372,7 @@ export class BacktestingTab extends BaseComponent {
 	#createConfigItem(configId, config) {
 		const item = new ConfigItem({ configId });
 
-		this.#$items.append(item.render());
+		this.#$configItems.append(item.render());
 		this.#configItems.set(configId, item);
 
 		if (config) item.update(config);

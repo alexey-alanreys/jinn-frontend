@@ -16,7 +16,7 @@ export class ParamsTab extends BaseComponent {
 	static COMPONENT_NAME = 'ParamsTab';
 
 	#$element = null;
-	#items = new Map();
+	#paramsItems = new Map();
 
 	#contextId;
 
@@ -59,7 +59,7 @@ export class ParamsTab extends BaseComponent {
 
 	async #handleChange(event) {
 		const id = $Q(event.target).data('param-id');
-		const item = this.#items.get(id);
+		const item = this.#paramsItems.get(id);
 
 		if (item.isValid()) {
 			const context = stateService.get(STATE_KEYS.EXECUTION_CONTEXT);
@@ -101,7 +101,7 @@ export class ParamsTab extends BaseComponent {
 				const item = new ParamsItem();
 				$items.append(item.render());
 				item.update(id, value, labels[id] || id);
-				this.#items.set(id, item);
+				this.#paramsItems.set(id, item);
 			});
 		}
 
@@ -109,7 +109,7 @@ export class ParamsTab extends BaseComponent {
 	}
 
 	#clear() {
-		this.#items.forEach((item) => item.remove());
-		this.#items.clear();
+		this.#paramsItems.forEach((item) => item.remove());
+		this.#paramsItems.clear();
 	}
 }

@@ -39,7 +39,7 @@ export class OptimizationTab extends BaseComponent {
 	];
 
 	#$element = null;
-	#$items = null;
+	#$configItems = null;
 	#controlButtons = null;
 
 	#configItems = new Map();
@@ -83,7 +83,7 @@ export class OptimizationTab extends BaseComponent {
 			styles,
 		);
 		this.#$element = $Q(this.element);
-		this.#$items = this.#$element.find('[data-ref="configItems"]');
+		this.#$configItems = this.#$element.find('[data-ref="configItems"]');
 	}
 
 	async #setupInitialState() {
@@ -304,7 +304,7 @@ export class OptimizationTab extends BaseComponent {
 	#createConfigItem(configId, config = null) {
 		const item = new ConfigItem({ configId });
 
-		this.#$items.append(item.render());
+		this.#$configItems.append(item.render());
 		this.#configItems.set(configId, item);
 
 		if (config) {

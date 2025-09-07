@@ -18,7 +18,7 @@ export class StrategiesTab extends BaseComponent {
 	static COMPONENT_NAME = 'StrategiesTab';
 
 	#$element = null;
-	#items = new Map();
+	#strategiesItems = new Map();
 
 	#contextId;
 
@@ -63,13 +63,13 @@ export class StrategiesTab extends BaseComponent {
 
 		Object.entries(contexts).forEach(([id, context]) => {
 			const item = new StrategiesItem();
-			this.#items.set(id, item);
+			this.#strategiesItems.set(id, item);
 			$items.append(item.render());
 			item.update(id, context);
 		});
 
-		if (this.#contextId && this.#items.has(this.#contextId)) {
-			this.#items.get(this.#contextId).activate();
+		if (this.#contextId && this.#strategiesItems.has(this.#contextId)) {
+			this.#strategiesItems.get(this.#contextId).activate();
 		}
 	}
 
@@ -103,12 +103,12 @@ export class StrategiesTab extends BaseComponent {
 	#handleContextUpdate(context) {
 		if (this.#contextId === context.id) return;
 
-		if (this.#contextId && this.#items.has(this.#contextId)) {
-			this.#items.get(this.#contextId).deactivate();
+		if (this.#contextId && this.#strategiesItems.has(this.#contextId)) {
+			this.#strategiesItems.get(this.#contextId).deactivate();
 		}
 
-		if (context.id && this.#items.has(context.id)) {
-			this.#items.get(context.id).activate();
+		if (context.id && this.#strategiesItems.has(context.id)) {
+			this.#strategiesItems.get(context.id).activate();
 		}
 
 		this.#contextId = context.id;
@@ -117,17 +117,17 @@ export class StrategiesTab extends BaseComponent {
 	#handleContextsUpdate(contexts) {
 		const $items = this.#$element.find('[data-ref="strategiesItems"]');
 
-		this.#items.forEach((item, id) => {
+		this.#strategiesItems.forEach((item, id) => {
 			if (!contexts[id]) {
 				item.remove();
-				this.#items.delete(id);
+				this.#strategiesItems.delete(id);
 			}
 		});
 
 		Object.entries(contexts).forEach(([id, context]) => {
-			if (!this.#items.has(id)) {
+			if (!this.#strategiesItems.has(id)) {
 				const item = new StrategiesItem();
-				this.#items.set(id, item);
+				this.#strategiesItems.set(id, item);
 				$items.append(item.render());
 				item.update(id, context);
 			}

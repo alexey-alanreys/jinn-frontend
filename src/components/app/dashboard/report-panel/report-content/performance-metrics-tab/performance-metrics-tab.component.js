@@ -16,7 +16,7 @@ export class PerformanceMetricsTab extends BaseComponent {
 	static COMPONENT_NAME = 'PerformanceMetricsTab';
 
 	#$element = null;
-	#items = new Map();
+	#metricsItems = new Map();
 
 	render() {
 		this.#initDOM();
@@ -64,19 +64,19 @@ export class PerformanceMetricsTab extends BaseComponent {
 
 	#renderMetrics(metrics) {
 		if (!metrics.length) {
-			this.#items.forEach((item) => item.element.remove());
-			this.#items.clear();
+			this.#metricsItems.forEach((item) => item.element.remove());
+			this.#metricsItems.clear();
 			return;
 		}
 
 		const $items = this.#$element.find('[data-ref="metricsItems"]');
 
 		metrics.forEach((metric, index) => {
-			let item = this.#items.get(index);
+			let item = this.#metricsItems.get(index);
 
 			if (!item) {
 				item = new MetricsItem();
-				this.#items.set(index, item);
+				this.#metricsItems.set(index, item);
 				$items.append(item.render());
 			}
 

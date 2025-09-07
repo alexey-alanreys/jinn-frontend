@@ -17,8 +17,7 @@ export class AlertsTab extends BaseComponent {
 
 	#$element = null;
 	#$alertsItems = null;
-
-	#items = new Map();
+	#alertsItems = new Map();
 
 	get isActive() {
 		return this.#$element.css('display') === 'flex';
@@ -104,7 +103,7 @@ export class AlertsTab extends BaseComponent {
 		if (!alerts.length) return;
 
 		alerts.forEach((alert) => {
-			if (!this.#items.has(alert.alertId)) {
+			if (!this.#alertsItems.has(alert.alertId)) {
 				this.#createAlertItem(alert.alertId, alert);
 			}
 		});
@@ -114,7 +113,7 @@ export class AlertsTab extends BaseComponent {
 		const item = new AlertsItem();
 
 		this.#$alertsItems.prepend(item.render());
-		this.#items.set(id, item);
+		this.#alertsItems.set(id, item);
 		item.update(alert);
 	}
 
@@ -129,10 +128,10 @@ export class AlertsTab extends BaseComponent {
 			);
 			stateService.set(STATE_KEYS.EXECUTION_ALERTS, filteredAlerts);
 
-			const item = this.#items.get(alertId);
+			const item = this.#alertsItems.get(alertId);
 			if (item) {
 				item.remove();
-				this.#items.delete(alertId);
+				this.#alertsItems.delete(alertId);
 			}
 		} catch (error) {
 			console.error('Failed to delete alert.', error);

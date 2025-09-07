@@ -38,11 +38,12 @@ export class TradingTab extends BaseComponent {
 	];
 
 	#$element = null;
-	#$items = null;
+	#$configItems = null;
 	#controlButtons = null;
 
 	#configItems = new Map();
 	#runningContextIds = new Set();
+
 	#knownContextIds = {
 		optimization: new Set(),
 		execution: new Set(),
@@ -87,7 +88,7 @@ export class TradingTab extends BaseComponent {
 			styles,
 		);
 		this.#$element = $Q(this.element);
-		this.#$items = this.#$element.find('[data-ref="configItems"]');
+		this.#$configItems = this.#$element.find('[data-ref="configItems"]');
 	}
 
 	async #setupInitialState() {
@@ -175,7 +176,7 @@ export class TradingTab extends BaseComponent {
 		});
 
 		Object.entries(contexts).forEach(([contextId, context]) => {
-			if (!context.isLive) {
+			if (context.isLive) {
 				this.#knownContextIds.execution.add(contextId);
 			}
 		});
@@ -368,7 +369,7 @@ export class TradingTab extends BaseComponent {
 	#createConfigItem(configId, config) {
 		const item = new ConfigItem({ configId });
 
-		this.#$items.append(item.render());
+		this.#$configItems.append(item.render());
 		this.#configItems.set(configId, item);
 
 		if (config) item.update(config);

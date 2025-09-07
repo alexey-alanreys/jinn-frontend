@@ -34,7 +34,7 @@
 				display: inline-block;
 				width: 16px;
 				height: 16px;
-				background: var(--color-status-dot-halo);
+				background: rgb(var(--color-status-success-rgb), 0.3);
 				border-radius: 50%;
 
 				&[data-active='false'] {
@@ -47,7 +47,7 @@
 					left: 50%;
 					width: 8px;
 					height: 8px;
-					background: var(--color-status-dot-center);
+					background: var(--color-chart-up);
 					border-radius: 50%;
 					transform: translate(-50%, -50%);
 					content: '';
