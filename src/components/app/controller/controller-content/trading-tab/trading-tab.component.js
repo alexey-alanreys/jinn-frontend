@@ -188,9 +188,11 @@ export class TradingTab extends BaseComponent {
 		Object.entries(contexts).forEach(([contextId, context]) => {
 			if (this.#knownContextIds.optimization.has(contextId)) return;
 
+			const { _start, _end, ...remaining } = context;
+
 			context.params.forEach((paramSet) => {
 				const newId = crypto.randomUUID();
-				const newConfig = { ...context, params: paramSet };
+				const newConfig = { ...remaining, params: paramSet };
 
 				tradingConfigs[newId] = newConfig;
 				this.#createConfigItem(newId, newConfig);
