@@ -1,0 +1,28 @@
+.text-input {
+	position: relative;
+	display: flex;
+	align-items: center;
+
+	> input[type='text'] {
+		width: 120px;
+		height: 30px;
+		padding: 4px 8px;
+		font-size: 1.4rem;
+		color: inherit;
+		border: 1px solid var(--color-border-tertiary);
+		border-radius: 4px;
+
+		&::placeholder {
+			color: var(--color-text-secondary);
+		}
+
+		&:hover {
+			border-color: var(--color-accent-secondary);
+		}
+
+		&:focus {
+			padding: 4px 7px;
+			border: 2px solid var(--color-accent-secondary);
+		}
+	}
+}

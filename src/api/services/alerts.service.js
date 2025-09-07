@@ -15,7 +15,7 @@ class AlertsService extends BaseService {
 	 * @param {number} [options.limit] Maximum number of recent alerts to return.
 	 * @param {string} [options.sinceId] Alert identifier for filtering.
 	 *        Only alerts created after this ID will be returned.
-	 * @returns {Promise<Object>} Resolves with dictionary of alerts.
+	 * @returns {Promise<Array>} Resolves with formatted alerts data.
 	 * @throws {Error} If validation fails or request errors occur.
 	 */
 	async get({ limit, sinceId } = {}) {
@@ -27,10 +27,9 @@ class AlertsService extends BaseService {
 		if (limit) queryParams.limit = limit;
 		if (sinceId) queryParams.sinceId = sinceId;
 
-		const finalQueryParams =
-			Object.keys(queryParams).length > 0
-				? toSnakeCaseParams(queryParams)
-				: undefined;
+		const finalQueryParams = Object.keys(queryParams).length
+			? toSnakeCaseParams(queryParams)
+			: undefined;
 
 		return this._executeRequest({
 			path: '/alerts',

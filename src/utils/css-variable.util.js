@@ -1,8 +1,7 @@
 /**
  * @module cssVariable
  * @description
- * Utility functions for working with CSS variables
- * (custom properties) in JavaScript.
+ * Utility functions for working with CSS variables in JavaScript.
  */
 
 /**

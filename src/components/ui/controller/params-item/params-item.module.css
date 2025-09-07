@@ -1,0 +1,16 @@
+.params-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+	max-width: 320px;
+	padding: 8px 16px;
+	white-space: nowrap;
+
+	> [data-field='title'] {
+		font-size: 1.4rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}

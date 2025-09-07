@@ -1,50 +1,67 @@
-import { Layout } from '@/components/layout/layout.component';
-import { Notification } from '@/components/notification/notification.component';
 import { $Q } from '@/core/libs/query.lib';
-import { automationService } from '@/core/services/automation.service';
-import { initService } from '@/core/services/init.service';
-import { notificationService } from '@/core/services/notification.service';
+import { drawingsService } from '@/core/services/drawings.service';
+import { stateService } from '@/core/services/state.service.js';
+import { themeService } from '@/core/services/theme.service';
+import { tradingService } from '@/core/services/trading.service';
 
+import { App } from '@/components/app/app.component';
 
 import '@/styles/global.css';
 
-import { SERVER_MODE } from './config/mode.config';
+import { STATE_KEYS } from '@/constants/state-keys.constants';
+
+import { dataService } from '@/api/services/data.service';
+import { executionService } from '@/api/services/execution.service';
 
 class AppInitializer {
 	static async start() {
 		try {
-			const app = $Q('#app');
+			console.log('Initializing state...');
+			await this.initState();
 
-			this.renderNotificationShell(app);
-			await this.initializeAppState();
-			this.startAutomationIfNeeded();
-			this.renderApp(app);
+			console.log('Initializing services...');
+			this.initServices();
+
+			console.log('Rendering app...');
+			this.renderApp();
+
+			console.log('App initialized successfully!');
 		} catch (error) {
-			this.handleFatalError(error);
+			console.error('App initialization failed:', error);
 		}
 	}
 
-	static renderNotificationShell(app) {
-		app.append(new Notification().render());
-	}
+	static async initState() {
+		const [strategies, exchanges, intervals, contexts] = await Promise.all([
+			dataService.getStrategies(),
+			dataService.getExchanges(),
+			dataService.getIntervals(),
+			executionService.getAll(),
+		]);
 
-	static async initializeAppState() {
-		await initService.initialize();
-	}
-
-	static renderApp(app) {
-		app.append(new Layout().render());
-	}
-
-	static startAutomationIfNeeded() {
-		if (SERVER_MODE === 'AUTOMATION') {
-			automationService.start();
+		if (!Object.keys(strategies).length) {
+			throw new Error('No available strategies');
 		}
+
+		const context = Object.keys(contexts).length
+			? { id: Object.keys(contexts)[0], ...Object.values(contexts)[0] }
+			: {};
+
+		stateService.set(STATE_KEYS.STRATEGIES, strategies);
+		stateService.set(STATE_KEYS.EXCHANGES, exchanges);
+		stateService.set(STATE_KEYS.INTERVALS, intervals);
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXTS, contexts);
+		stateService.set(STATE_KEYS.EXECUTION_CONTEXT, context);
 	}
 
-	static handleFatalError(error) {
-		console.error('App initialization failed:', error);
-		notificationService.show('error', 'Failed to launch the application');
+	static initServices() {
+		drawingsService.init();
+		tradingService.init();
+		themeService.init();
+	}
+
+	static renderApp() {
+		$Q('#app').append(new App().render());
 	}
 }
 

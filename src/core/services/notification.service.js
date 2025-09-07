@@ -1,6 +1,6 @@
-import styles from '@/components/notification/notification.module.css';
 import { $Q } from '@/core/libs/query.lib';
 
+import styles from '@/components/app/notification/notification.module.css';
 
 /**
  * @module notificationService
@@ -17,7 +17,7 @@ class NotificationService {
 	 * @private
 	 */
 	#showNext() {
-		if (this.#queue.length === 0 || this.#isShowing) return;
+		if (!this.#queue.length || this.#isShowing) return;
 
 		const $notification = $Q('[data-ref="notification"]');
 		const { type, message } = this.#queue.shift();
@@ -54,7 +54,7 @@ class NotificationService {
 	show(type, message) {
 		if (!['info', 'success', 'warning', 'error'].includes(type)) {
 			throw new Error(
-				'Invalid notification type: expected "success" or "error".',
+				'Invalid notification type: expected "success" or "error"',
 			);
 		}
 

@@ -1,5 +1,4 @@
 import path from 'path';
-
 import { defineConfig, loadEnv } from 'vite';
 import string from 'vite-plugin-string';
 
@@ -7,10 +6,9 @@ export default ({ mode }) => {
 	const env = loadEnv(mode, process.cwd());
 
 	return defineConfig({
-		base: '/static/',
+		base: '/',
 		define: {
 			'import.meta.env.VITE_SERVER_URL': JSON.stringify(env.VITE_SERVER_URL),
-			'import.meta.env.VITE_SERVER_MODE': JSON.stringify(env.VITE_SERVER_MODE),
 		},
 		resolve: {
 			alias: {

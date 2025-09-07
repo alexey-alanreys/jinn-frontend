@@ -31,7 +31,7 @@ class Query {
 			this.element = selector;
 		} else {
 			throw new Error(
-				'The selector must be a string, HTMLElement, or Document.',
+				'The selector must be a string, HTMLElement, or Document',
 			);
 		}
 	}
@@ -96,7 +96,7 @@ class Query {
 	append(childElement) {
 		if (!(childElement instanceof HTMLElement)) {
 			throw new Error(
-				'The provided childElement must be an instance of HTMLElement.',
+				'The provided childElement must be an instance of HTMLElement',
 			);
 		}
 
@@ -115,7 +115,7 @@ class Query {
 	prepend(childElement) {
 		if (!(childElement instanceof HTMLElement)) {
 			throw new Error(
-				'The provided childElement must be an instance of HTMLElement.',
+				'The provided childElement must be an instance of HTMLElement',
 			);
 		}
 
@@ -142,14 +142,14 @@ class Query {
 	before(newElement) {
 		if (!(newElement instanceof HTMLElement)) {
 			throw new Error(
-				'The provided newElement must be an instance of HTMLElement.',
+				'The provided newElement must be an instance of HTMLElement',
 			);
 		}
 
 		const parentElement = this.element.parentElement;
 
 		if (!parentElement) {
-			throw new Error('The current element does not have a parent element.');
+			throw new Error('The current element does not have a parent element');
 		}
 
 		parentElement.insertBefore(newElement, this.element);
@@ -300,7 +300,7 @@ class Query {
 	 */
 	input({ onInput, ...rest }) {
 		if (this.element.tagName.toLowerCase() !== 'input') {
-			throw new Error('Element must be an input.');
+			throw new Error('Element must be an input');
 		}
 
 		for (const [key, value] of Object.entries(rest)) {
@@ -377,7 +377,7 @@ class Query {
 			this.element.classList.add(classNames);
 		} else {
 			throw new Error(
-				'The "classNames" parameter must be a string or an array of strings.',
+				'The "classNames" parameter must be a string or an array of strings',
 			);
 		}
 
@@ -412,7 +412,7 @@ class Query {
 	 */
 	hasClass(className) {
 		if (typeof className !== 'string') {
-			throw new Error('Class name must be a string.');
+			throw new Error('Class name must be a string');
 		}
 
 		return this.element.classList.contains(className);
@@ -431,7 +431,7 @@ class Query {
 	 */
 	attr(attributeName, value) {
 		if (typeof attributeName !== 'string') {
-			throw new Error('Attribute name must be a string.');
+			throw new Error('Attribute name must be a string');
 		}
 
 		if (typeof value === 'undefined') {
@@ -454,7 +454,7 @@ class Query {
 	 */
 	data(key, value) {
 		if (typeof key !== 'string') {
-			throw new Error('Key must be a string.');
+			throw new Error('Key must be a string');
 		}
 
 		const dataAttr = `data-${key}`;
@@ -477,7 +477,7 @@ class Query {
 	 */
 	is(attrName) {
 		if (typeof attrName !== 'string') {
-			throw new Error('Attribute name must be a string.');
+			throw new Error('Attribute name must be a string');
 		}
 
 		const attrValue = this.element.getAttribute(attrName);

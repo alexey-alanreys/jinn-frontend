@@ -1,0 +1,19 @@
+.scroll-button {
+	position: absolute;
+	z-index: 3;
+	right: 100px;
+	bottom: 60px;
+	width: 24px;
+	height: 24px;
+	background-color: var(--color-scroll-button);
+	border-radius: 6px;
+	box-shadow: var(--shadow-scroll-button);
+
+	&:hover {
+		background-color: var(--color-scroll-button);
+
+		svg {
+			color: var(--color-accent-primary);
+		}
+	}
+}

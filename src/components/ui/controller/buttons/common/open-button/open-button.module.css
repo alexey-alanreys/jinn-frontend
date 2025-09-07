@@ -1,0 +1,14 @@
+.open-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 6px;
+	opacity: 0;
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--color-bg-hover-secondary);
+	}
+}

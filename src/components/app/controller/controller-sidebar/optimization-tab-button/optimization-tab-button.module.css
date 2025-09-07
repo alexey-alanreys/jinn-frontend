@@ -1,0 +1,16 @@
+.optimization-tab-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 38px;
+	height: 38px;
+	border-radius: 6px;
+
+	&[data-active='true'] {
+		background-color: var(--color-bg-button-active);
+
+		svg {
+			color: var(--color-accent-primary);
+		}
+	}
+}

@@ -1,0 +1,9 @@
+.docs-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 38px;
+	height: 38px;
+	margin-top: auto;
+	border-radius: 6px;
+}

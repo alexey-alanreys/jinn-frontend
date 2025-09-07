@@ -1,0 +1,73 @@
+.number-input {
+	position: relative;
+	display: flex;
+	align-items: center;
+
+	> input[type='number'] {
+		width: 80px;
+		height: 30px;
+		padding: 4px 6px;
+		padding-right: 22px;
+		font-size: 1.4rem;
+		color: inherit;
+		border: 1px solid var(--color-border-tertiary);
+		border-radius: 4px;
+
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			margin: 0;
+			appearance: none;
+		}
+
+		&:hover {
+			border-color: var(--color-accent-secondary);
+		}
+
+		&:focus {
+			padding: 4px 5px;
+			border: 2px solid var(--color-accent-secondary);
+		}
+	}
+
+	> .number-stepper {
+		position: absolute;
+		z-index: 1;
+		top: 50%;
+		right: 2px;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		visibility: hidden;
+		transform: translateY(-50%);
+
+		> .stepper-up,
+		> .stepper-down {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 16px;
+			height: 12px;
+			background-color: transparent;
+			cursor: pointer;
+
+			> svg {
+				width: 8px;
+				height: 6px;
+				color: var(--color-accent-secondary);
+				pointer-events: none;
+			}
+
+			&:hover {
+				transform: scale(1.2);
+			}
+
+			&:active {
+				transform: scale(0.95);
+			}
+		}
+	}
+
+	&:hover .number-stepper {
+		visibility: visible;
+	}
+}

@@ -1,0 +1,6 @@
+export const CONTEXT_STATUS = {
+	QUEUED: 'QUEUED',
+	CREATING: 'CREATING',
+	READY: 'READY',
+	FAILED: 'FAILED',
+};
