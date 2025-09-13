@@ -33,7 +33,7 @@ export class ParamsItem extends BaseComponent {
 	}
 
 	isValid() {
-		return this.#input?.isValid();
+		return this.#input?.isValid?.() ?? true;
 	}
 
 	commit() {
