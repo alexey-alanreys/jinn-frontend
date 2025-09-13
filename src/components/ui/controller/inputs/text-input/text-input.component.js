@@ -10,9 +10,9 @@ export class TextInput extends BaseComponent {
 
 	#$element = null;
 	#$input = null;
-	#value = null;
 
-	#placeholder;
+	#value = '';
+	#placeholder = '';
 
 	constructor({ placeholder = '' } = {}) {
 		super();

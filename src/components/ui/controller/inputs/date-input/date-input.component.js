@@ -11,7 +11,7 @@ export class DateInput extends BaseComponent {
 	#$element = null;
 	#$input = null;
 
-	#value;
+	#value = '';
 
 	get value() {
 		return this.#$input.element.value;
