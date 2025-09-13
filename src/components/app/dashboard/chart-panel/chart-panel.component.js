@@ -491,9 +491,7 @@ export class ChartPanel extends BaseComponent {
 			const allOptions = strategies[context.strategy].indicatorOptions;
 
 			this.#initIndicatorPanels(allOptions);
-			const $panes = this.#getPaneContainers();
-
-			this.#renderIndicatorPanels($panes);
+			this.#renderIndicatorPanels();
 		});
 	}
 
@@ -508,23 +506,17 @@ export class ChartPanel extends BaseComponent {
 		});
 	}
 
-	#getPaneContainers() {
-		return this.#$element
-			.findAll('table > tr')
-			.slice(0, -1)
-			.filter((el) => el.css('height') !== '1px')
-			.map((el) => el.find('td > div'));
-	}
-
-	#renderIndicatorPanels($panes) {
-		$panes.forEach((container, paneIndex) => {
+	#renderIndicatorPanels() {
+		this.#chartApi.panes().forEach((paneApi) => {
+			const paneIndex = paneApi.paneIndex();
 			const panel = this.#indicatorPanels.get(paneIndex);
-			if (!panel) return;
 
 			const isPrimaryPane = paneIndex === 0;
 			const panelElement = panel.render(isPrimaryPane);
 
-			container.append(panelElement);
+			const paneElement = paneApi.getHTMLElement();
+			paneElement.style.position = 'relative';
+			paneElement.append(panelElement);
 		});
 	}
 
