@@ -26,6 +26,5 @@
 	},
 	"dependencies": {
 		"lightweight-charts": "^5.0.7"
-	},
-	"packageManager": "yarn@4.9.2"
+	}
 }

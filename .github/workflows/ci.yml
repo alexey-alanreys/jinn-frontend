@@ -19,14 +19,8 @@ jobs:
         with:
           node-version: 22
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Prepare Yarn
-        run: corepack install
-
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Lint JavaScript
         run: yarn lint:js:ci
