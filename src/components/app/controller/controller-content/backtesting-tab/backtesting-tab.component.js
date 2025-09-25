@@ -44,12 +44,8 @@ export class BacktestingTab extends BaseComponent {
 	#controlButtons = null;
 
 	#configItems = new Map();
+	#activeContextIds = new Set();
 	#runningContextIds = new Set();
-
-	#knownContextIds = {
-		optimization: new Set(),
-		execution: new Set(),
-	};
 
 	#pollingIntervalId;
 
@@ -169,17 +165,17 @@ export class BacktestingTab extends BaseComponent {
 	}
 
 	#handleExecutionContextsUpdate(contexts) {
-		Array.from(this.#knownContextIds.execution).forEach((contextId) => {
+		Array.from(this.#activeContextIds).forEach((contextId) => {
 			if (!(contextId in contexts)) {
 				const item = this.#configItems.get(contextId);
 				if (item) item.clearStatus();
-				this.#knownContextIds.execution.delete(contextId);
+				this.#activeContextIds.delete(contextId);
 			}
 		});
 
 		Object.entries(contexts).forEach(([contextId, context]) => {
 			if (!context.isLive) {
-				this.#knownContextIds.execution.add(contextId);
+				this.#activeContextIds.add(contextId);
 			}
 		});
 	}
@@ -188,9 +184,7 @@ export class BacktestingTab extends BaseComponent {
 		const backtestingConfigs =
 			storageService.getItem(STORAGE_KEYS.BACKTESTING_CONFIGS) || {};
 
-		Object.entries(contexts).forEach(([contextId, context]) => {
-			if (this.#knownContextIds.optimization.has(contextId)) return;
-
+		Object.values(contexts).forEach((context) => {
 			context.params.forEach((paramSet) => {
 				const newId = crypto.randomUUID();
 				const newConfig = { ...context, params: paramSet };
@@ -198,8 +192,6 @@ export class BacktestingTab extends BaseComponent {
 				backtestingConfigs[newId] = newConfig;
 				this.#createConfigItem(newId, newConfig);
 			});
-
-			this.#knownContextIds.optimization.add(contextId);
 		});
 
 		storageService.setItem(

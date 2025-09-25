@@ -42,12 +42,8 @@ export class TradingTab extends BaseComponent {
 	#controlButtons = null;
 
 	#configItems = new Map();
+	#activeContextIds = new Set();
 	#runningContextIds = new Set();
-
-	#knownContextIds = {
-		optimization: new Set(),
-		execution: new Set(),
-	};
 
 	#pollingIntervalId;
 
@@ -167,17 +163,17 @@ export class TradingTab extends BaseComponent {
 	}
 
 	#handleExecutionContextsUpdate(contexts) {
-		Array.from(this.#knownContextIds.execution).forEach((contextId) => {
+		Array.from(this.#activeContextIds).forEach((contextId) => {
 			if (!(contextId in contexts)) {
 				const item = this.#configItems.get(contextId);
 				if (item) item.clearStatus();
-				this.#knownContextIds.execution.delete(contextId);
+				this.#activeContextIds.delete(contextId);
 			}
 		});
 
 		Object.entries(contexts).forEach(([contextId, context]) => {
 			if (context.isLive) {
-				this.#knownContextIds.execution.add(contextId);
+				this.#activeContextIds.add(contextId);
 			}
 		});
 	}
@@ -186,9 +182,7 @@ export class TradingTab extends BaseComponent {
 		const tradingConfigs =
 			storageService.getItem(STORAGE_KEYS.TRADING_CONFIGS) || {};
 
-		Object.entries(contexts).forEach(([contextId, context]) => {
-			if (this.#knownContextIds.optimization.has(contextId)) return;
-
+		Object.values(contexts).forEach((context) => {
 			const { start: _start, end: _end, ...remaining } = context;
 
 			context.params.forEach((paramSet) => {
@@ -198,8 +192,6 @@ export class TradingTab extends BaseComponent {
 				tradingConfigs[newId] = newConfig;
 				this.#createConfigItem(newId, newConfig);
 			});
-
-			this.#knownContextIds.optimization.add(contextId);
 		});
 
 		storageService.setItem(STORAGE_KEYS.TRADING_CONFIGS, tradingConfigs);
