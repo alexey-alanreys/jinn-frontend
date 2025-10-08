@@ -26,7 +26,14 @@ yarn build
 
 ---
 
-**License:** Proprietary  
-**Author:** [Albert Alanreys](https://github.com/albert-alanreys)
+## 🔗 Related Repositories
+
+- **[jinn-docs](https://github.com/albert-alanreys/jinn-docs)** — Complete documentation
+- **[jinn-core](https://github.com/albert-alanreys/jinn-core)** — Core implementation
+
+---
+
+**License:** MIT  
+**Author:** [Albert Alan-Reys](https://github.com/albert-alanreys)
 
 **© 2025 Jinn Trading Framework**
