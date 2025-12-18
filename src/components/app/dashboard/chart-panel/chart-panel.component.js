@@ -511,6 +511,8 @@ export class ChartPanel extends BaseComponent {
 			const paneIndex = paneApi.paneIndex();
 			const panel = this.#indicatorPanels.get(paneIndex);
 
+			if (!panel) return;
+
 			const isPrimaryPane = paneIndex === 0;
 			const panelElement = panel.render(isPrimaryPane);
 
