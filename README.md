@@ -2,7 +2,7 @@
 
 Official frontend implementation of the **Jinn** algorithmic trading framework.
 
-This project provides the web interface for **Jinn** and is integrated into the core backend (`jinn-core`).  
+This project provides the web interface for **Jinn** and is integrated into the core backend (`jinn-core`).
 It requires `jinn-core` to be running in order to function properly.
 
 ---
@@ -28,12 +28,12 @@ yarn build
 
 ## 🔗 Related Repositories
 
-- **[jinn-docs](https://github.com/albert-alanreys/jinn-docs)** — Complete documentation
-- **[jinn-core](https://github.com/albert-alanreys/jinn-core)** — Core implementation
+- **[jinn-docs](https://github.com/alexey-alanreys/jinn-docs)** — Complete documentation
+- **[jinn-core](https://github.com/alexey-alanreys/jinn-core)** — Core implementation
 
 ---
 
-**License:** MIT  
-**Author:** [Albert Alan-Reys](https://github.com/albert-alanreys)
+**License:** MIT
+**Author:** [Alexey Alan-Reys](https://github.com/alexey-alanreys)
 
 **© 2025 Jinn Trading Framework**
