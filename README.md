@@ -9,7 +9,7 @@ It requires `jinn-core` to be running in order to function properly.
 
 ## ⚙️ Development
 
-This project uses **Yarn** and requires **Node.js v22**.
+This project uses **Yarn v1 (Classic)** and requires **Node.js v22**.
 
 To start the development server:
 
